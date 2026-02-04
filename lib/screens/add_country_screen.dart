@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/blocked_country.dart';
 import '../providers/blocked_provider.dart';
+import '../theme/app_theme.dart';
 
 class AddCountryScreen extends StatefulWidget {
   const AddCountryScreen({super.key});
@@ -14,7 +15,8 @@ class AddCountryScreen extends StatefulWidget {
 class _AddCountryScreenState extends State<AddCountryScreen> {
   final _codeController = TextEditingController();
   final _nameController = TextEditingController();
-  String _isoCode = 'UNKNOWN'; // Default
+  String _isoCode = 'UNKNOWN';
+  int _selectedTab = 1; // 0 = Select Country, 1 = Custom Code
 
   @override
   void dispose() {
@@ -29,7 +31,11 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
 
     if (code.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a country code')),
+        const SnackBar(
+          content: Text('Please enter a country code'),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+        ),
       );
       return;
     }
@@ -41,68 +47,233 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
     );
 
     Provider.of<BlockedProvider>(context, listen: false).addCountry(country);
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${ name.isEmpty ? 'Country' : name} added to blocklist'),
+        backgroundColor: AppColors.primary,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+    
     Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Block Country')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            ElevatedButton.icon(
-              icon: const Icon(Icons.public),
-              label: const Text('Select from List'),
-              onPressed: () {
-                showCountryPicker(
-                  context: context,
-                  showPhoneCode: true,
-                  onSelect: (Country country) {
-                    setState(() {
-                      _codeController.text = country.phoneCode;
-                      _nameController.text = country.name;
-                      _isoCode = country.countryCode; 
-                    });
-                  },
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-            const Text('Or enter manually:', style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _codeController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Phone Code (e.g. 1, 44)',
-                prefixText: '+',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Country Name (Optional)',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _save,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  backgroundColor: Colors.redAccent,
-                  foregroundColor: Colors.white,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text('Add Block Rule'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Segmented control
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: AppColors.inputDark,
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Text('BLOCK THIS COUNTRY'),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _TabButton(
+                        label: 'Select Country',
+                        isSelected: _selectedTab == 0,
+                        onTap: () {
+                          setState(() {
+                            _selectedTab = 0;
+                          });
+                          _showCountryPicker();
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: _TabButton(
+                        label: 'Custom Code',
+                        isSelected: _selectedTab == 1,
+                        onTap: () {
+                          setState(() {
+                            _selectedTab = 1;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 32),
+              
+              // Form header
+              Text(
+                'Enter Custom Rule',
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Block calls from specific international or local prefixes.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 24),
+              
+              // Country Code input
+              Text(
+                'COUNTRY CODE',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppColors.textSecondary,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _codeController,
+                keyboardType: TextInputType.number,
+                style: Theme.of(context).textTheme.bodyLarge,
+                decoration: InputDecoration(
+                  hintText: '1',
+                  prefixText: '+',
+                  prefixStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              
+              // Name input
+              Text(
+                'NAME (OPTIONAL)',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppColors.textSecondary,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _nameController,
+                style: Theme.of(context).textTheme.bodyLarge,
+                decoration: const InputDecoration(
+                  hintText: 'e.g. Work Contacts',
+                ),
+              ),
+              const SizedBox(height: 24),
+              
+              // Info box
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.05),
+                  border: Border.all(
+                    color: AppColors.primary.withOpacity(0.1),
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.info_outline,
+                      color: AppColors.primary,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'All incoming calls starting with this prefix will be automatically blocked.',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.textPrimary,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+              
+              // Save button
+              SizedBox(
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: _save,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    shadowColor: AppColors.primary.withOpacity(0.3),
+                    elevation: 8,
+                  ),
+                  child: const Text(
+                    'Save to Block List',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCountryPicker() {
+    showCountryPicker(
+      context: context,
+      showPhoneCode: true,
+      onSelect: (Country country) {
+        setState(() {
+          _codeController.text = country.phoneCode;
+          _nameController.text = country.name;
+          _isoCode = country.countryCode;
+        });
+      },
+    );
+  }
+}
+
+/// Custom tab button widget for segmented control
+class _TabButton extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _TabButton({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            color: isSelected ? Colors.white : AppColors.textSecondary,
+            fontWeight: FontWeight.w600,
+            fontSize: 13,
+          ),
         ),
       ),
     );

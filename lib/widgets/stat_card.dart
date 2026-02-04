@@ -1,0 +1,117 @@
+import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
+
+/// A statistics card widget for displaying metrics
+class StatCard extends StatelessWidget {
+  final String title;
+  final String value;
+  final IconData icon;
+  final String? subtitle;
+  final String? trend;
+  final bool? isTrendPositive;
+
+  const StatCard({
+    super.key,
+    required this.title,
+    required this.value,
+    required this.icon,
+    this.subtitle,
+    this.trend,
+    this.isTrendPositive,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.cardDark,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.borderDark.withOpacity(0.5),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  title.toUpperCase(),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: AppColors.textSecondary,
+                    letterSpacing: 1.2,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceDark.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  icon,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          
+          // Value
+          Text(
+            value,
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          
+          // Subtitle or trend
+          if (trend != null && isTrendPositive != null)
+            Row(
+              children: [
+                Icon(
+                  Icons.trending_up,
+                  size: 14,
+                  color: AppColors.success,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  trend!,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: AppColors.success,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            )
+          else if (subtitle != null)
+            Text(
+              subtitle!,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
