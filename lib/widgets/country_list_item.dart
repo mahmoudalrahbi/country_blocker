@@ -52,8 +52,9 @@ class CountryListItem extends StatelessWidget {
                             style: const TextStyle(fontSize: 24),
                           )
                         : const Icon(
-                            Icons.dialpad,
+                            Icons.public,
                             color: AppColors.textSecondary,
+                            size: 24,
                           ),
                   ),
                 ),

@@ -6,6 +6,7 @@ import '../widgets/stat_card.dart';
 import '../theme/app_theme.dart';
 import 'add_country_screen.dart';
 import '../widgets/country_list_item.dart';
+import '../utils/country_flags.dart';
 
 import 'dart:io';
 import '../services/permissions_service.dart';
@@ -430,17 +431,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   String? _getFlagEmoji(String isoCode) {
-    // Simple flag emoji mapping for common countries
-    const flagMap = {
-      'US': '🇺🇸',
-      'UK': '🇬🇧',
-      'GB': '🇬🇧',
-      'IN': '🇮🇳',
-      'NG': '🇳🇬',
-      'BR': '🇧🇷',
-      'CA': '🇨🇦',
-    };
-    return flagMap[isoCode.toUpperCase()];
+    // Use the CountryFlags utility to get flag emoji for any valid ISO code
+    // Returns null for unknown countries, which will show the default dialpad icon
+    return CountryFlags.getFlagEmoji(isoCode);
   }
 
   String _getSubtitle(int index) {
