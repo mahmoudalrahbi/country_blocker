@@ -227,10 +227,10 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: StatCard(
                   title: 'Blocked Calls',
-                  value: '1,284',
+                  value: '${provider.blockedCallsCount}',
                   icon: Icons.call_missed,
-                  trend: '+12% vs last week',
-                  isTrendPositive: true,
+                  trend: provider.blockedCallsCount > 0 ? 'Total blocked' : null,
+                  isTrendPositive: provider.blockedCallsCount > 0 ? true : null,
                 ),
               ),
               const SizedBox(width: 16),
@@ -294,7 +294,6 @@ class _HomeScreenState extends State<HomeScreen> {
             'ACTIVE RULES (${filteredCountries.length})',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: AppColors.textSecondary,
-              letterSpacing: 1.5,
               fontWeight: FontWeight.bold,
             ),
           ),

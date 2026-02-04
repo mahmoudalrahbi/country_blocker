@@ -52,9 +52,8 @@ class StatCard extends StatelessWidget {
                   title.toUpperCase(),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: AppColors.textSecondary,
-                    letterSpacing: 1.2,
                   ),
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -78,7 +77,7 @@ class StatCard extends StatelessWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              fontSize: 36,
+              fontSize: 28,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -94,11 +93,15 @@ class StatCard extends StatelessWidget {
                   color: AppColors.success,
                 ),
                 const SizedBox(width: 4),
-                Text(
-                  trend!,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.success,
-                    fontWeight: FontWeight.bold,
+                Flexible(
+                  child: Text(
+                    trend!,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: AppColors.success,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                 ),
               ],

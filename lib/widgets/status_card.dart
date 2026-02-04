@@ -93,7 +93,6 @@ class StatusCard extends StatelessWidget {
                       'PROTECTION STATUS',
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: AppColors.textSecondary,
-                        letterSpacing: 1.2,
                       ),
                     ),
                   ],
@@ -198,13 +197,26 @@ class _PulsingDotState extends State<_PulsingDot>
   @override
   Widget build(BuildContext context) {
     if (!widget.isActive) {
-      return Container(
-        width: 8,
-        height: 8,
-        decoration: BoxDecoration(
-          color: AppColors.textTertiary,
-          shape: BoxShape.circle,
-        ),
+      // Disabled state - use red color with subtle pulse
+      return AnimatedBuilder(
+        animation: _animation,
+        builder: (context, child) {
+          return Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: AppColors.error,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.error.withOpacity(_animation.value * 0.4),
+                  blurRadius: 6,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+          );
+        },
       );
     }
 

@@ -131,7 +131,6 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                 'COUNTRY CODE',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: AppColors.textSecondary,
-                  letterSpacing: 1.2,
                 ),
               ),
               const SizedBox(height: 8),
@@ -154,7 +153,6 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                 'NAME (OPTIONAL)',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: AppColors.textSecondary,
-                  letterSpacing: 1.2,
                 ),
               ),
               const SizedBox(height: 8),

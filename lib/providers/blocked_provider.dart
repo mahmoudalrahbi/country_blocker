@@ -6,9 +6,11 @@ import '../models/blocked_country.dart';
 class BlockedProvider with ChangeNotifier {
   List<BlockedCountry> _blockedList = [];
   bool _isLoading = true;
+  int _blockedCallsCount = 0;
 
   List<BlockedCountry> get blockedList => _blockedList;
   bool get isLoading => _isLoading;
+  int get blockedCallsCount => _blockedCallsCount;
 
   BlockedProvider() {
     _loadFromPrefs();
@@ -23,6 +25,10 @@ class BlockedProvider with ChangeNotifier {
           .map((item) => BlockedCountry.fromJson(item))
           .toList();
     }
+    
+    // Load blocked calls count
+    _blockedCallsCount = prefs.getInt('blocked_calls_count') ?? 0;
+    
     _isLoading = false;
     notifyListeners();
   }
@@ -54,5 +60,14 @@ class BlockedProvider with ChangeNotifier {
     // Native key will be "flutter.blocked_countries_simple"
     final String jsonString = json.encode(_blockedList.map((c) => c.toMap()).toList());
     await prefs.setString('blocked_countries_simple', jsonString);
+  }
+
+  /// Increment the blocked calls counter
+  Future<void> incrementBlockedCalls() async {
+    _blockedCallsCount++;
+    notifyListeners();
+    
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('blocked_calls_count', _blockedCallsCount);
   }
 }

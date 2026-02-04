@@ -76,19 +76,19 @@ class AppTheme {
       
       // Text theme - Updated to match design specs
       textTheme: TextTheme(
-        // Headlines (H1): 28-32px, Bold, White
+        // Headlines (H1): 24-28px, Bold, White (adjusted for mobile)
         displayLarge: GoogleFonts.inter(
-          fontSize: 32,
+          fontSize: 28,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
         ),
         displayMedium: GoogleFonts.inter(
-          fontSize: 30,
+          fontSize: 26,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
         ),
         displaySmall: GoogleFonts.inter(
-          fontSize: 28,
+          fontSize: 24,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
         ),
@@ -130,18 +130,18 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
         ),
-        // Micro-copy (Labels): 12px, Bold, Uppercase, Muted Gray
+        // Micro-copy (Labels): Smaller for mobile, Bold, Uppercase, Muted Gray
         labelMedium: GoogleFonts.inter(
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: FontWeight.bold,
           color: AppColors.textSecondary,
-          letterSpacing: 1.2,
+          letterSpacing: 0.8,
         ),
         labelSmall: GoogleFonts.inter(
-          fontSize: 10,
+          fontSize: 9,
           fontWeight: FontWeight.bold,
           color: AppColors.textSecondary,
-          letterSpacing: 1.2,
+          letterSpacing: 0.8,
         ),
       ),
       
