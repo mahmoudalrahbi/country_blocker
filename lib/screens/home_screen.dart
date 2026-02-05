@@ -6,6 +6,7 @@ import '../widgets/stat_card.dart';
 import '../theme/app_theme.dart';
 import 'add_country_screen.dart';
 import 'logs_screen.dart';
+import 'settings_screen.dart';
 import '../widgets/country_list_item.dart';
 import '../utils/country_flags.dart';
 
@@ -392,30 +393,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Settings Tab
   Widget _buildSettingsTab() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.settings,
-            size: 64,
-            color: AppColors.textTertiary,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Settings',
-            style: Theme.of(context).textTheme.headlineLarge,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Coming soon...',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
+    return const SettingsScreen();
   }
 
   String? _getFlagEmoji(String isoCode) {
