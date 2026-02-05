@@ -42,3 +42,6 @@ android {
 flutter {
     source = "../.."
 }
+dependencies {
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.13.24")
+}
