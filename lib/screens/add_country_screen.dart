@@ -16,7 +16,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
   final _codeController = TextEditingController();
   final _nameController = TextEditingController();
   String _isoCode = 'UNKNOWN';
-  int _selectedTab = 1; // 0 = Select Country, 1 = Custom Code
+  int _selectedTab = 0; // 0 = Select Country, 1 = Custom Code
 
   @override
   void dispose() {
@@ -94,8 +94,10 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                         onTap: () {
                           setState(() {
                             _selectedTab = 0;
+                            _codeController.clear();
+                            _nameController.clear();
+                            _isoCode = 'UNKNOWN';
                           });
-                          _showCountryPicker();
                         },
                       ),
                     ),
@@ -106,6 +108,9 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                         onTap: () {
                           setState(() {
                             _selectedTab = 1;
+                            _codeController.clear();
+                            _nameController.clear();
+                            _isoCode = 'UNKNOWN';
                           });
                         },
                       ),
@@ -117,12 +122,14 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               
               // Form header
               Text(
-                'Enter Custom Rule',
+                _selectedTab == 0 ? 'Select a Country' : 'Enter Custom Rule',
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
               const SizedBox(height: 8),
               Text(
-                'Block calls from specific international or local prefixes.',
+                _selectedTab == 0 
+                    ? 'Search and select a country from the list to block.'
+                    : 'Block calls from specific international or local prefixes.',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -140,13 +147,18 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               TextField(
                 controller: _codeController,
                 keyboardType: TextInputType.number,
+                readOnly: _selectedTab == 0,
+                onTap: _selectedTab == 0 ? _showCountryPicker : null,
                 style: Theme.of(context).textTheme.bodyLarge,
                 decoration: InputDecoration(
-                  hintText: '1',
+                  hintText: _selectedTab == 0 ? 'Tap to select country' : '1',
                   prefixText: '+',
                   prefixStyle: theme.textTheme.bodyLarge?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
+                  suffixIcon: _selectedTab == 0 
+                      ? Icon(Icons.arrow_drop_down, color: theme.colorScheme.onSurfaceVariant) 
+                      : null,
                 ),
               ),
               const SizedBox(height: 24),
