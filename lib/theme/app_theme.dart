@@ -31,8 +31,8 @@ class AppColors {
   
   // Light theme specific colors
   static const backgroundLightMode = Color(0xFFFFFFFF); // Pure White
-  static const surfaceLight = Color(0xFFF1F5F9); // Soft Slate Gray
-  static const cardLight = Color(0xFFF1F5F9); // Same as surface for cards
+  static const surfaceLight = Color(0xFFF8FAFC); // Cool Light Gray (Card background)
+  static const cardLight = Color(0xFFF8FAFC); // Cool Light Gray for cards
   static const inputLight = Color(0xFFF8FAFC); // Slightly lighter for inputs
   
   // Light theme text colors
@@ -40,6 +40,7 @@ class AppColors {
   static const textSecondaryLight = Color(0xFF475569); // Medium Contrast
   static const textTertiaryLight = Color(0xFF64748B); // Lower Contrast
   static const textMutedLight = Color(0xFF94A3B8); // Muted slate gray
+  static const textSectionHeaderLight = Color(0xFF1E293B); // Section headers
   
   // Light theme borders
   static const borderLightMode = Color(0xFFE2E8F0); // Light Gray
@@ -148,16 +149,16 @@ class AppTheme {
         ),
         // Micro-copy (Labels): Smaller for mobile, Bold, Uppercase, Muted Gray
         labelMedium: GoogleFonts.inter(
-          fontSize: 11,
+          fontSize: 13,
           fontWeight: FontWeight.bold,
           color: AppColors.textSecondary,
-          letterSpacing: 0.8,
+          letterSpacing: 1.2,
         ),
         labelSmall: GoogleFonts.inter(
-          fontSize: 9,
+          fontSize: 13,
           fontWeight: FontWeight.bold,
           color: AppColors.textSecondary,
-          letterSpacing: 0.8,
+          letterSpacing: 1.2,
         ),
       ),
       
@@ -352,16 +353,16 @@ class AppTheme {
         ),
         // Micro-copy (Labels): Smaller for mobile, Bold, Uppercase, Muted Gray
         labelMedium: GoogleFonts.inter(
-          fontSize: 11,
+          fontSize: 13,
           fontWeight: FontWeight.bold,
-          color: AppColors.textTertiaryLight,
-          letterSpacing: 0.8,
+          color: AppColors.textSectionHeaderLight,
+          letterSpacing: 1.2,
         ),
         labelSmall: GoogleFonts.inter(
-          fontSize: 9,
+          fontSize: 13,
           fontWeight: FontWeight.bold,
-          color: AppColors.textTertiaryLight,
-          letterSpacing: 0.8,
+          color: AppColors.textSectionHeaderLight,
+          letterSpacing: 1.2,
         ),
       ),
       

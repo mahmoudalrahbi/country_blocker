@@ -25,9 +25,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildGeneralSection(),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
             _buildSupportSection(),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
             _buildVersionInfo(),
           ],
         ),
@@ -53,7 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         const SizedBox(height: 8),
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             color: Theme.of(context).cardTheme.color,
             border: Border.all(
@@ -62,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   : AppColors.borderLightMode,
               width: 1,
             ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
             children: [
@@ -197,7 +197,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 : Colors.transparent,
             width: 2,
           ),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           children: [
@@ -318,8 +318,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: isSelected
-                            ? AppColors.textPrimary
-                            : AppColors.textSecondary,
+                            ? (isDark ? AppColors.textPrimary : AppColors.textPrimaryLight)
+                            : (isDark ? AppColors.textSecondary : AppColors.textTertiaryLight),
                         fontWeight: isSelected
                             ? FontWeight.w600
                             : FontWeight.w500,
@@ -413,7 +413,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         const SizedBox(height: 8),
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             color: Theme.of(context).cardTheme.color,
             border: Border.all(
@@ -422,7 +422,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   : AppColors.borderLightMode,
               width: 1,
             ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
             children: [
@@ -558,8 +558,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Text(
         'COUNTRY BLOCKER V2.5.0',
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AppColors.textTertiary,
-              fontSize: 10,
+              color: AppColors.textMutedLight,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
               letterSpacing: 1.5,
             ),

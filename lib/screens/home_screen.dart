@@ -254,7 +254,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: 'Countries',
                   value: '${provider.blockedList.length}',
                   icon: Icons.flag,
-                  subtitle: 'Active on blocklist',
                 ),
               ),
             ],
