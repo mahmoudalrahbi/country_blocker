@@ -5,6 +5,7 @@ import '../widgets/status_card.dart';
 import '../widgets/stat_card.dart';
 import '../theme/app_theme.dart';
 import 'add_country_screen.dart';
+import 'logs_screen.dart';
 import '../widgets/country_list_item.dart';
 import '../utils/country_flags.dart';
 
@@ -135,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title = 'Blocked Countries';
         break;
       case 2:
-        title = 'Call Log';
+        title = 'Recent Blocks';
         break;
       case 3:
         title = 'Settings';
@@ -173,6 +174,16 @@ class _HomeScreenState extends State<HomeScreen> {
             color: AppColors.textSecondary,
             onPressed: () {
               // TODO: Show more options
+            },
+          ),
+        if (_selectedIndex == 2)
+          IconButton(
+            icon: Icon(
+              Icons.filter_list,
+              color: AppColors.textSecondary.withOpacity(0.7),
+            ),
+            onPressed: () {
+              // TODO: Show filter options
             },
           ),
       ],
@@ -376,30 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Log Tab
   Widget _buildLogTab() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.history,
-            size: 64,
-            color: AppColors.textTertiary,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Call Log',
-            style: Theme.of(context).textTheme.headlineLarge,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Coming soon...',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
+    return const LogsScreen();
   }
 
   // Settings Tab
