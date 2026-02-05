@@ -35,7 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildGeneralSection() {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: Spacing.s),
         Card(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -69,16 +69,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildNotificationToggle() {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: 12),
       child: Row(
         children: [
           _buildIconContainer(
             Icons.notifications,
-            const Color(0xFF3B82F6),
+            colorScheme.primary, // Replaced hardcoded blue
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: Spacing.m),
           Text(
             'Notifications',
             style: theme.textTheme.bodyLarge?.copyWith(
@@ -103,9 +104,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final theme = Theme.of(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
     final currentThemeMode = themeProvider.themeMode;
+    final colorScheme = theme.colorScheme;
     
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(Spacing.m),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -113,9 +115,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               _buildIconContainer(
                 Icons.palette,
-                const Color(0xFF6366F1),
+                colorScheme.secondary, // Replaced hardcoded indigo
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: Spacing.m),
               Text(
                 'Appearance',
                 style: theme.textTheme.bodyLarge?.copyWith(
@@ -124,7 +126,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: Spacing.m),
           Row(
             children: [
               Expanded(
@@ -171,7 +173,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     IconData icon,
   ) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
     final isSelected = currentThemeMode == mode;
     
     return GestureDetector(
@@ -179,14 +181,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         themeProvider.setThemeMode(mode);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: Spacing.s),
         decoration: BoxDecoration(
-          color: isDark
-              ? AppColors.surfaceDark.withOpacity(0.4)
-              : AppColors.surfaceLight.withOpacity(0.4),
+          color: colorScheme.surfaceContainerHighest.withOpacity(0.4),
           border: Border.all(
             color: isSelected
-                ? AppColors.primary
+                ? colorScheme.primary
                 : Colors.transparent,
             width: 2,
           ),
@@ -303,7 +303,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: Spacing.s),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -311,8 +311,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   label,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: isSelected
-                        ? (isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight)
-                        : (isDark ? AppColors.textSecondaryDark : AppColors.textTertiaryLight),
+                        ? colorScheme.onSurface
+                        : colorScheme.onSurfaceVariant,
                     fontWeight: isSelected
                         ? FontWeight.w600
                         : FontWeight.w500,
@@ -324,8 +324,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Container(
                     width: 12,
                     height: 12,
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -345,7 +345,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildLanguageSelector() {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
 
     return InkWell(
       onTap: () {
@@ -357,14 +357,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: 12),
         child: Row(
           children: [
             _buildIconContainer(
               Icons.language,
-              const Color(0xFFA855F7),
+              Colors.purple, // Keeping distinct color for visual hierarchy, but could map to tertiary
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: Spacing.m),
             Text(
               'Language',
               style: theme.textTheme.bodyLarge?.copyWith(
@@ -375,13 +375,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Text(
               'English',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: Spacing.s),
             Icon(
               Icons.chevron_right,
-              color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight,
+              color: colorScheme.onSurfaceVariant,
               size: 20,
             ),
           ],
@@ -392,7 +392,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildSupportSection() {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -407,7 +406,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: Spacing.s),
         Card(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -415,7 +414,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildMenuItem(
                 'Help Center',
                 Icons.help,
-                const Color(0xFFF97316),
+                Colors.orange, // Distinct functional color
                 () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -429,7 +428,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildMenuItem(
                 'About',
                 Icons.info,
-                const Color(0xFF64748B),
+                theme.colorScheme.onSurfaceVariant,
                 () {
                   _showAboutDialog();
                 },
@@ -448,16 +447,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     VoidCallback onTap,
   ) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
 
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: 12),
         child: Row(
           children: [
             _buildIconContainer(icon, iconColor),
-            const SizedBox(width: 12),
+            const SizedBox(width: Spacing.m),
             Text(
               title,
               style: theme.textTheme.bodyLarge?.copyWith(
@@ -467,7 +466,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const Spacer(),
             Icon(
               Icons.chevron_right,
-              color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight,
+              color: colorScheme.onSurfaceVariant,
               size: 20,
             ),
           ],

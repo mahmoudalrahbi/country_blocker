@@ -35,6 +35,16 @@ class AppColors {
   static const borderDark = Color(0xFF334155);
 }
 
+/// Standardized spacing constants
+class Spacing {
+  static const double xs = 4.0;
+  static const double s = 8.0;
+  static const double m = 16.0;
+  static const double l = 24.0;
+  static const double xl = 32.0;
+  static const double xxl = 40.0;
+}
+
 /// App theme configuration
 class AppTheme {
   
@@ -119,14 +129,19 @@ class AppTheme {
       // Color scheme
       colorScheme: const ColorScheme.dark(
         primary: AppColors.primary,
+        onPrimary: Colors.white,
         secondary: AppColors.primary,
+        onSecondary: Colors.white,
         surface: AppColors.surfaceDark,
-        background: AppColors.backgroundDark,
-        error: AppColors.error,
         onSurface: AppColors.textPrimaryDark,
+        surfaceContainerHighest: Color(0xFF334155), // Lighter distinct surface for containers
+        onSurfaceVariant: AppColors.textSecondaryDark,
+        background: AppColors.backgroundDark,
         onBackground: AppColors.textPrimaryDark,
+        error: AppColors.error,
+        onError: Colors.white,
         outline: AppColors.borderDark,
-        surfaceVariant: AppColors.surfaceDark, // For input fields
+        surfaceVariant: AppColors.surfaceDark, 
       ),
       
       // Scaffold background
@@ -138,7 +153,7 @@ class AppTheme {
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(16)), // Increased radius
+          borderRadius: const BorderRadius.all(Radius.circular(16)), 
           side: const BorderSide(
             color: Color(0xFF334155),
             width: 1,
@@ -148,7 +163,7 @@ class AppTheme {
 
       // List Tile Theme
       listTileTheme: const ListTileThemeData(
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: EdgeInsets.symmetric(horizontal: Spacing.m, vertical: Spacing.s),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
@@ -238,7 +253,7 @@ class AppTheme {
             width: 1,
           ),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: Spacing.m),
         hintStyle: GoogleFonts.inter(
           color: AppColors.textTertiaryDark,
           fontSize: 14,
@@ -272,26 +287,31 @@ class AppTheme {
       // Color scheme
       colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
+        onPrimary: Colors.white,
         secondary: AppColors.primary,
-        surface: AppColors.surfaceLight,
-        background: AppColors.backgroundLight,
-        error: AppColors.error,
+        onSecondary: Colors.white,
+        surface: AppColors.backgroundLight, // Swapped: Card background is now Gray
         onSurface: AppColors.textPrimaryLight,
+        surfaceContainerHighest: AppColors.surfaceLight, // Used for inner containers (White)
+        onSurfaceVariant: AppColors.textSecondaryLight,
+        background: AppColors.surfaceLight, // Swapped: Screen background is now White
         onBackground: AppColors.textPrimaryLight,
+        error: AppColors.error,
+        onError: Colors.white,
         outline: AppColors.borderLight,
-        surfaceVariant: AppColors.backgroundLight, // For input fields
+        surfaceVariant: AppColors.backgroundLight,
       ),
       
       // Scaffold background
-      scaffoldBackgroundColor: AppColors.backgroundLight,
+      scaffoldBackgroundColor: AppColors.surfaceLight, // White screen
       
       // Card theme
       cardTheme: CardThemeData(
-        color: AppColors.surfaceLight,
+        color: AppColors.backgroundLight, // Gray cards
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16)), // Increased radius to match design
+          borderRadius: BorderRadius.all(Radius.circular(16)), 
           side: BorderSide(
             color: AppColors.borderLight,
             width: 1,
@@ -301,7 +321,7 @@ class AppTheme {
 
       // List Tile Theme
       listTileTheme: const ListTileThemeData(
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: EdgeInsets.symmetric(horizontal: Spacing.m, vertical: Spacing.s),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
@@ -315,14 +335,14 @@ class AppTheme {
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) return AppColors.primary;
-          return AppColors.borderLight; // Darker border for switch
+          return AppColors.surfaceLight; // White track on Gray card
         }),
         trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
       ),
       
       // AppBar theme
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.backgroundLight.withOpacity(0.95),
+        backgroundColor: AppColors.surfaceLight.withOpacity(0.95), // White app bar
         elevation: 0,
         centerTitle: true,
         scrolledUnderElevation: 0,
@@ -392,7 +412,7 @@ class AppTheme {
             width: 1,
           ),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: Spacing.m),
         hintStyle: GoogleFonts.inter(
           color: AppColors.textTertiaryLight,
           fontSize: 14,
@@ -401,7 +421,7 @@ class AppTheme {
 
       // Bottom navigation bar theme
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: AppColors.backgroundLight.withOpacity(0.95),
+        backgroundColor: AppColors.surfaceLight.withOpacity(0.95), // White nav bar
         selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.textTertiaryLight,
         type: BottomNavigationBarType.fixed,

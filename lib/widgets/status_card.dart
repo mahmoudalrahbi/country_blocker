@@ -13,7 +13,10 @@ class StatusCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -62,7 +65,7 @@ class StatusCard extends StatelessWidget {
           
           // Status content
           Padding(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(Spacing.l),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -70,32 +73,32 @@ class StatusCard extends StatelessWidget {
                 Row(
                   children: [
                     _PulsingDot(isActive: isActive),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: Spacing.s),
                     Text(
                       'PROTECTION STATUS',
-                      style: Theme.of(context).textTheme.labelSmall,
+                      style: theme.textTheme.labelSmall,
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: Spacing.s),
                 
                 // Title
                 Text(
                   isActive ? 'Blocking Active' : 'Blocking Disabled',
-                  style: Theme.of(context).textTheme.displaySmall,
+                  style: theme.textTheme.displaySmall,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: Spacing.m),
                 
                 // Description
                 Text(
                   isActive
                       ? 'Incoming calls from your blocked country list are being automatically rejected.'
                       : 'Call blocking is currently disabled. Enable it to start blocking unwanted calls.',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     height: 1.5,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: Spacing.l),
                 
                 // Toggle button
                 SizedBox(
@@ -104,10 +107,10 @@ class StatusCard extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: onToggle,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
+                      backgroundColor: colorScheme.primary,
+                      foregroundColor: colorScheme.onPrimary,
                       elevation: 0,
-                      shadowColor: AppColors.primary.withOpacity(0.3),
+                      shadowColor: colorScheme.primary.withOpacity(0.3),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -119,7 +122,7 @@ class StatusCard extends StatelessWidget {
                           isActive ? Icons.pause_circle : Icons.play_circle,
                           size: 20,
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: Spacing.s),
                         Text(
                           isActive ? 'Disable Blocking' : 'Enable Blocking',
                           style: const TextStyle(

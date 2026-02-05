@@ -231,7 +231,7 @@ class _LogsScreenState extends State<LogsScreen> {
     final theme = Theme.of(context);
     
     return Padding(
-      padding: const EdgeInsets.only(top: 16, bottom: 12),
+      padding: const EdgeInsets.only(top: Spacing.m, bottom: 12),
       child: Text(
         date.toUpperCase(),
         style: theme.textTheme.labelMedium?.copyWith(
@@ -249,7 +249,7 @@ class _LogsScreenState extends State<LogsScreen> {
     int olderIndex = 0,
   }) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
     final flagEmoji = CountryFlags.getFlagEmoji(log.countryCode);
     
     // Calculate opacity for older items (fade effect)
@@ -263,7 +263,7 @@ class _LogsScreenState extends State<LogsScreen> {
       child: Card(
         margin: const EdgeInsets.only(bottom: 12),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(Spacing.m),
           child: Row(
             children: [
               // Country flag
@@ -277,16 +277,16 @@ class _LogsScreenState extends State<LogsScreen> {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHighest,
+                    color: colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     Icons.flag,
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                     size: 18,
                   ),
                 ),
-              const SizedBox(width: 16),
+              const SizedBox(width: Spacing.m),
               
               // Phone number and details
               Expanded(
@@ -301,7 +301,7 @@ class _LogsScreenState extends State<LogsScreen> {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: Spacing.xs),
                     
                     // Country name and timestamp
                     Row(
@@ -313,7 +313,7 @@ class _LogsScreenState extends State<LogsScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: Spacing.s),
                         Text(
                           _formatTimestamp(log.timestamp),
                           style: theme.textTheme.labelSmall?.copyWith(
@@ -338,7 +338,7 @@ class _LogsScreenState extends State<LogsScreen> {
                 ),
                 child: Icon(
                   Icons.block,
-                  color: theme.colorScheme.error,
+                  color: colorScheme.error,
                   size: 18,
                 ),
               ),

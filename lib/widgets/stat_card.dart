@@ -23,11 +23,11 @@ class StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
     
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(Spacing.m),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -47,48 +47,45 @@ class StatCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(Spacing.s),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? AppColors.surfaceDark.withOpacity(0.5)
-                        : AppColors.surfaceLight.withOpacity(0.5),
+                    color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     icon,
-                    color: AppColors.primary,
+                    color: colorScheme.primary,
                     size: 20,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: Spacing.m),
             
             // Value
             Text(
               value,
-              style: theme.textTheme.displaySmall?.copyWith(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
+              style: theme.textTheme.displaySmall, // Uses default 24px from AppTheme
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: Spacing.xs),
             
             // Subtitle or trend
             if (trend != null && isTrendPositive != null)
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.trending_up,
                     size: 14,
                     color: AppColors.success,
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: Spacing.xs),
                   Flexible(
                     child: Text(
                       trend!,
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: AppColors.success,
+                        color: AppColors.success, // Keeping specific success color or map to a semantic "success" if we had one. 
+                        // We mapped error but not success in ColorScheme officially (unless we use tertiary/etc).
+                        // I'll stick to AppColors.success for now as it's not in basic ColorScheme 
                         fontWeight: FontWeight.bold,
                       ),
                       overflow: TextOverflow.ellipsis,

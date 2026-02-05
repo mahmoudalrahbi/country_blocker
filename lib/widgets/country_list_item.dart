@@ -25,15 +25,15 @@ class CountryListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
     
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: 6),
       child: InkWell(
         onTap: () {},
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: 12),
           child: Row(
             children: [
               // Flag or Icon
@@ -41,10 +41,10 @@ class CountryListItem extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest,
+                  color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: theme.colorScheme.outline.withOpacity(0.5),
+                    color: colorScheme.outline.withOpacity(0.5),
                     width: 1,
                   ),
                 ),
@@ -56,12 +56,12 @@ class CountryListItem extends StatelessWidget {
                         )
                       : Icon(
                           Icons.public,
-                          color: theme.colorScheme.onSurfaceVariant,
+                          color: colorScheme.onSurfaceVariant,
                           size: 24,
                         ),
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: Spacing.m),
               
               // Country info
               Expanded(
@@ -98,7 +98,7 @@ class CountryListItem extends StatelessWidget {
               // Delete button
               IconButton(
                 icon: const Icon(Icons.delete_outline),
-                color: theme.colorScheme.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
                 onPressed: onDelete,
                 iconSize: 22,
               ),
