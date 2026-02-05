@@ -24,15 +24,25 @@ class CountryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
-      margin: const EdgeInsets.only(bottom: 2),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.transparent,
+        color: Theme.of(context).cardTheme.color,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDark
+              ? AppColors.borderDark.withOpacity(0.3)
+              : AppColors.borderLightMode.withOpacity(0.5),
+          width: 1,
+        ),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: () {},
+          borderRadius: BorderRadius.circular(12),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
@@ -42,7 +52,9 @@ class CountryListItem extends StatelessWidget {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: AppColors.inputDark,
+                    color: isDark
+                        ? AppColors.inputDark
+                        : AppColors.inputLight,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
@@ -51,9 +63,11 @@ class CountryListItem extends StatelessWidget {
                             flagEmoji!,
                             style: const TextStyle(fontSize: 24),
                           )
-                        : const Icon(
+                        : Icon(
                             Icons.public,
-                            color: AppColors.textSecondary,
+                            color: isDark 
+                                ? AppColors.textSecondary
+                                : AppColors.textTertiaryLight,
                             size: 24,
                           ),
                   ),

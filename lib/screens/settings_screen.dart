@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
+import '../providers/theme_provider.dart';
 
 /// Settings screen that provides app configuration options
 class SettingsScreen extends StatefulWidget {
@@ -11,10 +13,11 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notificationsEnabled = true;
-  ThemeMode _selectedThemeMode = ThemeMode.system;
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final currentThemeMode = themeProvider.themeMode;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24),
@@ -33,6 +36,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildGeneralSection() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -41,7 +46,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Text(
             'GENERAL',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.textSecondary,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.2,
                 ),
@@ -51,9 +55,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: AppColors.cardDark,
+            color: Theme.of(context).cardTheme.color,
             border: Border.all(
-              color: AppColors.borderDark.withOpacity(0.5),
+              color: isDark
+                  ? AppColors.borderDark.withOpacity(0.5)
+                  : AppColors.borderLightMode,
               width: 1,
             ),
             borderRadius: BorderRadius.circular(12),
@@ -103,6 +109,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildAppearanceSelector() {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final currentThemeMode = themeProvider.themeMode;
+    
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -128,6 +137,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               Expanded(
                 child: _buildThemeOption(
+                  themeProvider,
+                  currentThemeMode,
                   ThemeMode.light,
                   'Light',
                   Icons.wb_sunny,
@@ -136,6 +147,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildThemeOption(
+                  themeProvider,
+                  currentThemeMode,
                   ThemeMode.dark,
                   'Dark',
                   Icons.dark_mode,
@@ -144,6 +157,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildThemeOption(
+                  themeProvider,
+                  currentThemeMode,
                   ThemeMode.system,
                   'System',
                   Icons.settings_suggest,
@@ -156,19 +171,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildThemeOption(ThemeMode mode, String label, IconData icon) {
-    final isSelected = _selectedThemeMode == mode;
+  Widget _buildThemeOption(
+    ThemeProvider themeProvider,
+    ThemeMode currentThemeMode,
+    ThemeMode mode,
+    String label,
+    IconData icon,
+  ) {
+    final isSelected = currentThemeMode == mode;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _selectedThemeMode = mode;
-        });
+        themeProvider.setThemeMode(mode);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
-          color: AppColors.surfaceDark.withOpacity(0.4),
+          color: isDark
+              ? AppColors.surfaceDark.withOpacity(0.4)
+              : AppColors.surfaceLight.withOpacity(0.4),
           border: Border.all(
             color: isSelected
                 ? AppColors.primary
@@ -374,6 +396,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildSupportSection() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -382,7 +406,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Text(
             'SUPPORT',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.textSecondary,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.2,
                 ),
@@ -392,9 +415,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: AppColors.cardDark,
+            color: Theme.of(context).cardTheme.color,
             border: Border.all(
-              color: AppColors.borderDark.withOpacity(0.5),
+              color: isDark
+                  ? AppColors.borderDark.withOpacity(0.5)
+                  : AppColors.borderLightMode,
               width: 1,
             ),
             borderRadius: BorderRadius.circular(12),
@@ -517,10 +542,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildDivider() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       height: 1,
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      color: AppColors.borderDark.withOpacity(0.5),
+      color: isDark
+          ? AppColors.borderDark.withOpacity(0.5)
+          : AppColors.borderLightMode.withOpacity(0.5),
     );
   }
 
@@ -539,10 +568,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showAboutDialog() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surfaceDark,
+        backgroundColor: isDark
+            ? AppColors.surfaceDark
+            : AppColors.surfaceLight,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),

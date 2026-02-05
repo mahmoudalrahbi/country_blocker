@@ -14,18 +14,24 @@ class StatusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.borderDark.withOpacity(0.5),
+          color: isDark 
+              ? AppColors.borderDark.withOpacity(0.5)
+              : AppColors.borderLightMode,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 12,
+            color: isDark 
+                ? Colors.black.withOpacity(0.3)
+                : Colors.black.withOpacity(0.05),
+            blurRadius: isDark ? 12 : 6,
             offset: const Offset(0, 4),
           ),
         ],
@@ -91,9 +97,7 @@ class StatusCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       'PROTECTION STATUS',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ],
                 ),
@@ -112,7 +116,6 @@ class StatusCard extends StatelessWidget {
                       ? 'Incoming calls from your blocked country list are being automatically rejected.'
                       : 'Call blocking is currently disabled. Enable it to start blocking unwanted calls.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textSecondary,
                     height: 1.5,
                   ),
                 ),

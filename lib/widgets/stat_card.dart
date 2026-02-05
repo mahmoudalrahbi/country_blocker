@@ -22,18 +22,24 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.borderDark.withOpacity(0.5),
+          color: isDark 
+              ? AppColors.borderDark.withOpacity(0.5)
+              : AppColors.borderLightMode,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 8,
+            color: isDark
+                ? Colors.black.withOpacity(0.2)
+                : Colors.black.withOpacity(0.05),
+            blurRadius: isDark ? 8 : 6,
             offset: const Offset(0, 2),
           ),
         ],
@@ -50,9 +56,7 @@ class StatCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   title.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+                  style: Theme.of(context).textTheme.labelSmall,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -60,7 +64,9 @@ class StatCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceDark.withOpacity(0.5),
+                  color: isDark
+                      ? AppColors.surfaceDark.withOpacity(0.5)
+                      : AppColors.surfaceLight.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -109,9 +115,7 @@ class StatCard extends StatelessWidget {
           else if (subtitle != null)
             Text(
               subtitle!,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppColors.textSecondary,
-              ),
+              style: Theme.of(context).textTheme.labelSmall,
             ),
         ],
       ),

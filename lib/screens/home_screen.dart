@@ -96,7 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: AppColors.borderDark.withOpacity(0.5),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.borderDark.withOpacity(0.5)
+                  : AppColors.borderLightMode.withOpacity(0.5),
               width: 1,
             ),
           ),
@@ -264,6 +266,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Blocklist Tab
   Widget _buildBlocklistTab(BlockedProvider provider) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     // Filter countries based on search query
     final filteredCountries = provider.blockedList.where((country) {
       if (_searchQuery.isEmpty) return true;
@@ -279,17 +283,42 @@ class _HomeScreenState extends State<HomeScreen> {
           child: TextField(
             controller: _searchController,
             onChanged: _onSearchChanged,
+            style: Theme.of(context).textTheme.bodyLarge,
             decoration: InputDecoration(
               hintText: 'Search blocked rules...',
-              prefixIcon: const Icon(
+              prefixIcon: Icon(
                 Icons.search,
-                color: AppColors.textSecondary,
+                color: isDark
+                    ? AppColors.textTertiary
+                    : AppColors.textTertiaryLight,
+                size: 20,
               ),
               filled: true,
-              fillColor: AppColors.inputDark,
+              fillColor: Theme.of(context).cardTheme.color,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: isDark
+                      ? AppColors.borderDark.withOpacity(0.5)
+                      : AppColors.borderLightMode,
+                  width: 1,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: isDark
+                      ? AppColors.borderDark.withOpacity(0.5)
+                      : AppColors.borderLightMode,
+                  width: 1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: AppColors.primary,
+                  width: 1,
+                ),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
