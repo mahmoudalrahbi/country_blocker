@@ -136,7 +136,7 @@ class _BlocklistTabState extends State<BlocklistTab> {
                       Icon(
                         Icons.public_off,
                         size: 64,
-                        color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight, // Fixed: was textTertiary
+                        color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
                       ),
                       const SizedBox(height: 16),
                       Text(
@@ -144,7 +144,7 @@ class _BlocklistTabState extends State<BlocklistTab> {
                             ? 'No blocked countries yet'
                             : 'No results found',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight, // Fixed: was textSecondary
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                       const SizedBox(height: 8),

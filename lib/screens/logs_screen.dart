@@ -175,9 +175,7 @@ class _LogsScreenState extends State<LogsScreen> {
           Icon(
             Icons.history,
             size: 64,
-            color: isDark
-                ? AppColors.textTertiaryDark // Fixed: was textTertiary
-                : AppColors.textTertiaryLight,
+            color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -262,102 +260,90 @@ class _LogsScreenState extends State<LogsScreen> {
 
     return Opacity(
       opacity: opacity,
-      child: Container(
+      child: Card(
         margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: theme.cardTheme.color,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isDark
-                ? AppColors.borderDark.withOpacity(0.5)
-                : AppColors.borderLight.withOpacity(0.5),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            // Country flag
-            if (flagEmoji != null)
-              Text(
-                flagEmoji,
-                style: const TextStyle(fontSize: 32),
-              )
-            else
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              // Country flag
+              if (flagEmoji != null)
+                Text(
+                  flagEmoji,
+                  style: const TextStyle(fontSize: 32),
+                )
+              else
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.flag,
+                    color: theme.colorScheme.onSurfaceVariant,
+                    size: 18,
+                  ),
+                ),
+              const SizedBox(width: 16),
+              
+              // Phone number and details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Phone number only (full width)
+                    Text(
+                      log.phoneNumber,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    
+                    // Country name and timestamp
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            log.countryName,
+                            style: theme.textTheme.bodySmall,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          _formatTimestamp(log.timestamp),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              
+              // Block icon
               Container(
                 width: 32,
                 height: 32,
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.surfaceDark
-                      : AppColors.surfaceLight,
-                  borderRadius: BorderRadius.circular(8),
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
+                  shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.flag,
-                  color: isDark
-                      ? AppColors.textTertiaryDark // Fixed
-                      : AppColors.textTertiaryLight,
+                  Icons.block,
+                  color: theme.colorScheme.error,
                   size: 18,
                 ),
               ),
-            const SizedBox(width: 16),
-            
-            // Phone number and details
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Phone number only (full width)
-                  Text(
-                    log.phoneNumber,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  
-                  // Country name and timestamp
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          log.countryName,
-                          style: theme.textTheme.bodySmall,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        _formatTimestamp(log.timestamp),
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            
-            // Block icon
-            Container(
-              width: 32,
-              height: 32,
-              decoration: const BoxDecoration(
-                color: Colors.transparent,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.block,
-                color: AppColors.error,
-                size: 18,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

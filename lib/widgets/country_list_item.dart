@@ -27,103 +27,82 @@ class CountryListItem extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     
-    return Container(
+    return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: BoxDecoration(
-        color: theme.cardTheme.color,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isDark
-              ? AppColors.borderDark.withOpacity(0.3)
-              : AppColors.borderLight.withOpacity(0.5),
-          width: 1,
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {},
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                // Flag or Icon
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? AppColors.surfaceDark
-                        : AppColors.surfaceLight,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: isDark
-                          ? AppColors.borderDark.withOpacity(0.5)
-                          : AppColors.borderLight,
-                      width: 1,
-                    ),
-                  ),
-                  child: Center(
-                    child: flagEmoji != null
-                        ? Text(
-                            flagEmoji!,
-                            style: const TextStyle(fontSize: 24),
-                          )
-                        : Icon(
-                            Icons.public,
-                            color: isDark 
-                                ? AppColors.textSecondaryDark
-                                : AppColors.textTertiaryLight,
-                            size: 24,
-                          ),
+      child: InkWell(
+        onTap: () {},
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              // Flag or Icon
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: theme.colorScheme.outline.withOpacity(0.5),
+                    width: 1,
                   ),
                 ),
-                const SizedBox(width: 16),
-                
-                // Country info
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        countryName,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
+                child: Center(
+                  child: flagEmoji != null
+                      ? Text(
+                          flagEmoji!,
+                          style: const TextStyle(fontSize: 24),
+                        )
+                      : Icon(
+                          Icons.public,
+                          color: theme.colorScheme.onSurfaceVariant,
+                          size: 24,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 16),
+              
+              // Country info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      countryName,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '+$phoneCode${subtitle != null ? ' • $subtitle' : ''}',
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '+$phoneCode${subtitle != null ? ' • $subtitle' : ''}',
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                
-                // Toggle switch
-                Transform.scale(
-                  scale: 0.8,
-                  child: Switch(
-                    value: isEnabled,
-                    onChanged: onToggle,
-                    activeColor: AppColors.primary,
-                    activeTrackColor: AppColors.primary.withOpacity(0.5),
-                  ),
+              ),
+              const SizedBox(width: 12),
+              
+              // Toggle switch
+              Transform.scale(
+                scale: 0.8,
+                child: Switch.adaptive(
+                  value: isEnabled,
+                  onChanged: onToggle,
                 ),
-                
-                // Delete button
-                IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-                  onPressed: onDelete,
-                  iconSize: 22,
-                ),
-              ],
-            ),
+              ),
+              
+              // Delete button
+              IconButton(
+                icon: const Icon(Icons.delete_outline),
+                color: theme.colorScheme.onSurfaceVariant,
+                onPressed: onDelete,
+                iconSize: 22,
+              ),
+            ],
           ),
         ),
       ),

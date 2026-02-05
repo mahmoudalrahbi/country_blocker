@@ -84,9 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: isDark
-                  ? AppColors.borderDark.withOpacity(0.5)
-                  : AppColors.borderLight.withOpacity(0.5),
+              color: theme.colorScheme.outline.withOpacity(0.5),
               width: 1,
             ),
           ),
@@ -163,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (_selectedIndex == 1 || _selectedIndex == 3)
           IconButton(
             icon: const Icon(Icons.more_vert),
-            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight, // Fixed
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
             onPressed: () {
               // TODO: Show more options
             },
@@ -172,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(
               Icons.filter_list,
-              color: (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight).withOpacity(0.7), // Fixed
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             onPressed: () {
               // TODO: Show filter options

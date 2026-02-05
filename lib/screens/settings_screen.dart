@@ -51,18 +51,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        Container(
+        Card(
           margin: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-            color: theme.cardTheme.color,
-            border: Border.all(
-              color: isDark
-                  ? AppColors.borderDark.withOpacity(0.5)
-                  : AppColors.borderLight,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(16),
-          ),
           child: Column(
             children: [
               _buildNotificationToggle(),
@@ -96,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           const Spacer(),
-          _buildIOSToggle(
+          Switch.adaptive(
             value: _notificationsEnabled,
             onChanged: (value) {
               setState(() {
@@ -418,18 +408,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        Container(
+        Card(
           margin: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-            color: theme.cardTheme.color,
-            border: Border.all(
-              color: isDark
-                  ? AppColors.borderDark.withOpacity(0.5)
-                  : AppColors.borderLight,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(16),
-          ),
           child: Column(
             children: [
               _buildMenuItem(
@@ -511,43 +491,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildIOSToggle({
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) {
-    return GestureDetector(
-      onTap: () => onChanged(!value),
-      child: Container(
-        width: 44,
-        height: 24,
-        decoration: BoxDecoration(
-          color: value ? AppColors.primary : AppColors.borderDark,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: AnimatedAlign(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
-            width: 20,
-            height: 20,
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildDivider() {
     final theme = Theme.of(context);

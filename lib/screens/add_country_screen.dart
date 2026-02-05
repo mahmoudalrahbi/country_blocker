@@ -82,7 +82,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight, // Fixed: was inputDark
+                  color: theme.colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
@@ -123,8 +123,8 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               const SizedBox(height: 8),
               Text(
                 'Block calls from specific international or local prefixes.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight, // Fixed: was textSecondary
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 24),
@@ -132,8 +132,8 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               // Country Code input
               Text(
                 'COUNTRY CODE',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight, // Fixed
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 8),
@@ -144,8 +144,8 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                 decoration: InputDecoration(
                   hintText: '1',
                   prefixText: '+',
-                  prefixStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight, // Fixed
+                  prefixStyle: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -154,8 +154,8 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               // Name input
               Text(
                 'NAME (OPTIONAL)',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight, // Fixed
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 8),
@@ -169,35 +169,39 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               const SizedBox(height: 24),
               
               // Info box
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.05),
-                  border: Border.all(
-                    color: AppColors.primary.withOpacity(0.1),
+              Card(
+                color: theme.colorScheme.surfaceContainerHighest,
+                elevation: 0,
+                margin: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(
+                    color: theme.colorScheme.outline.withOpacity(0.2),
                     width: 1,
                   ),
-                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(
-                      Icons.info_outline,
-                      color: AppColors.primary,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'All incoming calls starting with this prefix will be automatically blocked.',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight, // Fixed: was textPrimary
-                          height: 1.5,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        color: theme.colorScheme.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'All incoming calls starting with this prefix will be automatically blocked.',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                            height: 1.5,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 32),
@@ -211,8 +215,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    shadowColor: AppColors.primary.withOpacity(0.3),
-                    elevation: 8,
+                    elevation: 4,
                   ),
                   child: const Text(
                     'Save to Block List',
@@ -260,6 +263,7 @@ class _TabButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
 
     return GestureDetector(
       onTap: onTap,
@@ -273,7 +277,7 @@ class _TabButton extends StatelessWidget {
           label,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            color: isSelected ? Colors.white : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight), // Fixed
+            color: isSelected ? Colors.white : theme.colorScheme.onSurfaceVariant,
             fontWeight: FontWeight.w600,
             fontSize: 13,
           ),

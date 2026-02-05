@@ -13,29 +13,9 @@ class StatusCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardTheme.color,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isDark 
-              ? AppColors.borderDark.withOpacity(0.5)
-              : AppColors.borderLight, // Fixed: was borderLightMode
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark 
-                ? Colors.black.withOpacity(0.3)
-                : Colors.black.withOpacity(0.05),
-            blurRadius: isDark ? 12 : 6,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+  Widget build(BuildContext context) {    
+    return Card(
+      clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -51,10 +31,6 @@ class StatusCard extends StatelessWidget {
                   Color(0xFF2563EB),
                   Color(0xFF4F46E5),
                 ],
-              ),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
               ),
             ),
             child: Stack(

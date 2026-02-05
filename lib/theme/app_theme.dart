@@ -136,7 +136,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: AppColors.surfaceDark,
         elevation: 0,
-        shadowColor: Colors.black.withOpacity(0.2), // Custom property to be used manually if needed
+        margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: const BorderRadius.all(Radius.circular(16)), // Increased radius
           side: const BorderSide(
@@ -144,6 +144,27 @@ class AppTheme {
             width: 1,
           ),
         ),
+      ),
+
+      // List Tile Theme
+      listTileTheme: const ListTileThemeData(
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+      ),
+      
+      // Switch Theme
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return Colors.white;
+          return null;
+        }),
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return AppColors.primary;
+          return AppColors.borderDark;
+        }),
+        trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
       ),
       
       // AppBar theme
@@ -268,7 +289,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: AppColors.surfaceLight,
         elevation: 0,
-        shadowColor: Colors.black.withOpacity(0.05), // Custom property to be used manually if needed
+        margin: EdgeInsets.zero,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(16)), // Increased radius to match design
           side: BorderSide(
@@ -276,6 +297,27 @@ class AppTheme {
             width: 1,
           ),
         ),
+      ),
+
+      // List Tile Theme
+      listTileTheme: const ListTileThemeData(
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+      ),
+
+      // Switch Theme
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return Colors.white;
+          return null;
+        }),
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return AppColors.primary;
+          return AppColors.borderLight; // Darker border for switch
+        }),
+        trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
       ),
       
       // AppBar theme
