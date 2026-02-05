@@ -23,7 +23,7 @@ class StatusCard extends StatelessWidget {
         border: Border.all(
           color: isDark 
               ? AppColors.borderDark.withOpacity(0.5)
-              : AppColors.borderLightMode,
+              : AppColors.borderLight, // Fixed: was borderLightMode
           width: 1,
         ),
         boxShadow: [

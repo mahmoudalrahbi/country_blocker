@@ -119,13 +119,14 @@ class _LogsScreenState extends State<LogsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final allLogs = _getMockLogs();
     final filteredLogs = _filterLogs(allLogs);
     final groupedLogs = _groupLogsByDate(filteredLogs);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Column(
         children: [
           // Search bar
@@ -134,46 +135,13 @@ class _LogsScreenState extends State<LogsScreen> {
             child: TextField(
               controller: _searchController,
               onChanged: _onSearchChanged,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: theme.textTheme.bodyLarge,
               decoration: InputDecoration(
                 hintText: 'Search number or country',
                 prefixIcon: Icon(
                   Icons.search,
-                  color: isDark 
-                      ? AppColors.textTertiary
-                      : AppColors.textTertiaryLight,
+                  color: theme.inputDecorationTheme.hintStyle?.color,
                   size: 20,
-                ),
-                filled: true,
-                fillColor: Theme.of(context).cardTheme.color,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: isDark
-                        ? AppColors.borderDark.withOpacity(0.5)
-                        : AppColors.borderLightMode,
-                    width: 1,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: isDark
-                        ? AppColors.borderDark.withOpacity(0.5)
-                        : AppColors.borderLightMode,
-                    width: 1,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: AppColors.primary,
-                    width: 1,
-                  ),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
                 ),
               ),
             ),
@@ -197,7 +165,8 @@ class _LogsScreenState extends State<LogsScreen> {
   }
 
   Widget _buildEmptyState() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     
     return Center(
       child: Column(
@@ -207,13 +176,13 @@ class _LogsScreenState extends State<LogsScreen> {
             Icons.history,
             size: 64,
             color: isDark
-                ? AppColors.textTertiary
+                ? AppColors.textTertiaryDark // Fixed: was textTertiary
                 : AppColors.textTertiaryLight,
           ),
           const SizedBox(height: 16),
           Text(
             _searchQuery.isEmpty ? 'No blocked calls yet' : 'No results found',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: theme.textTheme.bodyLarge,
           ),
         ],
       ),
@@ -261,13 +230,13 @@ class _LogsScreenState extends State<LogsScreen> {
   }
 
   Widget _buildDateHeader(String date) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
     
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 12),
       child: Text(
         date.toUpperCase(),
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+        style: theme.textTheme.labelMedium?.copyWith(
           fontSize: 10,
           fontWeight: FontWeight.bold,
           letterSpacing: 1.6,
@@ -281,7 +250,8 @@ class _LogsScreenState extends State<LogsScreen> {
     bool isOlder = false,
     int olderIndex = 0,
   }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final flagEmoji = CountryFlags.getFlagEmoji(log.countryCode);
     
     // Calculate opacity for older items (fade effect)
@@ -296,12 +266,12 @@ class _LogsScreenState extends State<LogsScreen> {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Theme.of(context).cardTheme.color,
+          color: theme.cardTheme.color,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isDark
                 ? AppColors.borderDark.withOpacity(0.5)
-                : AppColors.borderLightMode,
+                : AppColors.borderLight.withOpacity(0.5),
             width: 1,
           ),
         ),
@@ -326,7 +296,7 @@ class _LogsScreenState extends State<LogsScreen> {
                 child: Icon(
                   Icons.flag,
                   color: isDark
-                      ? AppColors.textTertiary
+                      ? AppColors.textTertiaryDark // Fixed
                       : AppColors.textTertiaryLight,
                   size: 18,
                 ),
@@ -341,7 +311,7 @@ class _LogsScreenState extends State<LogsScreen> {
                   // Phone number only (full width)
                   Text(
                     log.phoneNumber,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    style: theme.textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -354,14 +324,14 @@ class _LogsScreenState extends State<LogsScreen> {
                       Flexible(
                         child: Text(
                           log.countryName,
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: theme.textTheme.bodySmall,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(width: 8),
                       Text(
                         _formatTimestamp(log.timestamp),
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        style: theme.textTheme.labelSmall?.copyWith(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                         ),
@@ -394,8 +364,7 @@ class _LogsScreenState extends State<LogsScreen> {
   }
 
   String _formatTimestamp(DateTime timestamp) {
-    final now = DateTime.now();
-    final difference = now.difference(timestamp);
+    final difference = DateTime.now().difference(timestamp);
     
     // Just now (< 5 minutes)
     if (difference.inMinutes < 5) {

@@ -61,6 +61,9 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -79,7 +82,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: AppColors.inputDark,
+                  color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight, // Fixed: was inputDark
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
@@ -121,7 +124,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               Text(
                 'Block calls from specific international or local prefixes.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight, // Fixed: was textSecondary
                 ),
               ),
               const SizedBox(height: 24),
@@ -130,7 +133,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               Text(
                 'COUNTRY CODE',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.textSecondary,
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight, // Fixed
                 ),
               ),
               const SizedBox(height: 8),
@@ -142,7 +145,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                   hintText: '1',
                   prefixText: '+',
                   prefixStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppColors.textSecondary,
+                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight, // Fixed
                   ),
                 ),
               ),
@@ -152,7 +155,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               Text(
                 'NAME (OPTIONAL)',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.textSecondary,
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight, // Fixed
                 ),
               ),
               const SizedBox(height: 8),
@@ -189,7 +192,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                       child: Text(
                         'All incoming calls starting with this prefix will be automatically blocked.',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textPrimary,
+                          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight, // Fixed: was textPrimary
                           height: 1.5,
                         ),
                       ),
@@ -256,6 +259,8 @@ class _TabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -268,7 +273,7 @@ class _TabButton extends StatelessWidget {
           label,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            color: isSelected ? Colors.white : AppColors.textSecondary,
+            color: isSelected ? Colors.white : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight), // Fixed
             fontWeight: FontWeight.w600,
             fontSize: 13,
           ),

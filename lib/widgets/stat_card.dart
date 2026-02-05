@@ -22,16 +22,17 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).cardTheme.color,
+        color: theme.cardTheme.color,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark 
               ? AppColors.borderDark.withOpacity(0.5)
-              : AppColors.borderLightMode,
+              : AppColors.borderLight,
           width: 1,
         ),
         boxShadow: [
@@ -56,7 +57,7 @@ class StatCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   title.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  style: theme.textTheme.labelSmall?.copyWith(
                     fontSize: 11,
                   ),
                   maxLines: 2,
@@ -84,7 +85,7 @@ class StatCard extends StatelessWidget {
           // Value
           Text(
             value,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+            style: theme.textTheme.displaySmall?.copyWith(
               fontSize: 28,
               fontWeight: FontWeight.bold,
             ),
@@ -95,7 +96,7 @@ class StatCard extends StatelessWidget {
           if (trend != null && isTrendPositive != null)
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.trending_up,
                   size: 14,
                   color: AppColors.success,
@@ -104,7 +105,7 @@ class StatCard extends StatelessWidget {
                 Flexible(
                   child: Text(
                     trend!,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    style: theme.textTheme.labelSmall?.copyWith(
                       color: AppColors.success,
                       fontWeight: FontWeight.bold,
                     ),
@@ -117,7 +118,7 @@ class StatCard extends StatelessWidget {
           else if (subtitle != null)
             Text(
               subtitle!,
-              style: Theme.of(context).textTheme.labelSmall,
+              style: theme.textTheme.labelSmall,
             ),
         ],
       ),

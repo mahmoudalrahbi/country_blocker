@@ -24,17 +24,18 @@ class CountryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardTheme.color,
+        color: theme.cardTheme.color,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDark
               ? AppColors.borderDark.withOpacity(0.3)
-              : AppColors.borderLightMode.withOpacity(0.5),
+              : AppColors.borderLight.withOpacity(0.5),
           width: 1,
         ),
       ),
@@ -53,9 +54,15 @@ class CountryListItem extends StatelessWidget {
                   height: 44,
                   decoration: BoxDecoration(
                     color: isDark
-                        ? AppColors.inputDark
-                        : AppColors.inputLight,
+                        ? AppColors.surfaceDark
+                        : AppColors.surfaceLight,
                     borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.borderDark.withOpacity(0.5)
+                          : AppColors.borderLight,
+                      width: 1,
+                    ),
                   ),
                   child: Center(
                     child: flagEmoji != null
@@ -66,7 +73,7 @@ class CountryListItem extends StatelessWidget {
                         : Icon(
                             Icons.public,
                             color: isDark 
-                                ? AppColors.textSecondary
+                                ? AppColors.textSecondaryDark
                                 : AppColors.textTertiaryLight,
                             size: 24,
                           ),
@@ -81,7 +88,7 @@ class CountryListItem extends StatelessWidget {
                     children: [
                       Text(
                         countryName,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        style: theme.textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                         maxLines: 1,
@@ -90,7 +97,7 @@ class CountryListItem extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         '+$phoneCode${subtitle != null ? ' • $subtitle' : ''}',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: theme.textTheme.bodySmall,
                       ),
                     ],
                   ),
@@ -111,7 +118,7 @@ class CountryListItem extends StatelessWidget {
                 // Delete button
                 IconButton(
                   icon: const Icon(Icons.delete_outline),
-                  color: AppColors.textSecondary,
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
                   onPressed: onDelete,
                   iconSize: 22,
                 ),
