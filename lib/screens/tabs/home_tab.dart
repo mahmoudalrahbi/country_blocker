@@ -31,31 +31,9 @@ class HomeTab extends StatelessWidget {
           const SizedBox(height: 32),
           
           // Overview header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Overview',
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  'Last 30 days',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
+          Text(
+            'Overview',
+            style: Theme.of(context).textTheme.headlineLarge,
           ),
           const SizedBox(height: 16),
           

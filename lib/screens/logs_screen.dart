@@ -29,54 +29,7 @@ class _LogsScreenState extends State<LogsScreen> {
 
   // Mock data for demonstration - replace with actual data from provider
   List<BlockedCallLog> _getMockLogs() {
-    final now = DateTime.now();
-    return [
-      // Today's logs
-      BlockedCallLog(
-        phoneNumber: '+91 98765 43210',
-        countryName: 'India',
-        countryCode: 'IN',
-        reason: BlockReason.spamDatabase,
-        timestamp: now.subtract(const Duration(minutes: 2)),
-      ),
-      BlockedCallLog(
-        phoneNumber: '+1 (555) 012-3456',
-        countryName: 'United States',
-        countryCode: 'US',
-        reason: BlockReason.ruleMarketing,
-        timestamp: now.subtract(const Duration(hours: 2, minutes: 40)),
-      ),
-      BlockedCallLog(
-        phoneNumber: '+234 801 234 5678',
-        countryName: 'Nigeria',
-        countryCode: 'NG',
-        reason: BlockReason.countryBlocked,
-        timestamp: now.subtract(const Duration(hours: 5, minutes: 55)),
-      ),
-      
-      // Yesterday's logs
-      BlockedCallLog(
-        phoneNumber: '+7 495 123-45-67',
-        countryName: 'Russia',
-        countryCode: 'RU',
-        reason: BlockReason.countryBlocked,
-        timestamp: now.subtract(const Duration(days: 1, hours: 1, minutes: 15)),
-      ),
-      BlockedCallLog(
-        phoneNumber: '+44 20 7946 0958',
-        countryName: 'United Kingdom',
-        countryCode: 'GB',
-        reason: BlockReason.ruleUnknownCaller,
-        timestamp: now.subtract(const Duration(days: 1, hours: 6, minutes: 48)),
-      ),
-      BlockedCallLog(
-        phoneNumber: '+55 11 91234-5678',
-        countryName: 'Brazil',
-        countryCode: 'BR',
-        reason: BlockReason.countryBlocked,
-        timestamp: now.subtract(const Duration(days: 1, hours: 15, minutes: 30)),
-      ),
-    ];
+    return [];
   }
 
   Map<String, List<BlockedCallLog>> _groupLogsByDate(List<BlockedCallLog> logs) {

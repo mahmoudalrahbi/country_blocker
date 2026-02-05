@@ -39,17 +39,7 @@ class _BlocklistTabState extends State<BlocklistTab> {
     return CountryFlags.getFlagEmoji(isoCode);
   }
 
-  String _getSubtitle(int index) {
-    const subtitles = [
-      'Custom Code Rule',
-      'High spam activity',
-      'Blocked by user',
-      'Frequent marketing',
-      'Potential fraud',
-      'Unknown source',
-    ];
-    return subtitles[index % subtitles.length];
-  }
+
 
   void _showDeleteDialog(BuildContext context, String phoneCode, String name) {
     showDialog(
@@ -170,7 +160,7 @@ class _BlocklistTabState extends State<BlocklistTab> {
                       countryName: country.name,
                       phoneCode: country.phoneCode,
                       flagEmoji: _getFlagEmoji(country.isoCode),
-                      subtitle: _getSubtitle(index),
+
                       isEnabled: isEnabled,
                       onToggle: (value) {
                         setState(() {
