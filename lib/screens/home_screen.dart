@@ -21,17 +21,44 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   bool _isBlockingActive = true;
   
+  @override
+  void initState() {
+    super.initState();
+    _checkPermissions();
+  }
+
+  Future<void> _checkPermissions() async {
+    await PermissionsService.requestPhonePermissions();
+  }
+
   void _onNavItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  void _toggleBlocking() {
+  void _toggleBlocking() async {
+    // Ensure we have permissions before enabling
+    if (!_isBlockingActive) {
+      bool hasPerms = await PermissionsService.requestPhonePermissions();
+      if (!hasPerms) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Permissions required to enable blocking'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+        return;
+      }
+    }
+
     setState(() {
       _isBlockingActive = !_isBlockingActive;
     });
     
+    if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
