@@ -21,7 +21,7 @@ class _BlocklistTabState extends State<BlocklistTab> {
   String _searchQuery = '';
   // Store toggle states locally for UI responsiveness before persisting if needed
   // In a real app, this might be better handled in the provider model directly
-  final Map<String, bool> _toggleStates = {};
+  // Removed local state map
 
   @override
   void dispose() {
@@ -52,6 +52,9 @@ class _BlocklistTabState extends State<BlocklistTab> {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Cancel'),
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -150,23 +153,18 @@ class _BlocklistTabState extends State<BlocklistTab> {
                   itemCount: filteredCountries.length,
                   itemBuilder: (context, index) {
                     final country = filteredCountries[index];
-                    final key = country.phoneCode;
-                    
-                    // Initialize toggle state if not exists, but don't do it in build
-                    // We just use the ?? true default here for display
-                    final isEnabled = _toggleStates[key] ?? true;
                     
                     return CountryListItem(
                       countryName: country.name,
                       phoneCode: country.phoneCode,
                       flagEmoji: _getFlagEmoji(country.isoCode),
-
-                      isEnabled: isEnabled,
-                      onToggle: (value) {
-                        setState(() {
-                          _toggleStates[key] = value;
-                        });
+                      isEnabled: country.isEnabled,
+                      onToggle: (value) async {
+                         await widget.provider.toggleCountry(country.phoneCode, value);
                         
+                        if (!context.mounted) return;
+
+                        ScaffoldMessenger.of(context).clearSnackBars();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(

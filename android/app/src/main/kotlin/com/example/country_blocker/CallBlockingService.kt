@@ -39,6 +39,15 @@ class CallBlockingService : CallScreeningService() {
     private fun shouldBlock(number: String): Boolean {
         // Read directly from Shared Preferences used by Flutter
         val prefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+        
+        // 1. GLOBAL SWITCH CHECK
+        // Default to true if not found to be safe, but app initializes it.
+        val isGlobalBlockingEnabled = prefs.getBoolean("flutter.blocking_enabled", true)
+        if (!isGlobalBlockingEnabled) {
+            // If global switch is OFF, allow everything
+            return false
+        }
+        
         val blockedJsonString = prefs.getString("flutter.blocked_countries_simple", null) ?: return false
         
         val phoneUtil = PhoneNumberUtil.getInstance()
@@ -80,9 +89,17 @@ class CallBlockingService : CallScreeningService() {
             val jsonArray = org.json.JSONArray(blockedJsonString)
             for (i in 0 until jsonArray.length()) {
                 val item = jsonArray.getJSONObject(i)
+                
+                // 2. PER-COUNTRY SWITCH CHECK
+                // Check if this specific rule is enabled. Default to true if missing.
+                val isRuleEnabled = if (item.has("isEnabled")) item.getBoolean("isEnabled") else true
+                if (!isRuleEnabled) {
+                    continue
+                }
+                
                 val blockedCodeStr = item.getString("phoneCode") // "1", "971"
                 
-                // 1. Strict Code Match via LibPhoneNumber
+                // 3. Strict Code Match via LibPhoneNumber
                 try {
                     val blockedCode = blockedCodeStr.toInt()
                     if (isValidNumber && incomingCountryCode == blockedCode) {

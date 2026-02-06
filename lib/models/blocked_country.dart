@@ -4,11 +4,13 @@ class BlockedCountry {
   final String isoCode; // e.g. "US"
   final String phoneCode; // e.g. "1" or "971"
   final String name;
+  final bool isEnabled;
 
   BlockedCountry({
     required this.isoCode,
     required this.phoneCode,
     required this.name,
+    this.isEnabled = true,
   });
 
   Map<String, dynamic> toMap() {
@@ -16,6 +18,7 @@ class BlockedCountry {
       'isoCode': isoCode,
       'phoneCode': phoneCode,
       'name': name,
+      'isEnabled': isEnabled,
     };
   }
 
@@ -24,6 +27,7 @@ class BlockedCountry {
       isoCode: map['isoCode'] ?? '',
       phoneCode: map['phoneCode'] ?? '',
       name: map['name'] ?? '',
+      isEnabled: map['isEnabled'] ?? true,
     );
   }
 

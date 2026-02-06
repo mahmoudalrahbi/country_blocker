@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  bool _isBlockingActive = true;
+
   
   @override
   void initState() {
@@ -38,8 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _toggleBlocking() async {
+    final provider = Provider.of<BlockedProvider>(context, listen: false);
+
     // Ensure we have permissions before enabling
-    if (!_isBlockingActive) {
+    if (!provider.isBlockingActive) {
       bool hasPerms = await PermissionsService.requestPhonePermissions();
       if (!hasPerms) {
         if (!mounted) return;
@@ -53,16 +55,14 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    setState(() {
-      _isBlockingActive = !_isBlockingActive;
-    });
+    await provider.toggleGlobalBlocking();
     
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          _isBlockingActive
+          provider.isBlockingActive
               ? 'Call blocking enabled'
               : 'Call blocking disabled',
         ),
@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 HomeTab(
                   provider: provider,
-                  isBlockingActive: _isBlockingActive,
+                  isBlockingActive: provider.isBlockingActive,
                   onToggleBlocking: _toggleBlocking,
                 ),
                 BlocklistTab(provider: provider),
