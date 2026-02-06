@@ -82,7 +82,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest,
+                  color: theme.inputDecorationTheme.fillColor,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
