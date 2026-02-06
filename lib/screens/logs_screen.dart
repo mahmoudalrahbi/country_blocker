@@ -73,7 +73,7 @@ class _LogsScreenState extends State<LogsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+
     final allLogs = _getMockLogs();
     final filteredLogs = _filterLogs(allLogs);
     final groupedLogs = _groupLogsByDate(filteredLogs);
@@ -119,7 +119,7 @@ class _LogsScreenState extends State<LogsScreen> {
 
   Widget _buildEmptyState() {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+
     
     return Center(
       child: Column(
@@ -128,7 +128,7 @@ class _LogsScreenState extends State<LogsScreen> {
           Icon(
             Icons.history,
             size: 64,
-            color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+            color: theme.colorScheme.onSurfaceVariant.withValues(alpha:0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -223,7 +223,7 @@ class _LogsScreenState extends State<LogsScreen> {
               if (flagEmoji != null)
                 Text(
                   flagEmoji,
-                  style: const TextStyle(fontSize: 32),
+                  style: theme.textTheme.displayMedium,
                 )
               else
                 Container(
@@ -285,7 +285,7 @@ class _LogsScreenState extends State<LogsScreen> {
               Container(
                 width: 32,
                 height: 32,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.transparent,
                   shape: BoxShape.circle,
                 ),

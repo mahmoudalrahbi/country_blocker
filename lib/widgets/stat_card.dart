@@ -49,7 +49,7 @@ class StatCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(Spacing.s),
                   decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                    color: colorScheme.surfaceContainerHighest.withValues(alpha:0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(

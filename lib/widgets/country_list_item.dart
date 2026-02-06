@@ -44,7 +44,7 @@ class CountryListItem extends StatelessWidget {
                   color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: colorScheme.outline.withOpacity(0.5),
+                    color: colorScheme.outline.withValues(alpha:0.5),
                     width: 1,
                   ),
                 ),
@@ -52,7 +52,7 @@ class CountryListItem extends StatelessWidget {
                   child: flagEmoji != null
                       ? Text(
                           flagEmoji!,
-                          style: const TextStyle(fontSize: 24),
+                          style: theme.textTheme.headlineSmall,
                         )
                       : Icon(
                           Icons.public,

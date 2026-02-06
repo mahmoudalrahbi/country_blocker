@@ -136,12 +136,9 @@ class AppTheme {
         onSurface: AppColors.textPrimaryDark,
         surfaceContainerHighest: Color(0xFF334155), // Lighter distinct surface for containers
         onSurfaceVariant: AppColors.textSecondaryDark,
-        background: AppColors.backgroundDark,
-        onBackground: AppColors.textPrimaryDark,
-        error: AppColors.error,
-        onError: Colors.white,
-        outline: AppColors.borderDark,
-        surfaceVariant: AppColors.surfaceDark, 
+        // background: AppColors.backgroundDark, // Deprecated
+        // onBackground: AppColors.textPrimaryDark, // Deprecated
+        // surfaceVariant: AppColors.surfaceDark, // Deprecated 
       ),
       
       // Scaffold background
@@ -184,7 +181,7 @@ class AppTheme {
       
       // AppBar theme
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.backgroundDark.withOpacity(0.95),
+        backgroundColor: AppColors.backgroundDark.withValues(alpha:0.95),
         elevation: 0,
         centerTitle: true,
         scrolledUnderElevation: 0,
@@ -209,7 +206,7 @@ class AppTheme {
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
           elevation: 0,
-          shadowColor: AppColors.primary.withOpacity(0.3),
+          shadowColor: AppColors.primary.withValues(alpha:0.3),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -228,14 +225,14 @@ class AppTheme {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
-            color: AppColors.borderDark.withOpacity(0.5),
+            color: AppColors.borderDark.withValues(alpha:0.5),
             width: 1,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
-            color: AppColors.borderDark.withOpacity(0.5),
+            color: AppColors.borderDark.withValues(alpha:0.5),
             width: 1,
           ),
         ),
@@ -262,7 +259,7 @@ class AppTheme {
       
       // Bottom navigation bar theme
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: AppColors.backgroundDark.withOpacity(0.95),
+        backgroundColor: AppColors.backgroundDark.withValues(alpha:0.95),
         selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.textTertiaryDark,
         type: BottomNavigationBarType.fixed,
@@ -294,12 +291,9 @@ class AppTheme {
         onSurface: AppColors.textPrimaryLight,
         surfaceContainerHighest: AppColors.surfaceLight, // Used for inner containers (White)
         onSurfaceVariant: AppColors.textSecondaryLight,
-        background: AppColors.surfaceLight, // Swapped: Screen background is now White
-        onBackground: AppColors.textPrimaryLight,
-        error: AppColors.error,
-        onError: Colors.white,
-        outline: AppColors.borderLight,
-        surfaceVariant: AppColors.backgroundLight,
+        // background: AppColors.surfaceLight, // Deprecated
+        // onBackground: AppColors.textPrimaryLight, // Deprecated
+        // surfaceVariant: AppColors.backgroundLight, // Deprecated
       ),
       
       // Scaffold background
@@ -342,7 +336,7 @@ class AppTheme {
       
       // AppBar theme
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.surfaceLight.withOpacity(0.95), // White app bar
+        backgroundColor: AppColors.surfaceLight.withValues(alpha:0.95), // White app bar
         elevation: 0,
         centerTitle: true,
         scrolledUnderElevation: 0,
@@ -368,7 +362,7 @@ class AppTheme {
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
           elevation: 0,
-          shadowColor: AppColors.primary.withOpacity(0.3),
+          shadowColor: AppColors.primary.withValues(alpha:0.3),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -421,7 +415,7 @@ class AppTheme {
 
       // Bottom navigation bar theme
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: AppColors.surfaceLight.withOpacity(0.95), // White nav bar
+        backgroundColor: AppColors.surfaceLight.withValues(alpha:0.95), // White nav bar
         selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.textTertiaryLight,
         type: BottomNavigationBarType.fixed,

@@ -35,7 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildGeneralSection() {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,7 +183,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: Spacing.s),
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerHighest.withOpacity(0.4),
+          color: colorScheme.surfaceContainerHighest.withValues(alpha:0.4),
           border: Border.all(
             color: isSelected
                 ? colorScheme.primary
@@ -479,7 +479,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha:0.2),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(
@@ -500,8 +500,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       height: 1,
       margin: const EdgeInsets.symmetric(horizontal: 16),
       color: isDark
-          ? AppColors.borderDark.withOpacity(0.5)
-          : AppColors.borderLight.withOpacity(0.5),
+          ? AppColors.borderDark.withValues(alpha:0.5)
+          : AppColors.borderLight.withValues(alpha:0.5),
     );
   }
 
@@ -538,7 +538,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha:0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(

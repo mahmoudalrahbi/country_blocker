@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/blocked_country.dart';
 import '../providers/blocked_provider.dart';
-import '../theme/app_theme.dart';
+
 
 class AddCountryScreen extends StatefulWidget {
   const AddCountryScreen({super.key});
@@ -31,9 +31,9 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
 
     if (code.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text('Please enter a country code'),
-          backgroundColor: AppColors.error,
+          backgroundColor: Theme.of(context).colorScheme.error,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -51,7 +51,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('${ name.isEmpty ? 'Country' : name} added to blocklist'),
-        backgroundColor: AppColors.primary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -62,7 +62,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+
 
     return Scaffold(
       appBar: AppBar(
@@ -188,7 +188,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                   side: BorderSide(
-                    color: theme.colorScheme.outline.withOpacity(0.2),
+                    color: theme.colorScheme.outline.withValues(alpha:0.2),
                     width: 1,
                   ),
                 ),
@@ -274,7 +274,7 @@ class _TabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final theme = Theme.of(context);
 
     return GestureDetector(
@@ -282,7 +282,7 @@ class _TabButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.transparent,
+          color: isSelected ? theme.colorScheme.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(

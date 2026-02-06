@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../providers/blocked_provider.dart';
-import '../../theme/app_theme.dart';
+
 import '../../widgets/country_list_item.dart';
 import '../../utils/country_flags.dart';
 
@@ -60,14 +60,14 @@ class _BlocklistTabState extends State<BlocklistTab> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('$name removed from blocklist'),
-                  backgroundColor: AppColors.error,
+                  backgroundColor: Theme.of(context).colorScheme.error,
                   behavior: SnackBarBehavior.floating,
                 ),
               );
             },
-            child: const Text(
+            child: Text(
               'Delete',
-              style: TextStyle(color: AppColors.error),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           ),
         ],
@@ -77,7 +77,7 @@ class _BlocklistTabState extends State<BlocklistTab> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     
     // Filter countries based on search query
     final filteredCountries = widget.provider.blockedList.where((country) {
@@ -126,7 +126,7 @@ class _BlocklistTabState extends State<BlocklistTab> {
                       Icon(
                         Icons.public_off,
                         size: 64,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha:0.5),
                       ),
                       const SizedBox(height: 16),
                       Text(
@@ -174,7 +174,7 @@ class _BlocklistTabState extends State<BlocklistTab> {
                                   ? '${country.name} blocking enabled'
                                   : '${country.name} blocking disabled',
                             ),
-                            backgroundColor: AppColors.primary,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             behavior: SnackBarBehavior.floating,
                             duration: const Duration(seconds: 2),
                           ),

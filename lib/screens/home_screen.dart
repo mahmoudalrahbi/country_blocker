@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/blocked_provider.dart';
-import '../theme/app_theme.dart';
+
 import 'add_country_screen.dart';
 import 'logs_screen.dart';
 import 'settings_screen.dart';
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ? 'Call blocking enabled'
               : 'Call blocking disabled',
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final provider = Provider.of<BlockedProvider>(context);
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+
 
     return Scaffold(
       appBar: _buildAppBar(context),
@@ -111,8 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: theme.colorScheme.outline.withOpacity(0.5),
-              width: 1,
+              color: theme.colorScheme.outline.withValues(alpha:0.1),
+              width: 0.5,
             ),
           ),
         ),
@@ -146,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     String title = 'Country Blocker';
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     
     switch (_selectedIndex) {
       case 1:
@@ -165,12 +165,12 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(12.0),
         child: Container(
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: Theme.of(context).colorScheme.primary.withValues(alpha:0.1),
             shape: BoxShape.circle,
           ),
-          child: const Icon(
+          child: Icon(
             Icons.public_off,
-            color: AppColors.primary,
+            color: Theme.of(context).colorScheme.primary,
             size: 20,
           ),
         ),

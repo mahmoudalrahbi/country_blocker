@@ -25,14 +25,14 @@ class StatusCard extends StatelessWidget {
           // Hero gradient image
           Container(
             height: 140,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.primary,
-                  Color(0xFF2563EB),
-                  Color(0xFF4F46E5),
+                  colorScheme.primary,
+                  colorScheme.primary, // Using primary for consistency or define a variant if needed
+                  colorScheme.primary.withValues(alpha:0.8), // Slight variation for gradient
                 ],
               ),
             ),
@@ -45,7 +45,7 @@ class StatusCard extends StatelessWidget {
                       center: Alignment.center,
                       radius: 1.0,
                       colors: [
-                        Colors.white.withOpacity(0.2),
+                        Colors.white.withValues(alpha:0.2),
                         Colors.transparent,
                       ],
                     ),
@@ -56,7 +56,7 @@ class StatusCard extends StatelessWidget {
                   child: Icon(
                     Icons.phonelink_lock,
                     size: 70,
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withValues(alpha:0.4),
                   ),
                 ),
               ],
@@ -110,7 +110,7 @@ class StatusCard extends StatelessWidget {
                       backgroundColor: colorScheme.primary,
                       foregroundColor: colorScheme.onPrimary,
                       elevation: 0,
-                      shadowColor: colorScheme.primary.withOpacity(0.3),
+                      shadowColor: colorScheme.primary.withValues(alpha:0.3),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -187,11 +187,11 @@ class _PulsingDotState extends State<_PulsingDot>
             width: 8,
             height: 8,
             decoration: BoxDecoration(
-              color: AppColors.error,
+              color: Theme.of(context).colorScheme.error,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.error.withOpacity(_animation.value * 0.4),
+                  color: Theme.of(context).colorScheme.error.withValues(alpha:_animation.value * 0.4),
                   blurRadius: 6,
                   spreadRadius: 1,
                 ),
@@ -213,7 +213,7 @@ class _PulsingDotState extends State<_PulsingDot>
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: AppColors.success.withOpacity(_animation.value),
+                color: AppColors.success.withValues(alpha:_animation.value),
                 blurRadius: 8,
                 spreadRadius: 2,
               ),
