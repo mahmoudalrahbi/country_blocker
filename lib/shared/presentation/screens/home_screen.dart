@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/providers.dart';
-import '../../features/country_blocking/presentation/screens/add_country_screen.dart';
-import '../../features/country_blocking/presentation/screens/logs_screen.dart';
-import '../../features/country_blocking/presentation/screens/tabs/blocklist_tab.dart';
-import '../../features/country_blocking/presentation/screens/tabs/home_tab.dart';
-import '../services/permissions_service.dart';
+import '../../../core/providers.dart';
+import '../../../features/country_blocking/presentation/screens/add_country_screen.dart';
+import '../../../features/country_blocking/presentation/screens/logs_screen.dart';
+import '../../../features/country_blocking/presentation/screens/tabs/blocklist_tab.dart';
+import '../../../features/country_blocking/presentation/screens/tabs/home_tab.dart';
+import '../../services/permissions_service.dart';
 import 'settings_screen.dart';
 
 /// Main home screen with bottom navigation
@@ -37,41 +37,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
-  Future<void> _toggleBlocking() async {
-    final notifier = ref.read(countryBlockingNotifierProvider.notifier);
-    final isActive = ref.read(isBlockingActiveProvider);
 
-    // Ensure we have permissions before enabling
-    if (!isActive) {
-      final hasPerms = await PermissionsService.requestPhonePermissions();
-      if (!hasPerms) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Permissions required to enable blocking'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-        return;
-      }
-    }
-
-    await notifier.toggleGlobalBlocking();
-
-    if (!mounted) return;
-
-    // Read the new status after toggle
-    final newStatus = ref.read(isBlockingActiveProvider);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          newStatus ? 'Call blocking enabled' : 'Call blocking disabled',
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

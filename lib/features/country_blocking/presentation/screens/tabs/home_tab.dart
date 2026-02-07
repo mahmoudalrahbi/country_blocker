@@ -1,19 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/providers.dart';
-import '../widgets/status_card.dart';
-import '../widgets/stat_card.dart';
+import '../../../../../../core/providers.dart';
+import '../../../../../../shared/services/permissions_service.dart';
+import '../../widgets/status_card.dart';
+import '../../widgets/stat_card.dart';
 
 /// Home tab displaying blocking status and statistics
 class HomeTab extends ConsumerWidget {
   const HomeTab({super.key});
 
+  Future<void> _toggleBlocking(BuildContext context, WidgetRef ref) async {
+    final notifier = ref.read(countryBlockingNotifierProvider.notifier);
+    final state = ref.read(countryBlockingNotifierProvider);
+
+    // Ensure we have permissions before enabling
+    if (!state.isBlockingActive) {
+      final hasPerms = await PermissionsService.requestPhonePermissions();
+      if (!hasPerms) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Permissions required to enable blocking'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+        return;
+      }
+    }
+
+    await notifier.toggleGlobalBlocking();
+    
+    // Feedback is handled by UI state change, but we could add a snackbar if desired
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Watch the state from Riverpod provider
     final state = ref.watch(countryBlockingNotifierProvider);
-    final notifier = ref.read(countryBlockingNotifierProvider.notifier);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -23,7 +47,7 @@ class HomeTab extends ConsumerWidget {
           // Status Card
           StatusCard(
             isActive: state.isBlockingActive,
-            onToggle: () => notifier.toggleGlobalBlocking(),
+            onToggle: () => _toggleBlocking(context, ref),
           ),
           const SizedBox(height: 32),
 

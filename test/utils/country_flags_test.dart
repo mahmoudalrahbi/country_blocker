@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:country_blocker/utils/country_flags.dart';
+import 'package:country_blocker/core/utils/country_flags.dart';
 
 void main() {
   group('CountryFlags', () {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/providers.dart';
-import '../../../../core/utils/country_flags.dart';
-import '../widgets/country_list_item.dart';
+import '../../../../../../core/providers.dart';
+import '../../../../../../core/utils/country_flags.dart';
+import '../../widgets/country_list_item.dart';
 
 /// Blocklist tab showing all blocked countries with search functionality
 class BlocklistTab extends ConsumerStatefulWidget {

@@ -2,7 +2,7 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/providers.dart';
+import '../../../../core/providers.dart';
 import '../../domain/entities/blocked_country.dart';
 import '../../domain/usecases/add_blocked_country.dart';
 

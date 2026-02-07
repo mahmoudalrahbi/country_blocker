@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import '../../../../theme/app_theme.dart';
 
 /// A status card widget displaying the current blocking status
 class StatusCard extends StatelessWidget {
@@ -16,7 +16,7 @@ class StatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -31,8 +31,8 @@ class StatusCard extends StatelessWidget {
                 end: Alignment.bottomRight,
                 colors: [
                   colorScheme.primary,
-                  colorScheme.primary, // Using primary for consistency or define a variant if needed
-                  colorScheme.primary.withValues(alpha:0.8), // Slight variation for gradient
+                  colorScheme.primary,
+                  colorScheme.primary.withValues(alpha: 0.8),
                 ],
               ),
             ),
@@ -45,7 +45,7 @@ class StatusCard extends StatelessWidget {
                       center: Alignment.center,
                       radius: 1.0,
                       colors: [
-                        Colors.white.withValues(alpha:0.2),
+                        Colors.white.withValues(alpha: 0.2),
                         Colors.transparent,
                       ],
                     ),
@@ -56,16 +56,16 @@ class StatusCard extends StatelessWidget {
                   child: Icon(
                     Icons.phonelink_lock,
                     size: 70,
-                    color: Colors.white.withValues(alpha:0.4),
+                    color: Colors.white.withValues(alpha: 0.4),
                   ),
                 ),
               ],
             ),
           ),
-          
+
           // Status content
           Padding(
-            padding: const EdgeInsets.all(Spacing.l),
+            padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -73,22 +73,22 @@ class StatusCard extends StatelessWidget {
                 Row(
                   children: [
                     _PulsingDot(isActive: isActive),
-                    const SizedBox(width: Spacing.s),
+                    const SizedBox(width: 8),
                     Text(
                       'PROTECTION STATUS',
                       style: theme.textTheme.labelSmall,
                     ),
                   ],
                 ),
-                const SizedBox(height: Spacing.s),
-                
+                const SizedBox(height: 8),
+
                 // Title
                 Text(
                   isActive ? 'Blocking Active' : 'Blocking Disabled',
                   style: theme.textTheme.displaySmall,
                 ),
-                const SizedBox(height: Spacing.m),
-                
+                const SizedBox(height: 16),
+
                 // Description
                 Text(
                   isActive
@@ -98,8 +98,8 @@ class StatusCard extends StatelessWidget {
                     height: 1.5,
                   ),
                 ),
-                const SizedBox(height: Spacing.l),
-                
+                const SizedBox(height: 24),
+
                 // Toggle button
                 SizedBox(
                   width: double.infinity,
@@ -110,7 +110,7 @@ class StatusCard extends StatelessWidget {
                       backgroundColor: colorScheme.primary,
                       foregroundColor: colorScheme.onPrimary,
                       elevation: 0,
-                      shadowColor: colorScheme.primary.withValues(alpha:0.3),
+                      shadowColor: colorScheme.primary.withValues(alpha: 0.3),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -122,7 +122,7 @@ class StatusCard extends StatelessWidget {
                           isActive ? Icons.pause_circle : Icons.play_circle,
                           size: 20,
                         ),
-                        const SizedBox(width: Spacing.s),
+                        const SizedBox(width: 8),
                         Text(
                           isActive ? 'Disable Blocking' : 'Enable Blocking',
                           style: const TextStyle(
@@ -191,7 +191,10 @@ class _PulsingDotState extends State<_PulsingDot>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.error.withValues(alpha:_animation.value * 0.4),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .error
+                      .withValues(alpha: _animation.value * 0.4),
                   blurRadius: 6,
                   spreadRadius: 1,
                 ),
@@ -213,7 +216,7 @@ class _PulsingDotState extends State<_PulsingDot>
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: AppColors.success.withValues(alpha:_animation.value),
+                color: AppColors.success.withValues(alpha: _animation.value),
                 blurRadius: 8,
                 spreadRadius: 2,
               ),
