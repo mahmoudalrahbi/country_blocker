@@ -59,5 +59,11 @@
   "enableBlocking": "تفعيل الحظر",
   "blockedCalls": "المكالمات المحظورة",
   "formattedTotalBlocked": "إجمالي المحظور",
-  "countries": "الدول"
+  "countries": "الدول",
+  "general": "عام",
+  "notifications": "الإشعارات",
+  "support": "الدعم",
+  "helpCenterComingSoon": "مركز المساعدة قريباً",
+  "aboutDescription": "حظر المكالمات الدولية غير المرغوب فيها باستخدام رمز الدولة. تحكم في هاتفك واحمِ نفسك من البريد العشوائي والاحتيال.",
+  "copyright": "© 2026 {appTitle}. جميع الحقوق محفوظة."
 }

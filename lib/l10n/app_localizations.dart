@@ -451,6 +451,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Countries'**
   String get countries;
+
+  /// No description provided for @general.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get general;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @support.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get support;
+
+  /// No description provided for @helpCenterComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Help Center coming soon'**
+  String get helpCenterComingSoon;
+
+  /// No description provided for @aboutDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Block unwanted international calls by country code. Take control of your phone and protect yourself from spam and fraud.'**
+  String get aboutDescription;
+
+  /// No description provided for @copyright.
+  ///
+  /// In en, this message translates to:
+  /// **'© 2026 {appTitle}. All rights reserved.'**
+  String copyright(String appTitle);
 }
 
 class _AppLocalizationsDelegate

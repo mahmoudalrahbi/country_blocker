@@ -44,7 +44,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            'GENERAL',
+            AppLocalizations.of(context)!.general,
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.bold,
               letterSpacing: 1.2,
@@ -82,7 +82,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const SizedBox(width: 16),
           Text(
-            'Notifications',
+            AppLocalizations.of(context)!.notifications,
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w500,
             ),
@@ -426,7 +426,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            'SUPPORT',
+            AppLocalizations.of(context)!.support,
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.bold,
               letterSpacing: 1.2,
@@ -444,8 +444,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 Colors.orange, // Distinct functional color
                 () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Help Center coming soon'),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.helpCenterComingSoon),
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
@@ -584,14 +584,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Block unwanted international calls by country code. Take control of your phone and protect yourself from spam and fraud.',
+              AppLocalizations.of(context)!.aboutDescription,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 16),
             Text(
-              '© 2026 ${AppLocalizations.of(context)!.appTitle}. All rights reserved.',
+              AppLocalizations.of(context)!.copyright(AppLocalizations.of(context)!.appTitle),
               style: theme.textTheme.bodySmall?.copyWith(
                 fontSize: 10,
               ),

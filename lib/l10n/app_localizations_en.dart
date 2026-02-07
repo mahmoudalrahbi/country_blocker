@@ -192,4 +192,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get countries => 'Countries';
+
+  @override
+  String get general => 'General';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get helpCenterComingSoon => 'Help Center coming soon';
+
+  @override
+  String get aboutDescription =>
+      'Block unwanted international calls by country code. Take control of your phone and protect yourself from spam and fraud.';
+
+  @override
+  String copyright(String appTitle) {
+    return '© 2026 $appTitle. All rights reserved.';
+  }
 }

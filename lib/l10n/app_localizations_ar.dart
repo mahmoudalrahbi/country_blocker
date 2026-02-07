@@ -191,4 +191,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get countries => 'الدول';
+
+  @override
+  String get general => 'عام';
+
+  @override
+  String get notifications => 'الإشعارات';
+
+  @override
+  String get support => 'الدعم';
+
+  @override
+  String get helpCenterComingSoon => 'مركز المساعدة قريباً';
+
+  @override
+  String get aboutDescription =>
+      'حظر المكالمات الدولية غير المرغوب فيها باستخدام رمز الدولة. تحكم في هاتفك واحمِ نفسك من البريد العشوائي والاحتيال.';
+
+  @override
+  String copyright(String appTitle) {
+    return '© 2026 $appTitle. جميع الحقوق محفوظة.';
+  }
 }

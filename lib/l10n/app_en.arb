@@ -66,5 +66,18 @@
   "enableBlocking": "Enable Blocking",
   "blockedCalls": "Blocked Calls",
   "formattedTotalBlocked": "Total blocked",
-  "countries": "Countries"
+  "countries": "Countries",
+  "general": "General",
+  "notifications": "Notifications",
+  "support": "Support",
+  "helpCenterComingSoon": "Help Center coming soon",
+  "aboutDescription": "Block unwanted international calls by country code. Take control of your phone and protect yourself from spam and fraud.",
+  "copyright": "© 2026 {appTitle}. All rights reserved.",
+  "@copyright": {
+    "placeholders": {
+      "appTitle": {
+        "type": "String"
+      }
+    }
+  }
 }
