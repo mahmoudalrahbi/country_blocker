@@ -1,5 +1,6 @@
-import 'dart:convert';
+import 'package:equatable/equatable.dart';
 
+/// Enum representing the reason a call was blocked
 enum BlockReason {
   spamDatabase,
   ruleMarketing,
@@ -8,7 +9,9 @@ enum BlockReason {
   customRule,
 }
 
-class BlockedCallLog {
+/// Domain entity representing a blocked call log entry
+/// This is a pure domain model without any framework dependencies
+class BlockedCallLog extends Equatable {
   final String phoneNumber;
   final String countryName;
   final String countryCode; // ISO code for flag
@@ -16,7 +19,7 @@ class BlockedCallLog {
   final DateTime timestamp;
   final String? customReasonText;
 
-  BlockedCallLog({
+  const BlockedCallLog({
     required this.phoneNumber,
     required this.countryName,
     required this.countryCode,
@@ -25,9 +28,10 @@ class BlockedCallLog {
     this.customReasonText,
   });
 
+  /// Get human-readable reason text
   String get reasonText {
     if (customReasonText != null) return customReasonText!;
-    
+
     switch (reason) {
       case BlockReason.spamDatabase:
         return 'Spam Database';
@@ -42,36 +46,23 @@ class BlockedCallLog {
     }
   }
 
+  /// Check if this is a rule-based block reason
   bool get isRuleReason {
     return reason == BlockReason.ruleMarketing ||
-           reason == BlockReason.ruleUnknownCaller ||
-           reason == BlockReason.customRule;
+        reason == BlockReason.ruleUnknownCaller ||
+        reason == BlockReason.customRule;
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'phoneNumber': phoneNumber,
-      'countryName': countryName,
-      'countryCode': countryCode,
-      'reason': reason.index,
-      'timestamp': timestamp.toIso8601String(),
-      'customReasonText': customReasonText,
-    };
-  }
+  @override
+  List<Object?> get props => [
+        phoneNumber,
+        countryName,
+        countryCode,
+        reason,
+        timestamp,
+        customReasonText,
+      ];
 
-  factory BlockedCallLog.fromMap(Map<String, dynamic> map) {
-    return BlockedCallLog(
-      phoneNumber: map['phoneNumber'] ?? '',
-      countryName: map['countryName'] ?? '',
-      countryCode: map['countryCode'] ?? '',
-      reason: BlockReason.values[map['reason'] ?? 0],
-      timestamp: DateTime.parse(map['timestamp']),
-      customReasonText: map['customReasonText'],
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory BlockedCallLog.fromJson(String source) =>
-      BlockedCallLog.fromMap(json.decode(source));
+  @override
+  bool get stringify => true;
 }

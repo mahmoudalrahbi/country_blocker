@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../models/blocked_call_log.dart';
-import '../theme/app_theme.dart';
-import '../utils/country_flags.dart';
+
+import '../../domain/entities/blocked_call_log.dart';
+import '../../../../core/utils/country_flags.dart';
 
 class LogsScreen extends StatefulWidget {
   const LogsScreen({super.key});
@@ -184,7 +184,7 @@ class _LogsScreenState extends State<LogsScreen> {
     final theme = Theme.of(context);
     
     return Padding(
-      padding: const EdgeInsets.only(top: Spacing.m, bottom: 12),
+      padding: const EdgeInsets.only(top: 16, bottom: 12),
       child: Text(
         date.toUpperCase(),
         style: theme.textTheme.labelMedium?.copyWith(
@@ -216,7 +216,7 @@ class _LogsScreenState extends State<LogsScreen> {
       child: Card(
         margin: const EdgeInsets.only(bottom: 12),
         child: Padding(
-          padding: const EdgeInsets.all(Spacing.m),
+          padding: const EdgeInsets.all(16),
           child: Row(
             children: [
               // Country flag
@@ -239,7 +239,7 @@ class _LogsScreenState extends State<LogsScreen> {
                     size: 18,
                   ),
                 ),
-              const SizedBox(width: Spacing.m),
+              const SizedBox(width: 16),
               
               // Phone number and details
               Expanded(
@@ -254,7 +254,7 @@ class _LogsScreenState extends State<LogsScreen> {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: Spacing.xs),
+                    const SizedBox(height: 8),
                     
                     // Country name and timestamp
                     Row(
@@ -266,7 +266,7 @@ class _LogsScreenState extends State<LogsScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(width: Spacing.s),
+                        const SizedBox(width: 12),
                         Text(
                           _formatTimestamp(log.timestamp),
                           style: theme.textTheme.labelSmall?.copyWith(

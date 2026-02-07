@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import '../../../../theme/app_theme.dart';
 
 /// A statistics card widget for displaying metrics
 class StatCard extends StatelessWidget {
@@ -24,10 +24,10 @@ class StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(Spacing.m),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -47,9 +47,10 @@ class StatCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(Spacing.s),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest.withValues(alpha:0.5),
+                    color: colorScheme.surfaceContainerHighest
+                        .withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -60,15 +61,15 @@ class StatCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: Spacing.m),
-            
+            const SizedBox(height: 16),
+
             // Value
             Text(
               value,
-              style: theme.textTheme.displaySmall, // Uses default 24px from AppTheme
+              style: theme.textTheme.displaySmall,
             ),
-            const SizedBox(height: Spacing.xs),
-            
+            const SizedBox(height: 4),
+
             // Subtitle or trend
             if (trend != null && isTrendPositive != null)
               Row(
@@ -78,14 +79,12 @@ class StatCard extends StatelessWidget {
                     size: 14,
                     color: AppColors.success,
                   ),
-                  const SizedBox(width: Spacing.xs),
+                  const SizedBox(width: 4),
                   Flexible(
                     child: Text(
                       trend!,
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: AppColors.success, // Keeping specific success color or map to a semantic "success" if we had one. 
-                        // We mapped error but not success in ColorScheme officially (unless we use tertiary/etc).
-                        // I'll stick to AppColors.success for now as it's not in basic ColorScheme 
+                        color: AppColors.success,
                         fontWeight: FontWeight.bold,
                       ),
                       overflow: TextOverflow.ellipsis,

@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
-import '../../providers/blocked_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../../core/providers.dart';
+import '../../../../../../core/utils/country_flags.dart';
 import '../../widgets/country_list_item.dart';
-import '../../utils/country_flags.dart';
 
-class BlocklistTab extends StatefulWidget {
-  final BlockedProvider provider;
-
-  const BlocklistTab({
-    super.key,
-    required this.provider,
-  });
+/// Blocklist tab showing all blocked countries with search functionality
+class BlocklistTab extends ConsumerStatefulWidget {
+  const BlocklistTab({super.key});
 
   @override
-  State<BlocklistTab> createState() => _BlocklistTabState();
+  ConsumerState<BlocklistTab> createState() => _BlocklistTabState();
 }
 
-class _BlocklistTabState extends State<BlocklistTab> {
+class _BlocklistTabState extends ConsumerState<BlocklistTab> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  // Store toggle states locally for UI responsiveness before persisting if needed
-  // In a real app, this might be better handled in the provider model directly
-  // Removed local state map
 
   @override
   void dispose() {
@@ -39,8 +33,6 @@ class _BlocklistTabState extends State<BlocklistTab> {
     return CountryFlags.getFlagEmoji(isoCode);
   }
 
-
-
   void _showDeleteDialog(BuildContext context, String phoneCode, String name) {
     showDialog(
       context: context,
@@ -51,15 +43,20 @@ class _BlocklistTabState extends State<BlocklistTab> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.onSurface,
             ),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              widget.provider.removeCountry(phoneCode);
+              // Use notifier to remove country
+              ref.read(countryBlockingNotifierProvider.notifier)
+                  .removeCountry(phoneCode);
               Navigator.of(context).pop();
+              
+              if (!context.mounted) return;
+              
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('$name removed from blocklist'),
@@ -80,10 +77,12 @@ class _BlocklistTabState extends State<BlocklistTab> {
 
   @override
   Widget build(BuildContext context) {
+    // Watch the state
+    final state = ref.watch(countryBlockingNotifierProvider);
+    final notifier = ref.read(countryBlockingNotifierProvider.notifier);
 
-    
     // Filter countries based on search query
-    final filteredCountries = widget.provider.blockedList.where((country) {
+    final filteredCountries = state.blockedCountries.where((country) {
       if (_searchQuery.isEmpty) return true;
       return country.name.toLowerCase().contains(_searchQuery) ||
           country.phoneCode.contains(_searchQuery);
@@ -108,7 +107,7 @@ class _BlocklistTabState extends State<BlocklistTab> {
             ),
           ),
         ),
-        
+
         // Section header
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -118,7 +117,7 @@ class _BlocklistTabState extends State<BlocklistTab> {
             style: Theme.of(context).textTheme.labelSmall,
           ),
         ),
-        
+
         // Countries list
         Expanded(
           child: filteredCountries.isEmpty
@@ -129,7 +128,10 @@ class _BlocklistTabState extends State<BlocklistTab> {
                       Icon(
                         Icons.public_off,
                         size: 64,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha:0.5),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurfaceVariant
+                            .withValues(alpha: 0.5),
                       ),
                       const SizedBox(height: 16),
                       Text(
@@ -137,8 +139,8 @@ class _BlocklistTabState extends State<BlocklistTab> {
                             ? 'No blocked countries yet'
                             : 'No results found',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
                       ),
                       const SizedBox(height: 8),
                       if (_searchQuery.isEmpty)
@@ -153,15 +155,15 @@ class _BlocklistTabState extends State<BlocklistTab> {
                   itemCount: filteredCountries.length,
                   itemBuilder: (context, index) {
                     final country = filteredCountries[index];
-                    
+
                     return CountryListItem(
                       countryName: country.name,
                       phoneCode: country.phoneCode,
                       flagEmoji: _getFlagEmoji(country.isoCode),
                       isEnabled: country.isEnabled,
                       onToggle: (value) async {
-                         await widget.provider.toggleCountry(country.phoneCode, value);
-                        
+                        await notifier.toggleCountry(country.phoneCode, value);
+
                         if (!context.mounted) return;
 
                         ScaffoldMessenger.of(context).clearSnackBars();

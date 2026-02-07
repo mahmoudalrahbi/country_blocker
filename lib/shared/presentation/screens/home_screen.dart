@@ -1,26 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/blocked_provider.dart';
-
-import 'add_country_screen.dart';
-import 'logs_screen.dart';
-import 'settings_screen.dart';
-import 'tabs/home_tab.dart';
-import 'tabs/blocklist_tab.dart';
-import '../services/permissions_service.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeScreen extends StatefulWidget {
+import '../../../core/providers.dart';
+import '../../../features/country_blocking/presentation/screens/add_country_screen.dart';
+import '../../../features/country_blocking/presentation/screens/logs_screen.dart';
+import '../../../features/country_blocking/presentation/screens/tabs/blocklist_tab.dart';
+import '../../../features/country_blocking/presentation/screens/tabs/home_tab.dart';
+import '../../services/permissions_service.dart';
+import 'settings_screen.dart';
+
+/// Main home screen with bottom navigation
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _selectedIndex = 0;
 
-  
   @override
   void initState() {
     super.initState();
@@ -37,62 +37,25 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _toggleBlocking() async {
-    final provider = Provider.of<BlockedProvider>(context, listen: false);
 
-    // Ensure we have permissions before enabling
-    if (!provider.isBlockingActive) {
-      bool hasPerms = await PermissionsService.requestPhonePermissions();
-      if (!hasPerms) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Permissions required to enable blocking'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-        return;
-      }
-    }
-
-    await provider.toggleGlobalBlocking();
-    
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          provider.isBlockingActive
-              ? 'Call blocking enabled'
-              : 'Call blocking disabled',
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<BlockedProvider>(context);
+    // Watch loading state
+    final isLoading = ref.watch(isLoadingProvider);
     final theme = Theme.of(context);
-
 
     return Scaffold(
       appBar: _buildAppBar(context),
-      body: provider.isLoading
+      body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : IndexedStack(
               index: _selectedIndex,
-              children: [
-                HomeTab(
-                  provider: provider,
-                  isBlockingActive: provider.isBlockingActive,
-                  onToggleBlocking: _toggleBlocking,
-                ),
-                BlocklistTab(provider: provider),
-                const LogsScreen(),
-                const SettingsScreen(),
+              children: const [
+                HomeTab(),
+                BlocklistTab(),
+                LogsScreen(),
+                SettingsScreen(),
               ],
             ),
       floatingActionButton: _selectedIndex == 0 || _selectedIndex == 1
@@ -111,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: theme.colorScheme.outline.withValues(alpha:0.1),
+              color: theme.colorScheme.outline.withValues(alpha: 0.1),
               width: 0.5,
             ),
           ),
@@ -147,7 +110,6 @@ class _HomeScreenState extends State<HomeScreen> {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     String title = 'Country Blocker';
 
-    
     switch (_selectedIndex) {
       case 1:
         title = 'Blocked Countries';
@@ -165,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(12.0),
         child: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withValues(alpha:0.1),
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(

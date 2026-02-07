@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+
 
 /// A country list item widget for the blocklist screen
 class CountryListItem extends StatelessWidget {
@@ -28,12 +28,12 @@ class CountryListItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: InkWell(
         onTap: () {},
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
             children: [
               // Flag or Icon
@@ -61,7 +61,7 @@ class CountryListItem extends StatelessWidget {
                         ),
                 ),
               ),
-              const SizedBox(width: Spacing.m),
+              const SizedBox(width: 16),
               
               // Country info
               Expanded(

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../theme/app_theme.dart';
-import '../providers/theme_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/providers.dart';
+import '../../../theme/app_theme.dart';
 
 /// Settings screen that provides app configuration options
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _notificationsEnabled = true;
 
   @override
@@ -36,7 +37,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildGeneralSection() {
     final theme = Theme.of(context);
 
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -50,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
         ),
-        const SizedBox(height: Spacing.s),
+        const SizedBox(height: 8),
         Card(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -70,16 +70,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildNotificationToggle() {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
           _buildIconContainer(
             Icons.notifications,
             colorScheme.primary, // Replaced hardcoded blue
           ),
-          const SizedBox(width: Spacing.m),
+          const SizedBox(width: 16),
           Text(
             'Notifications',
             style: theme.textTheme.bodyLarge?.copyWith(
@@ -102,12 +102,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildAppearanceSelector() {
     final theme = Theme.of(context);
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final currentThemeMode = themeProvider.themeMode;
+    final currentThemeMode = ref.watch(themeModeProvider);
     final colorScheme = theme.colorScheme;
-    
+
     return Padding(
-      padding: const EdgeInsets.all(Spacing.m),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -117,7 +116,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Icons.palette,
                 colorScheme.secondary, // Replaced hardcoded indigo
               ),
-              const SizedBox(width: Spacing.m),
+              const SizedBox(width: 16),
               Text(
                 'Appearance',
                 style: theme.textTheme.bodyLarge?.copyWith(
@@ -126,12 +125,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
-          const SizedBox(height: Spacing.m),
+          const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
                 child: _buildThemeOption(
-                  themeProvider,
                   currentThemeMode,
                   ThemeMode.light,
                   'Light',
@@ -141,7 +139,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildThemeOption(
-                  themeProvider,
                   currentThemeMode,
                   ThemeMode.dark,
                   'Dark',
@@ -151,7 +148,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildThemeOption(
-                  themeProvider,
                   currentThemeMode,
                   ThemeMode.system,
                   'System',
@@ -166,7 +162,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildThemeOption(
-    ThemeProvider themeProvider,
     ThemeMode currentThemeMode,
     ThemeMode mode,
     String label,
@@ -175,19 +170,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isSelected = currentThemeMode == mode;
-    
+
     return GestureDetector(
       onTap: () {
-        themeProvider.setThemeMode(mode);
+        ref.read(themeModeProvider.notifier).setThemeMode(mode);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: Spacing.s),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerHighest.withValues(alpha:0.4),
+          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
           border: Border.all(
-            color: isSelected
-                ? colorScheme.primary
-                : Colors.transparent,
+            color: isSelected ? colorScheme.primary : Colors.transparent,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(12),
@@ -225,7 +218,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     height: 6,
                                     width: 30,
                                     decoration: BoxDecoration(
-                                      color: AppColors.borderLight, // Fixed: was borderLightMode
+                                      color:
+                                          AppColors.borderLight, // Fixed: was borderLightMode
                                       borderRadius: BorderRadius.circular(3),
                                     ),
                                   ),
@@ -234,7 +228,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     height: 6,
                                     width: 20,
                                     decoration: BoxDecoration(
-                                      color: AppColors.surfaceLight, // Fixed: was cardLight
+                                      color:
+                                          AppColors.surfaceLight, // Fixed: was cardLight
                                       borderRadius: BorderRadius.circular(3),
                                     ),
                                   ),
@@ -283,7 +278,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             width: 30,
                             decoration: BoxDecoration(
                               color: mode == ThemeMode.light
-                                  ? AppColors.borderLight // Fixed: was borderLightMode
+                                  ? AppColors
+                                      .borderLight // Fixed: was borderLightMode
                                   : AppColors.borderDark,
                               borderRadius: BorderRadius.circular(3),
                             ),
@@ -303,7 +299,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
             ),
-            const SizedBox(height: Spacing.s),
+            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -313,9 +309,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: isSelected
                         ? colorScheme.onSurface
                         : colorScheme.onSurfaceVariant,
-                    fontWeight: isSelected
-                        ? FontWeight.w600
-                        : FontWeight.w500,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     fontSize: 12,
                   ),
                 ),
@@ -357,14 +351,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
             _buildIconContainer(
               Icons.language,
-              Colors.purple, // Keeping distinct color for visual hierarchy, but could map to tertiary
+              Colors
+                  .purple, // Keeping distinct color for visual hierarchy, but could map to tertiary
             ),
-            const SizedBox(width: Spacing.m),
+            const SizedBox(width: 16),
             Text(
               'Language',
               style: theme.textTheme.bodyLarge?.copyWith(
@@ -378,7 +373,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(width: Spacing.s),
+            const SizedBox(width: 8),
             Icon(
               Icons.chevron_right,
               color: colorScheme.onSurfaceVariant,
@@ -392,7 +387,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildSupportSection() {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -406,7 +401,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
         ),
-        const SizedBox(height: Spacing.s),
+        const SizedBox(height: 8),
         Card(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -452,11 +447,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Spacing.m, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
             _buildIconContainer(icon, iconColor),
-            const SizedBox(width: Spacing.m),
+            const SizedBox(width: 16),
             Text(
               title,
               style: theme.textTheme.bodyLarge?.copyWith(
@@ -479,7 +474,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: color.withValues(alpha:0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(
@@ -490,18 +485,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-
-
   Widget _buildDivider() {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Container(
       height: 1,
       margin: const EdgeInsets.symmetric(horizontal: 16),
       color: isDark
-          ? AppColors.borderDark.withValues(alpha:0.5)
-          : AppColors.borderLight.withValues(alpha:0.5),
+          ? AppColors.borderDark.withValues(alpha: 0.5)
+          : AppColors.borderLight.withValues(alpha: 0.5),
     );
   }
 
@@ -513,7 +506,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Text(
         'COUNTRY BLOCKER V2.5.0',
         style: theme.textTheme.bodySmall?.copyWith(
-          color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight,
+          color:
+              isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight,
           fontSize: 14,
           fontWeight: FontWeight.w500,
           letterSpacing: 1.5,
@@ -525,7 +519,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _showAboutDialog() {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -538,7 +532,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha:0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -560,21 +554,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Text(
               'Version 2.5.0',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondaryLight,
               ),
             ),
             const SizedBox(height: 16),
             Text(
               'Block unwanted international calls by country code. Take control of your phone and protect yourself from spam and fraud.',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondaryLight,
               ),
             ),
             const SizedBox(height: 16),
             Text(
               '© 2026 Country Blocker. All rights reserved.',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight,
+                color: isDark
+                    ? AppColors.textTertiaryDark
+                    : AppColors.textTertiaryLight,
                 fontSize: 10,
               ),
             ),

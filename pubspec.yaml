@@ -36,10 +36,15 @@ dependencies:
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.5.4
   country_picker: ^2.0.27
-  provider: ^6.1.5+1
   google_fonts: ^6.1.0
   intl: ^0.19.0
   permission_handler: ^12.0.1
+  
+  # State Management & Clean Architecture
+  flutter_riverpod: ^2.4.0
+  dartz: ^0.10.1
+  equatable: ^2.0.5
+  freezed_annotation: ^2.4.1
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +56,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  
+  # Testing & Code Generation
+  mocktail: ^1.0.0
+  freezed: ^2.4.5
+  build_runner: ^2.4.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

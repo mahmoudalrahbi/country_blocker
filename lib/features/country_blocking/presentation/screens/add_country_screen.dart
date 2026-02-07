@@ -1,18 +1,20 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../models/blocked_country.dart';
-import '../providers/blocked_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/providers.dart';
+import '../../domain/entities/blocked_country.dart';
+import '../../domain/usecases/add_blocked_country.dart';
 
-class AddCountryScreen extends StatefulWidget {
+/// Screen for adding a new country to the blocklist
+class AddCountryScreen extends ConsumerStatefulWidget {
   const AddCountryScreen({super.key});
 
   @override
-  State<AddCountryScreen> createState() => _AddCountryScreenState();
+  ConsumerState<AddCountryScreen> createState() => _AddCountryScreenState();
 }
 
-class _AddCountryScreenState extends State<AddCountryScreen> {
+class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
   final _codeController = TextEditingController();
   final _nameController = TextEditingController();
   String _isoCode = 'UNKNOWN';
@@ -25,14 +27,14 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
     super.dispose();
   }
 
-  void _save() {
+  Future<void> _save() async {
     final code = _codeController.text.trim();
     final name = _nameController.text.trim();
 
     if (code.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please enter a country code'),
+          content: const Text('Please enter a country code'),
           backgroundColor: Theme.of(context).colorScheme.error,
           behavior: SnackBarBehavior.floating,
         ),
@@ -46,23 +48,42 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
       name: name.isEmpty ? 'Unknown Region' : name,
     );
 
-    Provider.of<BlockedProvider>(context, listen: false).addCountry(country);
-    
+    // Use notifier to add country
+    final notifier = ref.read(countryBlockingNotifierProvider.notifier);
+    await notifier.addCountry(AddBlockedCountryParams(country: country));
+
+    // Check for errors
+    final error = ref.read(errorMessageProvider);
+    if (error != null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      // Clear error
+      notifier.clearError();
+      return;
+    }
+
+    if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${ name.isEmpty ? 'Country' : name} added to blocklist'),
+        content: Text('${name.isEmpty ? 'Country' : name} added to blocklist'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         behavior: SnackBarBehavior.floating,
       ),
     );
-    
+
     Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
 
     return Scaffold(
       appBar: AppBar(
@@ -119,7 +140,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              
+
               // Form header
               Text(
                 _selectedTab == 0 ? 'Select a Country' : 'Enter Custom Rule',
@@ -127,7 +148,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                _selectedTab == 0 
+                _selectedTab == 0
                     ? 'Search and select a country from the list to block.'
                     : 'Block calls from specific international or local prefixes.',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -135,7 +156,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Country Code input
               Text(
                 'COUNTRY CODE',
@@ -156,13 +177,14 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                   prefixStyle: theme.textTheme.bodyLarge?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
-                  suffixIcon: _selectedTab == 0 
-                      ? Icon(Icons.arrow_drop_down, color: theme.colorScheme.onSurfaceVariant) 
+                  suffixIcon: _selectedTab == 0
+                      ? Icon(Icons.arrow_drop_down,
+                          color: theme.colorScheme.onSurfaceVariant)
                       : null,
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Name input
               Text(
                 'NAME (OPTIONAL)',
@@ -179,7 +201,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Info box
               Card(
                 color: theme.colorScheme.surfaceContainerHighest,
@@ -188,7 +210,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                   side: BorderSide(
-                    color: theme.colorScheme.outline.withValues(alpha:0.2),
+                    color: theme.colorScheme.outline.withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
@@ -217,7 +239,7 @@ class _AddCountryScreenState extends State<AddCountryScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              
+
               // Save button
               SizedBox(
                 height: 56,
@@ -274,7 +296,6 @@ class _TabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final theme = Theme.of(context);
 
     return GestureDetector(
@@ -289,10 +310,12 @@ class _TabButton extends StatelessWidget {
           label,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            color: isSelected ? Colors.white : theme.colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-          ),
+                color: isSelected
+                    ? Colors.white
+                    : theme.colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
         ),
       ),
     );
