@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+
+import '../../../../core/providers.dart';
 
 import '../../domain/entities/blocked_call_log.dart';
 import '../../../../core/utils/country_flags.dart';
 
-class LogsScreen extends StatefulWidget {
+class LogsScreen extends ConsumerStatefulWidget {
   const LogsScreen({super.key});
 
   @override
-  State<LogsScreen> createState() => _LogsScreenState();
+  ConsumerState<LogsScreen> createState() => _LogsScreenState();
 }
 
-class _LogsScreenState extends State<LogsScreen> {
+class _LogsScreenState extends ConsumerState<LogsScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Refresh logs when screen is opened
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(blockLogNotifierProvider.notifier).loadLogs();
+    });
+  }
 
   @override
   void dispose() {
@@ -27,9 +39,8 @@ class _LogsScreenState extends State<LogsScreen> {
     });
   }
 
-  // Mock data for demonstration - replace with actual data from provider
-  List<BlockedCallLog> _getMockLogs() {
-    return [];
+  List<BlockedCallLog> _getLogs() {
+    return ref.watch(blockLogNotifierProvider);
   }
 
   Map<String, List<BlockedCallLog>> _groupLogsByDate(List<BlockedCallLog> logs) {
@@ -74,12 +85,22 @@ class _LogsScreenState extends State<LogsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final allLogs = _getMockLogs();
+    final allLogs = _getLogs();
     final filteredLogs = _filterLogs(allLogs);
     final groupedLogs = _groupLogsByDate(filteredLogs);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
+      floatingActionButton: allLogs.isNotEmpty
+          ? FloatingActionButton(
+              onPressed: () {
+                _showClearConfirmation(context);
+              },
+              backgroundColor: theme.colorScheme.errorContainer,
+              foregroundColor: theme.colorScheme.onErrorContainer,
+              child: const Icon(Icons.delete_outline),
+            )
+          : null,
       body: Column(
         children: [
           // Search bar
@@ -147,6 +168,29 @@ class _LogsScreenState extends State<LogsScreen> {
       count += logs.length; // Log items
     });
     return count;
+  }
+  
+  void _showClearConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear Logs?'),
+        content: const Text('This will delete all call history. This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              ref.read(blockLogNotifierProvider.notifier).clearLogs();
+              Navigator.pop(context);
+            },
+            child: const Text('Clear'),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildListItem(

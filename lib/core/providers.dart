@@ -14,6 +14,12 @@ import '../features/country_blocking/domain/usecases/toggle_global_blocking.dart
 
 import '../features/country_blocking/presentation/notifiers/country_blocking_notifier.dart';
 import '../features/country_blocking/presentation/notifiers/country_blocking_state.dart';
+import '../features/country_blocking/data/datasources/block_log_local_data_source.dart';
+import '../features/country_blocking/data/repositories/block_log_repository_impl.dart';
+import '../features/country_blocking/domain/repositories/block_log_repository.dart';
+import '../features/country_blocking/domain/usecases/get_blocked_logs.dart';
+import '../features/country_blocking/presentation/notifiers/block_log_notifier.dart';
+import '../features/country_blocking/domain/entities/blocked_call_log.dart';
 
 
 export '../shared/presentation/notifiers/theme_notifier.dart';
@@ -44,6 +50,14 @@ final countryBlockingLocalDataSourceProvider =
   );
 });
 
+/// Block log local data source provider
+final blockLogLocalDataSourceProvider =
+    Provider<BlockLogLocalDataSource>((ref) {
+  return BlockLogLocalDataSourceImpl(
+    sharedPreferences: ref.watch(sharedPreferencesProvider),
+  );
+});
+
 // ==================== Repositories ====================
 
 /// Country blocking repository provider
@@ -51,6 +65,13 @@ final countryBlockingRepositoryProvider =
     Provider<CountryBlockingRepository>((ref) {
   return CountryBlockingRepositoryImpl(
     localDataSource: ref.watch(countryBlockingLocalDataSourceProvider),
+  );
+});
+
+/// Block log repository provider
+final blockLogRepositoryProvider = Provider<BlockLogRepository>((ref) {
+  return BlockLogRepositoryImpl(
+    localDataSource: ref.watch(blockLogLocalDataSourceProvider),
   );
 });
 
@@ -98,6 +119,13 @@ final incrementBlockedCallsProvider = Provider<IncrementBlockedCalls>((ref) {
   );
 });
 
+/// Get blocked logs use case provider
+final getBlockedLogsProvider = Provider<GetBlockedLogs>((ref) {
+  return GetBlockedLogs(
+    ref.watch(blockLogRepositoryProvider),
+  );
+});
+
 // ==================== State Notifiers ====================
 
 /// Country blocking state notifier provider
@@ -110,6 +138,15 @@ final countryBlockingNotifierProvider =
     toggleCountryBlocking: ref.watch(toggleCountryBlockingProvider),
     toggleGlobalBlocking: ref.watch(toggleGlobalBlockingProvider),
     incrementBlockedCalls: ref.watch(incrementBlockedCallsProvider),
+  );
+});
+
+/// Block log notifier provider
+final blockLogNotifierProvider =
+    StateNotifierProvider<BlockLogNotifier, List<BlockedCallLog>>((ref) {
+  return BlockLogNotifier(
+    getBlockedLogs: ref.watch(getBlockedLogsProvider),
+    repository: ref.watch(blockLogRepositoryProvider),
   );
 });
 
