@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../services/permissions_service.dart';
 import '../../../core/providers.dart';
 
 /// Screen displayed when required permissions are missing.

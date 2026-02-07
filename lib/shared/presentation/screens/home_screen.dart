@@ -7,7 +7,6 @@ import '../../../features/country_blocking/presentation/screens/add_country_scre
 import '../../../features/country_blocking/presentation/screens/logs_screen.dart';
 import '../../../features/country_blocking/presentation/screens/tabs/blocklist_tab.dart';
 import '../../../features/country_blocking/presentation/screens/tabs/home_tab.dart';
-import '../../services/permissions_service.dart';
 import 'permission_guard_screen.dart';
 import 'settings_screen.dart';
 

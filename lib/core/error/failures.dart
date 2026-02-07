@@ -13,23 +13,20 @@ abstract class Failure extends Equatable {
 
 /// Failure when caching/retrieving data from local storage fails
 class CacheFailure extends Failure {
-  const CacheFailure([String message = 'Failed to access local storage'])
-      : super(message);
+  const CacheFailure([super.message = 'Failed to access local storage']);
 }
 
 /// Failure when permission operations fail
 class PermissionFailure extends Failure {
-  const PermissionFailure([String message = 'Permission denied'])
-      : super(message);
+  const PermissionFailure([super.message = 'Permission denied']);
 }
 
 /// Generic server failure (for future API integration)
 class ServerFailure extends Failure {
-  const ServerFailure([String message = 'Server error occurred'])
-      : super(message);
+  const ServerFailure([super.message = 'Server error occurred']);
 }
 
 /// Validation failure for business logic validation
 class ValidationFailure extends Failure {
-  const ValidationFailure(String message) : super(message);
+  const ValidationFailure(super.message);
 }

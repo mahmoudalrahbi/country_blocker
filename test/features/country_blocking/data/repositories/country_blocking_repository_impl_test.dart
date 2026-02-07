@@ -3,7 +3,6 @@ import 'package:country_blocker/core/error/failures.dart';
 import 'package:country_blocker/features/country_blocking/data/datasources/country_blocking_local_data_source.dart';
 import 'package:country_blocker/features/country_blocking/data/models/blocked_country_model.dart';
 import 'package:country_blocker/features/country_blocking/data/repositories/country_blocking_repository_impl.dart';
-import 'package:country_blocker/features/country_blocking/domain/entities/blocked_country.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

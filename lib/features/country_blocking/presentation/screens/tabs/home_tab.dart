@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../core/providers.dart';
-import '../../../../../../shared/services/permissions_service.dart';
 import '../../widgets/status_card.dart';
 import '../../widgets/stat_card.dart';
 

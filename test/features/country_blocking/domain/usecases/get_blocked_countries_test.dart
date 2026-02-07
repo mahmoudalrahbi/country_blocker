@@ -1,4 +1,4 @@
-import 'package:country_blocker/core/error/failures.dart';
+
 import 'package:country_blocker/core/usecase/usecase.dart';
 import 'package:country_blocker/features/country_blocking/domain/entities/blocked_country.dart';
 import 'package:country_blocker/features/country_blocking/domain/repositories/country_blocking_repository.dart';
