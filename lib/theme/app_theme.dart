@@ -110,13 +110,11 @@ class AppTheme {
         fontSize: 13,
         fontWeight: FontWeight.bold,
         color: secondary,
-        letterSpacing: 1.2,
       ),
       labelSmall: GoogleFonts.inter(
         fontSize: 11,
         fontWeight: FontWeight.bold,
         color: secondary,
-        letterSpacing: 1.2,
       ),
     );
   }

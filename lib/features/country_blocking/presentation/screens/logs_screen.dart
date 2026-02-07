@@ -235,7 +235,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
         style: theme.textTheme.labelMedium?.copyWith(
           fontSize: 10,
           fontWeight: FontWeight.bold,
-          letterSpacing: 1.6,
         ),
       ),
     );

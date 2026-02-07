@@ -47,7 +47,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             AppLocalizations.of(context)!.general,
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
             ),
           ),
         ),
@@ -429,7 +428,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             AppLocalizations.of(context)!.support,
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
             ),
           ),
         ),
@@ -536,7 +534,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         style: theme.textTheme.bodySmall?.copyWith(
           fontSize: 14,
           fontWeight: FontWeight.w500,
-          letterSpacing: 1.5,
         ),
       ),
     );

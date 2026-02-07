@@ -1,5 +1,6 @@
 
 import 'package:country_blocker/core/providers.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 
 import 'package:country_blocker/features/country_blocking/domain/usecases/add_blocked_country.dart';
 import 'package:country_blocker/features/country_blocking/domain/usecases/get_blocked_countries.dart';
@@ -76,6 +77,8 @@ void main() {
         incrementBlockedCallsProvider.overrideWithValue(mockIncrementBlockedCalls),
       ],
       child: const MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: HomeScreen(),
       ),
     );
