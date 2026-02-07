@@ -39,8 +39,8 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Theme.of(context).cardTheme.color,
-        title: Text(AppLocalizations.of(context)!.delete),
-        content: Text('Are you sure you want to remove $name from the blocklist?'), // Parametric string needs better handling in ARB but keeping simple for now
+        title: Text(AppLocalizations.of(context)!.deleteBlocklistEntryTitle),
+        content: Text(AppLocalizations.of(context)!.deleteBlocklistEntryMessage(name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -138,7 +138,7 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                       Text(
                         _searchQuery.isEmpty
                             ? AppLocalizations.of(context)!.addFirstCountry
-                            : 'No results found',
+                            : AppLocalizations.of(context)!.noResultsFound,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
@@ -146,7 +146,7 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                       const SizedBox(height: 8),
                       if (_searchQuery.isEmpty)
                         Text(
-                          'Tap + to add one',
+                          AppLocalizations.of(context)!.tapToAdd,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                     ],
@@ -171,9 +171,10 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              value
-                                  ? '${country.name} blocking enabled'
-                                  : '${country.name} blocking disabled',
+                              AppLocalizations.of(context)!.blockingStateChanged(
+                                country.name,
+                                value ? AppLocalizations.of(context)!.enabled : AppLocalizations.of(context)!.disabled,
+                              ),
                             ),
                             backgroundColor: Theme.of(context).colorScheme.primary,
                             behavior: SnackBarBehavior.floating,

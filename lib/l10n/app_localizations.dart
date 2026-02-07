@@ -404,6 +404,84 @@ abstract class AppLocalizations {
   /// **'Save to Block List'**
   String get saveToBlockList;
 
+  /// No description provided for @permissionRequiredToEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions required to enable blocking'**
+  String get permissionRequiredToEnable;
+
+  /// No description provided for @deleteBlocklistEntryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from blocklist?'**
+  String get deleteBlocklistEntryTitle;
+
+  /// No description provided for @deleteBlocklistEntryMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove {country} from the blocklist?'**
+  String deleteBlocklistEntryMessage(String country);
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
+  /// No description provided for @tapToAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add one'**
+  String get tapToAdd;
+
+  /// No description provided for @blockingStateChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{country} blocking {state}'**
+  String blockingStateChanged(String country, String state);
+
+  /// No description provided for @enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'enabled'**
+  String get enabled;
+
+  /// No description provided for @disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'disabled'**
+  String get disabled;
+
+  /// No description provided for @clearLogsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Logs?'**
+  String get clearLogsTitle;
+
+  /// No description provided for @clearLogsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This will delete all call history. This action cannot be undone.'**
+  String get clearLogsMessage;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'TODAY'**
+  String get today;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'YESTERDAY'**
+  String get yesterday;
+
+  /// No description provided for @justNow.
+  ///
+  /// In en, this message translates to:
+  /// **'JUST NOW'**
+  String get justNow;
+
   /// No description provided for @protectionStatus.
   ///
   /// In en, this message translates to:

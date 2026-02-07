@@ -73,7 +73,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${name.isEmpty ? 'Country' : name} added to blocklist'),
+        content: Text(AppLocalizations.of(context)!.countryAddedToBlocklist(name.isEmpty ? 'Country' : name)),
         backgroundColor: Theme.of(context).colorScheme.primary,
         behavior: SnackBarBehavior.floating,
       ),

@@ -57,6 +57,36 @@
   "customCode": "Custom Code",
   "blockingDescription": "All incoming calls starting with this prefix will be automatically blocked.",
   "saveToBlockList": "Save to Block List",
+  "permissionRequiredToEnable": "Permissions required to enable blocking",
+  "deleteBlocklistEntryTitle": "Remove from blocklist?",
+  "deleteBlocklistEntryMessage": "Are you sure you want to remove {country} from the blocklist?",
+  "@deleteBlocklistEntryMessage": {
+    "placeholders": {
+      "country": {
+        "type": "String"
+      }
+    }
+  },
+  "noResultsFound": "No results found",
+  "tapToAdd": "Tap + to add one",
+  "blockingStateChanged": "{country} blocking {state}",
+  "@blockingStateChanged": {
+    "placeholders": {
+      "country": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "enabled": "enabled",
+  "disabled": "disabled",
+  "clearLogsTitle": "Clear Logs?",
+  "clearLogsMessage": "This will delete all call history. This action cannot be undone.",
+  "today": "TODAY",
+  "yesterday": "YESTERDAY",
+  "justNow": "JUST NOW",
   "protectionStatus": "PROTECTION STATUS",
   "blockingActive": "Blocking Active",
   "blockingDisabled": "Blocking Disabled",

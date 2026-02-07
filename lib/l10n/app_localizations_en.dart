@@ -168,6 +168,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveToBlockList => 'Save to Block List';
 
   @override
+  String get permissionRequiredToEnable =>
+      'Permissions required to enable blocking';
+
+  @override
+  String get deleteBlocklistEntryTitle => 'Remove from blocklist?';
+
+  @override
+  String deleteBlocklistEntryMessage(String country) {
+    return 'Are you sure you want to remove $country from the blocklist?';
+  }
+
+  @override
+  String get noResultsFound => 'No results found';
+
+  @override
+  String get tapToAdd => 'Tap + to add one';
+
+  @override
+  String blockingStateChanged(String country, String state) {
+    return '$country blocking $state';
+  }
+
+  @override
+  String get enabled => 'enabled';
+
+  @override
+  String get disabled => 'disabled';
+
+  @override
+  String get clearLogsTitle => 'Clear Logs?';
+
+  @override
+  String get clearLogsMessage =>
+      'This will delete all call history. This action cannot be undone.';
+
+  @override
+  String get today => 'TODAY';
+
+  @override
+  String get yesterday => 'YESTERDAY';
+
+  @override
+  String get justNow => 'JUST NOW';
+
+  @override
   String get protectionStatus => 'PROTECTION STATUS';
 
   @override

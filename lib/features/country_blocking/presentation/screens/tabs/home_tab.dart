@@ -21,7 +21,7 @@ class HomeTab extends ConsumerWidget {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Permissions required to enable blocking'),
+            content: Text(AppLocalizations.of(context)!.permissionRequiredToEnable),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

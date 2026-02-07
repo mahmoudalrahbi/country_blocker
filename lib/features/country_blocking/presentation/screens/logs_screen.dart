@@ -59,9 +59,9 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
 
       String key;
       if (logDate == today) {
-        key = 'Today';
+        key = AppLocalizations.of(context)!.today;
       } else if (logDate == yesterday) {
-        key = 'Yesterday';
+        key = AppLocalizations.of(context)!.yesterday;
       } else {
         key = DateFormat('MMMM d, yyyy').format(logDate);
       }
@@ -154,7 +154,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            _searchQuery.isEmpty ? AppLocalizations.of(context)!.noRecentActivity : 'No results found',
+            _searchQuery.isEmpty ? AppLocalizations.of(context)!.noRecentActivity : AppLocalizations.of(context)!.noResultsFound,
             style: theme.textTheme.bodyLarge,
           ),
         ],
@@ -175,8 +175,8 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear Logs?'),
-        content: const Text('This will delete all call history. This action cannot be undone.'),
+        title: Text(AppLocalizations.of(context)!.clearLogsTitle),
+        content: Text(AppLocalizations.of(context)!.clearLogsMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -211,7 +211,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
       // Check if this is a log item
       for (var i = 0; i < entry.value.length; i++) {
         if (currentIndex == index) {
-          final isOlder = entry.key != 'Today';
+          final isOlder = entry.key != AppLocalizations.of(context)!.today;
           return _buildLogCard(
             entry.value[i],
             isOlder: isOlder,
@@ -352,7 +352,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
     
     // Just now (< 5 minutes)
     if (difference.inMinutes < 5) {
-      return 'JUST NOW';
+      return AppLocalizations.of(context)!.justNow;
     }
     
     // All other times (today, yesterday, older) - just show time

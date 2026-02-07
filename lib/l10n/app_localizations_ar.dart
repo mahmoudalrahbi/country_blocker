@@ -167,6 +167,50 @@ class AppLocalizationsAr extends AppLocalizations {
   String get saveToBlockList => 'حفظ في قائمة الحظر';
 
   @override
+  String get permissionRequiredToEnable => 'الأذونات مطلوبة لتفعيل الحظر';
+
+  @override
+  String get deleteBlocklistEntryTitle => 'إزالة من قائمة الحظر؟';
+
+  @override
+  String deleteBlocklistEntryMessage(String country) {
+    return 'هل أنت متأكد أنك تريد إزالة $country من قائمة الحظر؟';
+  }
+
+  @override
+  String get noResultsFound => 'لم يتم العثور على نتائج';
+
+  @override
+  String get tapToAdd => 'اضغط + للإضافة';
+
+  @override
+  String blockingStateChanged(String country, String state) {
+    return 'تم $state حظر $country';
+  }
+
+  @override
+  String get enabled => 'تفعيل';
+
+  @override
+  String get disabled => 'تعطيل';
+
+  @override
+  String get clearLogsTitle => 'مسح السجلات؟';
+
+  @override
+  String get clearLogsMessage =>
+      'سيؤدي هذا إلى حذف سجل المكالمات بالكامل. لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get today => 'اليوم';
+
+  @override
+  String get yesterday => 'أمس';
+
+  @override
+  String get justNow => 'الآن';
+
+  @override
   String get protectionStatus => 'حالة الحماية';
 
   @override
