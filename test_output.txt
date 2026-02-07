@@ -1,0 +1,29 @@
+00:00 +0: loading /Users/macbook/Desktop/country_blocker/country_blocker/test/features/country_blocking/presentation/screens/home_screen_test.dart                                                     00:01 +0: loading /Users/macbook/Desktop/country_blocker/country_blocker/test/features/country_blocking/presentation/screens/home_screen_test.dart                                                     00:02 +0: loading /Users/macbook/Desktop/country_blocker/country_blocker/test/features/country_blocking/presentation/screens/home_screen_test.dart                                                     00:03 +0: loading /Users/macbook/Desktop/country_blocker/country_blocker/test/features/country_blocking/presentation/screens/home_screen_test.dart                                                     00:03 +0: HomeScreen shows PermissionGuardScreen when permissions denied                                                                                                                               00:04 +0: HomeScreen shows PermissionGuardScreen when permissions denied                                                                                                                               00:05 +0: HomeScreen shows PermissionGuardScreen when permissions denied                                                                                                                               00:06 +0: HomeScreen shows PermissionGuardScreen when permissions denied                                                                                                                               00:06 +1: HomeScreen shows PermissionGuardScreen when permissions denied                                                                                                                               00:06 +1: HomeScreen shows content when permissions granted                                                                                                                                            00:07 +1: HomeScreen shows content when permissions granted                                                                                                                                            00:08 +1: HomeScreen shows content when permissions granted                                                                                                                                            00:09 +1: HomeScreen shows content when permissions granted                                                                                                                                            00:10 +1: HomeScreen shows content when permissions granted                                                                                                                                            00:11 +1: HomeScreen shows content when permissions granted                                                                                                                                            00:12 +1: HomeScreen shows content when permissions granted                                                                                                                                            00:12 +1: HomeScreen shows content when permissions granted                                                                                                                                            
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+pumpAndSettle timed out
+
+When the exception was thrown, this was the stack:
+#0      WidgetTester.pumpAndSettle.<anonymous closure> (package:flutter_test/src/widget_tester.dart:717:11)
+<asynchronous suspension>
+#1      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#2      main.<anonymous closure> (file:///Users/macbook/Desktop/country_blocker/country_blocker/test/features/country_blocking/presentation/screens/home_screen_test.dart:104:5)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1059:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  HomeScreen shows content when permissions granted
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:12 +1 -1: HomeScreen shows content when permissions granted [E]                                                                                                                                     
+  Test failed. See exception logs above.
+  The test description was: HomeScreen shows content when permissions granted
+  
+
+To run this test again: /Users/macbook/Documents/development/flutter/bin/cache/dart-sdk/bin/dart test /Users/macbook/Desktop/country_blocker/country_blocker/test/features/country_blocking/presentation/screens/home_screen_test.dart -p vm --plain-name 'HomeScreen shows content when permissions granted'
+00:12 +1 -1: Some tests failed.                                                                                                                                                                        
