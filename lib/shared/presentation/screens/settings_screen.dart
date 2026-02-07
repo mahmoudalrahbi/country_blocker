@@ -487,27 +487,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   Widget _buildDivider() {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       height: 1,
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      color: isDark
-          ? AppColors.borderDark.withValues(alpha: 0.5)
-          : AppColors.borderLight.withValues(alpha: 0.5),
+      color: theme.dividerTheme.color,
     );
   }
 
   Widget _buildVersionInfo() {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Center(
       child: Text(
         'COUNTRY BLOCKER V2.5.0',
         style: theme.textTheme.bodySmall?.copyWith(
-          color:
-              isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight,
           fontSize: 14,
           fontWeight: FontWeight.w500,
           letterSpacing: 1.5,
@@ -518,7 +512,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   void _showAboutDialog() {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     showDialog(
       context: context,
@@ -554,27 +547,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             Text(
               'Version 2.5.0',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isDark
-                    ? AppColors.textSecondaryDark
-                    : AppColors.textSecondaryLight,
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 16),
             Text(
               'Block unwanted international calls by country code. Take control of your phone and protect yourself from spam and fraud.',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isDark
-                    ? AppColors.textSecondaryDark
-                    : AppColors.textSecondaryLight,
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 16),
             Text(
               '© 2026 Country Blocker. All rights reserved.',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isDark
-                    ? AppColors.textTertiaryDark
-                    : AppColors.textTertiaryLight,
                 fontSize: 10,
               ),
             ),

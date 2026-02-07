@@ -158,6 +158,13 @@ class AppTheme {
         ),
       ),
 
+      // Divider Theme
+      dividerTheme: DividerThemeData(
+        color: AppColors.borderDark.withValues(alpha: 0.5),
+        thickness: 1,
+        space: 1,
+      ),
+
       // List Tile Theme
       listTileTheme: const ListTileThemeData(
         contentPadding: EdgeInsets.symmetric(horizontal: Spacing.m, vertical: Spacing.s),
@@ -311,6 +318,13 @@ class AppTheme {
             width: 1,
           ),
         ),
+      ),
+
+      // Divider Theme
+      dividerTheme: DividerThemeData(
+        color: AppColors.borderLight.withValues(alpha: 0.5),
+        thickness: 1,
+        space: 1,
       ),
 
       // List Tile Theme
