@@ -164,24 +164,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ref.read(permissionsServiceProvider).requestRole();
             },
           ),
-        if (_selectedIndex == 1 || _selectedIndex == 3)
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-            onPressed: () {
-              // TODO: Show more options
-            },
-          ),
-        if (_selectedIndex == 2)
-          IconButton(
-            icon: Icon(
-              Icons.filter_list,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            onPressed: () {
-              // TODO: Show filter options
-            },
-          ),
       ],
     );
   }
