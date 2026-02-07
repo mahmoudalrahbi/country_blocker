@@ -3,16 +3,20 @@ package com.example.country_blocker
 import android.content.Context
 import android.telecom.Call
 import android.telecom.CallScreeningService
+import android.telephony.TelephonyManager
 import android.util.Log
-import org.json.JSONObject
+import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.google.i18n.phonenumbers.NumberParseException
+import com.google.i18n.phonenumbers.Phonenumber
+import java.util.Locale
 
 class CallBlockingService : CallScreeningService() {
 
     override fun onScreenCall(callDetails: Call.Details) {
-        val phoneNumber = callDetails.handle?.schemeSpecificPart ?: return
+        val rawPhoneNumber = callDetails.handle?.schemeSpecificPart ?: return
         
-        // Clean number (remove non-digits usually, but keep +)
-        // Usually implementation should robustly handle formats
+        // Clean the number - some devices might send encoded chars
+        val phoneNumber = java.net.URLDecoder.decode(rawPhoneNumber, "UTF-8")
         
         if (shouldBlock(phoneNumber)) {
             Log.d("CountryBlocker", "Blocking call from: $phoneNumber")
@@ -36,37 +40,98 @@ class CallBlockingService : CallScreeningService() {
         // Read directly from Shared Preferences used by Flutter
         val prefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         
-        // Flutter shared_preferences keys are prefixed with "flutter."
-        // We use the simplified JSON string key for native access
+        // 1. GLOBAL SWITCH CHECK
+        // Default to true if not found to be safe, but app initializes it.
+        val isGlobalBlockingEnabled = prefs.getBoolean("flutter.blocking_enabled", true)
+        if (!isGlobalBlockingEnabled) {
+            // If global switch is OFF, allow everything
+            return false
+        }
+        
         val blockedJsonString = prefs.getString("flutter.blocked_countries_simple", null) ?: return false
         
+        val phoneUtil = PhoneNumberUtil.getInstance()
+        var defaultRegion = "US" // Fallback
+        
+        // Try to get user's current region from SIM or Network
         try {
-            // It's a JSON Array of objects
+            val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val simCountry = tm.simCountryIso
+            if (!simCountry.isNullOrEmpty()) {
+                defaultRegion = simCountry.uppercase(Locale.getDefault())
+            } else {
+                val networkCountry = tm.networkCountryIso
+                if (!networkCountry.isNullOrEmpty()) {
+                    defaultRegion = networkCountry.uppercase(Locale.getDefault())
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("CountryBlocker", "Error getting default region", e)
+        }
+
+        var incomingCountryCode = 0
+        var isValidNumber = false
+        
+        try {
+            // Parse using libphonenumber
+            val phoneNumberProto: Phonenumber.PhoneNumber = phoneUtil.parse(number, defaultRegion)
+            isValidNumber = phoneUtil.isValidNumber(phoneNumberProto)
+            incomingCountryCode = phoneNumberProto.countryCode // e.g. 1, 971, 44
+        } catch (e: NumberParseException) {
+            Log.e("CountryBlocker", "Number parsing failed for: $number", e)
+            // Fallback: If strict parsing fails, we cannot safely rely on code matching
+            // We'll fallback to simple prefix check ONLY if it starts with '+'
+            return fallbackCheck(number, blockedJsonString)
+        }
+
+        try {
+            // Check against blocked list
             val jsonArray = org.json.JSONArray(blockedJsonString)
             for (i in 0 until jsonArray.length()) {
                 val item = jsonArray.getJSONObject(i)
-                val code = item.getString("phoneCode")
                 
-                // number format: usually "+971..." or "00971..."
-                // We check if number starts with "+" + code or "00" + code
-                // or just contains it at start.
-                
-                if (number.startsWith("+$code") || number.startsWith("00$code")) {
-                    return true
+                // 2. PER-COUNTRY SWITCH CHECK
+                // Check if this specific rule is enabled. Default to true if missing.
+                val isRuleEnabled = if (item.has("isEnabled")) item.getBoolean("isEnabled") else true
+                if (!isRuleEnabled) {
+                    continue
                 }
                 
-                // Also handle cases where number has no +, just digits, but implies country code?
-                // E.g. 1555...
-                if (number.startsWith(code)) {
-                     // CAREFUL: blocking "1" blocks US, but "1" is also start of "12" (meaningless example)
-                     // If code is "1", and number is "1555...", it blocks.
-                     return true
+                val blockedCodeStr = item.getString("phoneCode") // "1", "971"
+                
+                // 3. Strict Code Match via LibPhoneNumber
+                try {
+                    val blockedCode = blockedCodeStr.toInt()
+                    if (isValidNumber && incomingCountryCode == blockedCode) {
+                        return true
+                    }
+                } catch (e: NumberFormatException) {
+                    continue
                 }
             }
         } catch (e: Exception) {
             Log.e("CountryBlocker", "Error parsing blocked list", e)
         }
 
+        return false
+    }
+    
+    // Fallback for when libphonenumber fails to parse (e.g. unknown format)
+    private fun fallbackCheck(number: String, blockedJsonString: String): Boolean {
+        try {
+            val jsonArray = org.json.JSONArray(blockedJsonString)
+            for (i in 0 until jsonArray.length()) {
+                val item = jsonArray.getJSONObject(i)
+                val code = item.getString("phoneCode")
+                
+                // Only match overly explicit prefixes to avoid "1" matching "12..."
+                if (number.startsWith("+$code") || number.startsWith("00$code")) {
+                    return true
+                }
+            }
+        } catch (e: Exception) {
+            // ignore
+        }
         return false
     }
 }

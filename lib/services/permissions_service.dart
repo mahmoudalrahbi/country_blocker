@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 
 class PermissionsService {
@@ -13,5 +14,24 @@ class PermissionsService {
         print("Failed to request role: '${e.message}'.");
       }
     }
+  }
+
+  static Future<bool> requestPhonePermissions() async {
+    if (Platform.isAndroid) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.phone,
+        Permission.contacts,
+      ].request();
+
+      return statuses[Permission.phone]?.isGranted ?? false;
+    }
+    return true; // iOS handles checking differently via Call Directory Extension usually
+  }
+
+  static Future<bool> hasPhonePermissions() async {
+    if (Platform.isAndroid) {
+      return await Permission.phone.isGranted;
+    }
+    return true;
   }
 }
