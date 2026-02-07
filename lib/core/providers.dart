@@ -22,6 +22,7 @@ import '../features/country_blocking/presentation/notifiers/block_log_notifier.d
 import '../features/country_blocking/domain/entities/blocked_call_log.dart';
 
 
+export 'providers/locale_provider.dart';
 export '../shared/presentation/notifiers/theme_notifier.dart';
 import '../shared/services/permissions_service.dart';
 

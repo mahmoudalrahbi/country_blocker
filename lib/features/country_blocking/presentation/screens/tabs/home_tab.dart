@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../core/providers.dart';
@@ -52,7 +53,7 @@ class HomeTab extends ConsumerWidget {
 
           // Overview header
           Text(
-            'Overview',
+            AppLocalizations.of(context)!.overview,
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           const SizedBox(height: 16),
@@ -62,17 +63,17 @@ class HomeTab extends ConsumerWidget {
             children: [
               Expanded(
                 child: StatCard(
-                  title: 'Blocked Calls',
+                  title: AppLocalizations.of(context)!.blockedCalls,
                   value: '${state.blockedCallsCount}',
                   icon: Icons.call_missed,
-                  trend: state.blockedCallsCount > 0 ? 'Total blocked' : null,
+                  trend: state.blockedCallsCount > 0 ? AppLocalizations.of(context)!.formattedTotalBlocked : null,
                   isTrendPositive: state.blockedCallsCount > 0 ? true : null,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: StatCard(
-                  title: 'Countries',
+                  title: AppLocalizations.of(context)!.countries,
                   value: '${state.blockedCountries.length}',
                   icon: Icons.flag,
                 ),

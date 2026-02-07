@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -111,7 +112,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
               onChanged: _onSearchChanged,
               style: theme.textTheme.bodyLarge,
               decoration: InputDecoration(
-                hintText: 'Search number or country',
+                hintText: AppLocalizations.of(context)!.searchCountry,
                 prefixIcon: Icon(
                   Icons.search,
                   color: theme.inputDecorationTheme.hintStyle?.color,
@@ -129,7 +130,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: _calculateItemCount(groupedLogs),
                     itemBuilder: (context, index) {
-                      return _buildListItem(context, groupedLogs, index);
+                       return _buildListItem(context, groupedLogs, index);
                     },
                   ),
           ),
@@ -153,7 +154,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            _searchQuery.isEmpty ? 'No blocked calls yet' : 'No results found',
+            _searchQuery.isEmpty ? AppLocalizations.of(context)!.noRecentActivity : 'No results found',
             style: theme.textTheme.bodyLarge,
           ),
         ],
@@ -179,14 +180,14 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () {
               ref.read(blockLogNotifierProvider.notifier).clearLogs();
               Navigator.pop(context);
             },
-            child: const Text('Clear'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),

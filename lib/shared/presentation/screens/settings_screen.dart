@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers.dart';
@@ -118,7 +119,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SizedBox(width: 16),
               Text(
-                'Appearance',
+                AppLocalizations.of(context)!.theme,
                 style: theme.textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
@@ -132,7 +133,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: _buildThemeOption(
                   currentThemeMode,
                   ThemeMode.light,
-                  'Light',
+                  AppLocalizations.of(context)!.light,
                   Icons.wb_sunny,
                 ),
               ),
@@ -141,7 +142,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: _buildThemeOption(
                   currentThemeMode,
                   ThemeMode.dark,
-                  'Dark',
+                  AppLocalizations.of(context)!.dark,
                   Icons.dark_mode,
                 ),
               ),
@@ -150,7 +151,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: _buildThemeOption(
                   currentThemeMode,
                   ThemeMode.system,
-                  'System',
+                  AppLocalizations.of(context)!.system,
                   Icons.settings_suggest,
                 ),
               ),
@@ -340,15 +341,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildLanguageSelector() {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final currentLocale = ref.watch(localeProvider);
 
     return InkWell(
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Language selection coming soon'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        _showLanguageDialog(currentLocale);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -356,19 +353,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             _buildIconContainer(
               Icons.language,
-              Colors
-                  .purple, // Keeping distinct color for visual hierarchy, but could map to tertiary
+              Colors.purple,
             ),
             const SizedBox(width: 16),
             Text(
-              'Language',
+              AppLocalizations.of(context)!.language,
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
             ),
             const Spacer(),
             Text(
-              'English',
+              currentLocale.languageCode == 'ar' ? 'العربية' : 'English',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -378,6 +374,42 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Icons.chevron_right,
               color: colorScheme.onSurfaceVariant,
               size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageDialog(Locale currentLocale) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.selectCountry), // Reused selectCountry for now, ideally needs separate string
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioGroup<String>(
+              groupValue: currentLocale.languageCode,
+              onChanged: (value) {
+                if (value != null) {
+                  ref.read(localeProvider.notifier).setLocale(Locale(value));
+                  Navigator.pop(context);
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RadioListTile<String>(
+                    title: const Text('English'),
+                    value: 'en',
+                  ),
+                  RadioListTile<String>(
+                    title: const Text('العربية'),
+                    value: 'ar',
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -407,7 +439,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           child: Column(
             children: [
               _buildMenuItem(
-                'Help Center',
+                AppLocalizations.of(context)!.contactSupport,
                 Icons.help,
                 Colors.orange, // Distinct functional color
                 () {
@@ -421,7 +453,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               _buildDivider(),
               _buildMenuItem(
-                'About',
+                AppLocalizations.of(context)!.about,
                 Icons.info,
                 theme.colorScheme.onSurfaceVariant,
                 () {
@@ -500,7 +532,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     return Center(
       child: Text(
-        'COUNTRY BLOCKER V2.5.0',
+        '${AppLocalizations.of(context)!.appTitle} V2.5.0',
         style: theme.textTheme.bodySmall?.copyWith(
           fontSize: 14,
           fontWeight: FontWeight.w500,
@@ -535,17 +567,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
             const SizedBox(width: 12),
-            const Text('About'),
+            Text(AppLocalizations.of(context)!.about),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Country Blocker'),
+            Text(AppLocalizations.of(context)!.appTitle),
             const SizedBox(height: 4),
             Text(
-              'Version 2.5.0',
+              '${AppLocalizations.of(context)!.version} 2.5.0',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -559,7 +591,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              '© 2026 Country Blocker. All rights reserved.',
+              '© 2026 ${AppLocalizations.of(context)!.appTitle}. All rights reserved.',
               style: theme.textTheme.bodySmall?.copyWith(
                 fontSize: 10,
               ),
@@ -569,7 +601,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
         ],
       ),

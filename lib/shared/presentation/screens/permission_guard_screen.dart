@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers.dart';
 
@@ -87,7 +88,7 @@ class _PermissionGuardScreenState extends ConsumerState<PermissionGuardScreen> w
               ),
               const SizedBox(height: 32),
               Text(
-                'Permissions Required',
+                AppLocalizations.of(context)!.permissionRequired,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -95,7 +96,7 @@ class _PermissionGuardScreenState extends ConsumerState<PermissionGuardScreen> w
               ),
               const SizedBox(height: 16),
               Text(
-                'To protect you from unwanted calls, Country Blocker needs access to read your phone state and contacts.\n\nWe do not upload or share your data.',
+                AppLocalizations.of(context)!.permissionDescription,
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -105,7 +106,7 @@ class _PermissionGuardScreenState extends ConsumerState<PermissionGuardScreen> w
               FilledButton.icon(
                 onPressed: _requestPermissions,
                 icon: const Icon(Icons.check),
-                label: const Text('Grant Permissions'),
+                label: Text(AppLocalizations.of(context)!.grantPermissions),
                 style: FilledButton.styleFrom(
                   minimumSize: const Size(double.infinity, 56),
                 ),
@@ -113,7 +114,7 @@ class _PermissionGuardScreenState extends ConsumerState<PermissionGuardScreen> w
               const SizedBox(height: 16),
               TextButton(
                 onPressed: _openSettings,
-                child: const Text('Open App Settings'),
+                child: Text(AppLocalizations.of(context)!.openAppSettings),
               ),
             ],
           ),

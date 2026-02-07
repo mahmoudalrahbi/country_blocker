@@ -1,5 +1,6 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers.dart';
@@ -91,7 +92,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text('Add Block Rule'),
+        title: Text(AppLocalizations.of(context)!.addBlockRule),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -110,7 +111,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
                   children: [
                     Expanded(
                       child: _TabButton(
-                        label: 'Select Country',
+                        label: AppLocalizations.of(context)!.selectCountry,
                         isSelected: _selectedTab == 0,
                         onTap: () {
                           setState(() {
@@ -124,7 +125,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
                     ),
                     Expanded(
                       child: _TabButton(
-                        label: 'Custom Code',
+                        label: AppLocalizations.of(context)!.customCode,
                         isSelected: _selectedTab == 1,
                         onTap: () {
                           setState(() {
@@ -143,14 +144,14 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
 
               // Form header
               Text(
-                _selectedTab == 0 ? 'Select a Country' : 'Enter Custom Rule',
+                _selectedTab == 0 ? AppLocalizations.of(context)!.selectCountry : AppLocalizations.of(context)!.enterCustomRule,
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
               const SizedBox(height: 8),
               Text(
                 _selectedTab == 0
-                    ? 'Search and select a country from the list to block.'
-                    : 'Block calls from specific international or local prefixes.',
+                    ? AppLocalizations.of(context)!.selectCountryDescription
+                    : AppLocalizations.of(context)!.enterCustomRuleDescription,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -159,7 +160,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
 
               // Country Code input
               Text(
-                'COUNTRY CODE',
+                AppLocalizations.of(context)!.countryCode,
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -172,7 +173,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
                 onTap: _selectedTab == 0 ? _showCountryPicker : null,
                 style: Theme.of(context).textTheme.bodyLarge,
                 decoration: InputDecoration(
-                  hintText: _selectedTab == 0 ? 'Tap to select country' : '1',
+                  hintText: _selectedTab == 0 ? AppLocalizations.of(context)!.tapToSelectCountry : '1',
                   prefixText: '+',
                   prefixStyle: theme.textTheme.bodyLarge?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
@@ -187,7 +188,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
 
               // Name input
               Text(
-                'NAME (OPTIONAL)',
+                AppLocalizations.of(context)!.nameOptional,
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -196,8 +197,8 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
               TextField(
                 controller: _nameController,
                 style: Theme.of(context).textTheme.bodyLarge,
-                decoration: const InputDecoration(
-                  hintText: 'e.g. Work Contacts',
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)!.nameExample,
                 ),
               ),
               const SizedBox(height: 24),
@@ -227,7 +228,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'All incoming calls starting with this prefix will be automatically blocked.',
+                          AppLocalizations.of(context)!.blockingDescription,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface,
                             height: 1.5,
@@ -251,9 +252,9 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
                     ),
                     elevation: 4,
                   ),
-                  child: const Text(
-                    'Save to Block List',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.saveToBlockList,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers.dart';
@@ -100,23 +101,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           currentIndex: _selectedIndex,
           onTap: _onNavItemTapped,
           type: BottomNavigationBarType.fixed,
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              activeIcon: Icon(Icons.home),
-              label: 'Home',
+              icon: const Icon(Icons.home),
+              label: AppLocalizations.of(context)!.home,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.public_off),
-              label: 'Blocklist',
+              icon: const Icon(Icons.public_off),
+              label: AppLocalizations.of(context)!.blocklist,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              label: 'Log',
+              icon: const Icon(Icons.history),
+              label: AppLocalizations.of(context)!.logs,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
+              icon: const Icon(Icons.settings),
+              label: AppLocalizations.of(context)!.settings,
             ),
           ],
         ),
@@ -125,17 +125,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    String title = 'Country Blocker';
+    String title = AppLocalizations.of(context)!.appTitle;
 
     switch (_selectedIndex) {
       case 1:
-        title = 'Blocked Countries';
+        title = AppLocalizations.of(context)!.countriesBlocked;
         break;
       case 2:
-        title = 'Recent Blocks';
+        title = AppLocalizations.of(context)!.recentActivity;
         break;
       case 3:
-        title = 'Settings';
+        title = AppLocalizations.of(context)!.settings;
         break;
     }
 
@@ -159,7 +159,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (Platform.isAndroid && _selectedIndex == 0)
           IconButton(
             icon: const Icon(Icons.shield),
-            tooltip: 'Enable Call Blocking',
+            tooltip: AppLocalizations.of(context)!.enableBlocking,
             onPressed: () {
               ref.read(permissionsServiceProvider).requestRole();
             },

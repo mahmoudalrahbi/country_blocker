@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../core/providers.dart';
@@ -38,15 +39,15 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Theme.of(context).cardTheme.color,
-        title: const Text('Delete Country'),
-        content: Text('Are you sure you want to remove $name from the blocklist?'),
+        title: Text(AppLocalizations.of(context)!.delete),
+        content: Text('Are you sure you want to remove $name from the blocklist?'), // Parametric string needs better handling in ARB but keeping simple for now
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.onSurface,
             ),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -59,14 +60,14 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
               
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('$name removed from blocklist'),
+                  content: Text(AppLocalizations.of(context)!.itemDeleted),
                   backgroundColor: Theme.of(context).colorScheme.error,
                   behavior: SnackBarBehavior.floating,
                 ),
               );
             },
             child: Text(
-              'Delete',
+              AppLocalizations.of(context)!.delete,
               style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           ),
@@ -98,7 +99,7 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
             onChanged: _onSearchChanged,
             style: Theme.of(context).textTheme.bodyLarge,
             decoration: InputDecoration(
-              hintText: 'Search blocked rules...',
+              hintText: AppLocalizations.of(context)!.searchCountry,
               prefixIcon: Icon(
                 Icons.search,
                 color: Theme.of(context).inputDecorationTheme.hintStyle?.color,
@@ -113,7 +114,7 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           alignment: Alignment.centerLeft,
           child: Text(
-            'ACTIVE RULES (${filteredCountries.length})',
+            '${AppLocalizations.of(context)!.active} (${filteredCountries.length})',
             style: Theme.of(context).textTheme.labelSmall,
           ),
         ),
@@ -136,7 +137,7 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                       const SizedBox(height: 16),
                       Text(
                         _searchQuery.isEmpty
-                            ? 'No blocked countries yet'
+                            ? AppLocalizations.of(context)!.addFirstCountry
                             : 'No results found',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
