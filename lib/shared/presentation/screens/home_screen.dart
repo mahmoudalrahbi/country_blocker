@@ -8,6 +8,7 @@ import '../../../features/country_blocking/presentation/screens/logs_screen.dart
 import '../../../features/country_blocking/presentation/screens/tabs/blocklist_tab.dart';
 import '../../../features/country_blocking/presentation/screens/tabs/home_tab.dart';
 import '../../services/permissions_service.dart';
+import 'permission_guard_screen.dart';
 import 'settings_screen.dart';
 
 /// Main home screen with bottom navigation
@@ -28,7 +29,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _checkPermissions() async {
-    await PermissionsService.requestPhonePermissions();
+    final hasPerms = await ref.read(permissionsServiceProvider).hasPhonePermissions();
+    if (mounted) {
+      setState(() {
+        _hasPermissions = hasPerms;
+      });
+    }
   }
 
   void _onNavItemTapped(int index) {
@@ -39,8 +45,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
 
 
+  bool _hasPermissions = false;
+
   @override
   Widget build(BuildContext context) {
+    if (!_hasPermissions) {
+      return PermissionGuardScreen(
+        onPermissionsGranted: () {
+          setState(() {
+            _hasPermissions = true;
+          });
+        },
+      );
+    }
+
     // Watch loading state
     final isLoading = ref.watch(isLoadingProvider);
     final theme = Theme.of(context);
@@ -144,7 +162,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             icon: const Icon(Icons.shield),
             tooltip: 'Enable Call Blocking',
             onPressed: () {
-              PermissionsService.requestRole();
+              ref.read(permissionsServiceProvider).requestRole();
             },
           ),
         if (_selectedIndex == 1 || _selectedIndex == 3)

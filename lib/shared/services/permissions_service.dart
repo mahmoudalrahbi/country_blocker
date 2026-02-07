@@ -3,9 +3,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 
 class PermissionsService {
-  static const platform = MethodChannel('com.example.country_blocker/channel');
+  final platform = const MethodChannel('com.example.country_blocker/channel');
 
-  static Future<void> requestRole() async {
+  Future<void> requestRole() async {
     if (Platform.isAndroid) {
       try {
         await platform.invokeMethod('requestRole');
@@ -16,7 +16,7 @@ class PermissionsService {
     }
   }
 
-  static Future<bool> requestPhonePermissions() async {
+  Future<bool> requestPhonePermissions() async {
     if (Platform.isAndroid) {
       Map<Permission, PermissionStatus> statuses = await [
         Permission.phone,
@@ -28,10 +28,14 @@ class PermissionsService {
     return true; // iOS handles checking differently via Call Directory Extension usually
   }
 
-  static Future<bool> hasPhonePermissions() async {
+  Future<bool> hasPhonePermissions() async {
     if (Platform.isAndroid) {
       return await Permission.phone.isGranted;
     }
     return true;
+  }
+
+  Future<bool> openSettings() async {
+    return await openAppSettings();
   }
 }

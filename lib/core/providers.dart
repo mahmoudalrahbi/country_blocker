@@ -17,6 +17,7 @@ import '../features/country_blocking/presentation/notifiers/country_blocking_sta
 
 
 export '../shared/presentation/notifiers/theme_notifier.dart';
+import '../shared/services/permissions_service.dart';
 
 // ==================== External Dependencies ====================
 
@@ -26,6 +27,11 @@ final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError(
     'sharedPreferencesProvider must be overridden in main.dart',
   );
+});
+
+/// Permissions service provider
+final permissionsServiceProvider = Provider<PermissionsService>((ref) {
+  return PermissionsService();
 });
 
 // ==================== Data Sources ====================

@@ -16,7 +16,7 @@ class HomeTab extends ConsumerWidget {
 
     // Ensure we have permissions before enabling
     if (!state.isBlockingActive) {
-      final hasPerms = await PermissionsService.requestPhonePermissions();
+      final hasPerms = await ref.read(permissionsServiceProvider).requestPhonePermissions();
       if (!hasPerms) {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
