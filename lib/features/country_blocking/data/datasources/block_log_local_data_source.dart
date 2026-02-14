@@ -8,7 +8,7 @@ abstract class BlockLogLocalDataSource {
   Future<void> clearLogs();
 }
 
-const String kBlockedCallLogsKey = 'flutter.blocked_call_logs_native';
+const String kBlockedCallLogsKey = 'blocked_call_logs_native';
 
 class BlockLogLocalDataSourceImpl implements BlockLogLocalDataSource {
   final SharedPreferences sharedPreferences;
@@ -17,6 +17,7 @@ class BlockLogLocalDataSourceImpl implements BlockLogLocalDataSource {
 
   @override
   Future<List<BlockedCallLogModel>> getLogs() async {
+    await sharedPreferences.reload();
     final jsonString = sharedPreferences.getString(kBlockedCallLogsKey);
     if (jsonString != null) {
       try {

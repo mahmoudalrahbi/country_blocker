@@ -27,16 +27,29 @@ class MainActivity: FlutterActivity() {
     }
 
     private fun requestCallScreeningRole() {
+        android.util.Log.d("CountryBlocker", "Requesting Call Screening Role. SDK: ${Build.VERSION.SDK_INT}")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val roleManager = getSystemService(Context.ROLE_SERVICE) as RoleManager
-            if (roleManager.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING)) {
-                if (roleManager.isRoleHeld(RoleManager.ROLE_CALL_SCREENING)) {
-                    // Already held
+            val isAvailable = roleManager.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING)
+            val isHeld = roleManager.isRoleHeld(RoleManager.ROLE_CALL_SCREENING)
+            
+            android.util.Log.d("CountryBlocker", "Role Available: $isAvailable, Role Held: $isHeld")
+
+            if (isAvailable) {
+                if (isHeld) {
+                    android.util.Log.d("CountryBlocker", "Role already held")
                     return
                 }
+                android.util.Log.d("CountryBlocker", "Launching role request intent")
                 val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING)
                 startActivityForResult(intent, REQUEST_ID)
+            } else {
+                android.util.Log.e("CountryBlocker", "Role Call Screening is NOT available on this device")
             }
+        } else {
+             android.util.Log.w("CountryBlocker", "Android version below Q (29), cannot request ROLE_CALL_SCREENING via RoleManager")
+             // Here we might need to fallback to asking to be Default Dialer for older phones, 
+             // but for now just logging explains why it doesn't work.
         }
     }
 }

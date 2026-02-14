@@ -16,8 +16,10 @@ class CallBlockingService : CallScreeningService() {
         val rawPhoneNumber = callDetails.handle?.schemeSpecificPart ?: return
         
         // Clean the number - some devices might send encoded chars
-        val phoneNumber = java.net.URLDecoder.decode(rawPhoneNumber, "UTF-8")
+        val phoneNumber = java.net.URLDecoder.decode(rawPhoneNumber, "UTF-8").trim()
         
+        Log.d("CountryBlocker", "Incoming call detected: $phoneNumber")
+
         if (shouldBlock(phoneNumber)) {
             Log.d("CountryBlocker", "Blocking call from: $phoneNumber")
             val response = CallResponse.Builder()
@@ -29,6 +31,7 @@ class CallBlockingService : CallScreeningService() {
             
             respondToCall(callDetails, response)
         } else {
+            Log.d("CountryBlocker", "Allowing call from: $phoneNumber")
             val response = CallResponse.Builder()
                 .setDisallowCall(false) // Allow
                 .build()
@@ -37,6 +40,7 @@ class CallBlockingService : CallScreeningService() {
     }
 
     private fun shouldBlock(number: String): Boolean {
+         Log.e("CountryBlocker", "==============shouldBlock called with number: $number ==============")
         // Read directly from Shared Preferences used by Flutter
         val prefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         
@@ -45,6 +49,7 @@ class CallBlockingService : CallScreeningService() {
         val isGlobalBlockingEnabled = prefs.getBoolean("flutter.blocking_enabled", true)
         if (!isGlobalBlockingEnabled) {
             // If global switch is OFF, allow everything
+             Log.e("CountryBlocker", "=====Global blocking is disabled. Allowing all calls.")
             return false
         }
         
@@ -79,11 +84,34 @@ class CallBlockingService : CallScreeningService() {
             phoneNumberProto = phoneUtil.parse(number, defaultRegion)
             isValidNumber = phoneUtil.isValidNumber(phoneNumberProto)
             incomingCountryCode = phoneNumberProto.countryCode // e.g. 1, 971, 44
+             Log.e("CountryBlocker", "=== incoming number parsed: countryCode=$incomingCountryCode, isValid=$isValidNumber, defaultRegion=$defaultRegion ===")
         } catch (e: NumberParseException) {
             Log.e("CountryBlocker", "Number parsing failed for: $number", e)
-            // Fallback: If strict parsing fails, we cannot safely rely on code matching
-            // We'll fallback to simple prefix check ONLY if it starts with '+'
-            return fallbackCheck(number, blockedJsonString)
+        }
+
+        // IMPROVED FALLBACK:
+        // If the number is NOT valid (or failed to parse initially) AND it doesn't accept a '+',
+        // let's try to parse it again with a '+' prefix.
+        // This handles cases like "1650..." coming in while in "OM" (Oman) region, where it's 
+        // treated as a local number and fails validation.
+        if (!isValidNumber && !number.startsWith("+")) {
+             try {
+                val numberPlus = "+$number"
+                val potentialProto = phoneUtil.parse(numberPlus, null) // null region for international format
+                 if (phoneUtil.isValidNumber(potentialProto)) {
+                     phoneNumberProto = potentialProto
+                     incomingCountryCode = phoneNumberProto.countryCode
+                     isValidNumber = true
+                     Log.e("CountryBlocker", "=== FIXED: Parsed with '+' prefix. CountryCode=$incomingCountryCode ===")
+                 }
+             } catch (e: Exception) {
+                 Log.e("CountryBlocker", "Fallback '+' parsing failed", e)
+             }
+        }
+
+        if (!isValidNumber) {
+             // If still invalid, check naive fallback
+             return fallbackCheck(number, blockedJsonString)
         }
 
         try {
@@ -104,6 +132,7 @@ class CallBlockingService : CallScreeningService() {
                 // 3. Strict Code Match via LibPhoneNumber
                 try {
                     val blockedCode = blockedCodeStr.toInt()
+                     Log.e("CountryBlocker", "Checking against blocked code: $blockedCode, incoming code: $incomingCountryCode, isValidNumber: $isValidNumber")
                     if (isValidNumber && incomingCountryCode == blockedCode) {
                         var countryName = "Unknown"
                         if (phoneNumberProto != null) {
@@ -113,6 +142,7 @@ class CallBlockingService : CallScreeningService() {
                              }
                         }
                         saveBlockedCall(number, incomingCountryCode.toString(), countryName, 3)
+                         Log.e("CountryBlocker", "Blocked call from country code: $incomingCountryCode, country name: $countryName")
                         return true
                     }
                 } catch (e: NumberFormatException) {
