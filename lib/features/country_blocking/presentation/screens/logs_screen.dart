@@ -4,6 +4,7 @@ import 'package:country_blocker/core/utils/phone_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
+import 'package:country_picker/country_picker.dart';
 
 import '../../../../core/providers.dart';
 
@@ -250,7 +251,28 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final flagEmoji = CountryFlags.getFlagEmoji(log.countryCode);
+    
+    String? isoCode = log.countryCode;
+    String displayCountryName = log.countryName;
+
+    // Try to find the country object to convert phone code to ISO code
+    Country? country;
+    if (int.tryParse(log.countryCode) != null) {
+      country = CountryService().findByPhoneCode(log.countryCode);
+    } else {
+      country = CountryService().findByCode(log.countryCode);
+    }
+
+    if (country != null) {
+      isoCode = country.countryCode;
+      
+      final locName = CountryLocalizations.of(context)?.countryName(countryCode: isoCode);
+      if (locName != null && (log.countryName == country.name || log.countryName == 'Unknown' || log.countryName == 'Unknown Region')) {
+        displayCountryName = locName;
+      }
+    }
+
+    final flagEmoji = CountryFlags.getFlagEmoji(isoCode);
     
     // Calculate opacity for older items (fade effect)
     double opacity = 1.0;
@@ -309,7 +331,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
                       children: [
                         Flexible(
                           child: Text(
-                            log.countryName,
+                            displayCountryName,
                             style: theme.textTheme.bodySmall,
                             overflow: TextOverflow.ellipsis,
                           ),

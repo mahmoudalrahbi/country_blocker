@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:country_picker/country_picker.dart';
 
 import '../../../../../../core/providers.dart';
 import '../../../../../../core/utils/country_flags.dart';
@@ -156,9 +157,22 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                   itemCount: filteredCountries.length,
                   itemBuilder: (context, index) {
                     final country = filteredCountries[index];
+                    String displayCountryName = country.name;
+
+                    if (country.isoCode != 'UNKNOWN') {
+                      final locName = CountryLocalizations.of(context)?.countryName(countryCode: country.isoCode);
+                      if (locName != null) {
+                         // If the user didn't provide a custom name (meaning the saved name matches the English name), 
+                         // then override it with the localized name.
+                         final englishName = CountryService().findByCode(country.isoCode)?.name;
+                         if (englishName == country.name || country.name == 'Unknown Region') {
+                             displayCountryName = locName;
+                         }
+                      }
+                    }
 
                     return CountryListItem(
-                      countryName: country.name,
+                      countryName: displayCountryName,
                       phoneCode: country.phoneCode,
                       flagEmoji: _getFlagEmoji(country.isoCode),
                       isEnabled: country.isEnabled,
@@ -172,7 +186,7 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                           SnackBar(
                             content: Text(
                               AppLocalizations.of(context)!.blockingStateChanged(
-                                country.name,
+                                displayCountryName,
                                 value ? AppLocalizations.of(context)!.enabled : AppLocalizations.of(context)!.disabled,
                               ),
                             ),
@@ -183,7 +197,7 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                         );
                       },
                       onDelete: () {
-                        _showDeleteDialog(context, country.phoneCode, country.name);
+                        _showDeleteDialog(context, country.phoneCode, displayCountryName);
                       },
                     );
                   },

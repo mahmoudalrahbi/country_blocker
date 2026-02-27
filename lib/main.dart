@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:country_picker/country_picker.dart';
 
 import 'core/providers.dart';
 import 'shared/presentation/screens/home_screen.dart';
@@ -41,6 +42,7 @@ class CountryBlockerApp extends ConsumerWidget {
       themeMode: themeMode,
       locale: locale,
       localizationsDelegates: const [
+        CountryLocalizations.delegate,
         ...AppLocalizations.localizationsDelegates,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
