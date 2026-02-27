@@ -192,6 +192,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
               TextField(
                 controller: _codeController,
                 keyboardType: TextInputType.number,
+                textDirection: TextDirection.ltr,
                 readOnly: _selectedTab == 0,
                 onTap: _selectedTab == 0 ? _showCountryPicker : null,
                 style: Theme.of(context).textTheme.bodyLarge,
