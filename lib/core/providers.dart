@@ -6,7 +6,9 @@ import '../features/country_blocking/data/datasources/country_blocking_local_dat
 import '../features/country_blocking/data/repositories/country_blocking_repository_impl.dart';
 import '../features/country_blocking/domain/repositories/country_blocking_repository.dart';
 import '../features/country_blocking/domain/usecases/add_blocked_country.dart';
+import '../features/country_blocking/domain/usecases/get_blocked_calls_count.dart';
 import '../features/country_blocking/domain/usecases/get_blocked_countries.dart';
+import '../features/country_blocking/domain/usecases/get_global_blocking_status.dart';
 import '../features/country_blocking/domain/usecases/increment_blocked_calls.dart';
 import '../features/country_blocking/domain/usecases/remove_blocked_country.dart';
 import '../features/country_blocking/domain/usecases/toggle_country_blocking.dart';
@@ -127,6 +129,20 @@ final getBlockedLogsProvider = Provider<GetBlockedLogs>((ref) {
   );
 });
 
+/// Get global blocking status use case provider
+final getGlobalBlockingStatusProvider = Provider<GetGlobalBlockingStatus>((ref) {
+  return GetGlobalBlockingStatus(
+    ref.watch(countryBlockingRepositoryProvider),
+  );
+});
+
+/// Get blocked calls count use case provider
+final getBlockedCallsCountProvider = Provider<GetBlockedCallsCount>((ref) {
+  return GetBlockedCallsCount(
+    ref.watch(countryBlockingRepositoryProvider),
+  );
+});
+
 // ==================== State Notifiers ====================
 
 /// Country blocking state notifier provider
@@ -134,6 +150,8 @@ final countryBlockingNotifierProvider =
     StateNotifierProvider<CountryBlockingNotifier, CountryBlockingState>((ref) {
   return CountryBlockingNotifier(
     getBlockedCountries: ref.watch(getBlockedCountriesProvider),
+    getGlobalBlockingStatus: ref.watch(getGlobalBlockingStatusProvider),
+    getBlockedCallsCount: ref.watch(getBlockedCallsCountProvider),
     addBlockedCountry: ref.watch(addBlockedCountryProvider),
     removeBlockedCountry: ref.watch(removeBlockedCountryProvider),
     toggleCountryBlocking: ref.watch(toggleCountryBlockingProvider),

@@ -12,17 +12,21 @@ import 'package:country_blocker/features/country_blocking/domain/entities/blocke
 import 'package:country_blocker/features/country_blocking/domain/repositories/country_blocking_repository.dart'
     as _i2;
 import 'package:country_blocker/features/country_blocking/domain/usecases/add_blocked_country.dart'
-    as _i9;
+    as _i11;
+import 'package:country_blocker/features/country_blocking/domain/usecases/get_blocked_calls_count.dart'
+    as _i10;
 import 'package:country_blocker/features/country_blocking/domain/usecases/get_blocked_countries.dart'
     as _i4;
+import 'package:country_blocker/features/country_blocking/domain/usecases/get_global_blocking_status.dart'
+    as _i9;
 import 'package:country_blocker/features/country_blocking/domain/usecases/increment_blocked_calls.dart'
-    as _i13;
+    as _i15;
 import 'package:country_blocker/features/country_blocking/domain/usecases/remove_blocked_country.dart'
-    as _i10;
-import 'package:country_blocker/features/country_blocking/domain/usecases/toggle_country_blocking.dart'
-    as _i11;
-import 'package:country_blocker/features/country_blocking/domain/usecases/toggle_global_blocking.dart'
     as _i12;
+import 'package:country_blocker/features/country_blocking/domain/usecases/toggle_country_blocking.dart'
+    as _i13;
+import 'package:country_blocker/features/country_blocking/domain/usecases/toggle_global_blocking.dart'
+    as _i14;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -90,10 +94,78 @@ class MockGetBlockedCountries extends _i1.Mock
           as _i5.Future<_i3.Either<_i6.Failure, List<_i7.BlockedCountry>>>);
 }
 
+/// A class which mocks [GetGlobalBlockingStatus].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetGlobalBlockingStatus extends _i1.Mock
+    implements _i9.GetGlobalBlockingStatus {
+  MockGetGlobalBlockingStatus() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.CountryBlockingRepository get repository =>
+      (super.noSuchMethod(
+            Invocation.getter(#repository),
+            returnValue: _FakeCountryBlockingRepository_0(
+              this,
+              Invocation.getter(#repository),
+            ),
+          )
+          as _i2.CountryBlockingRepository);
+
+  @override
+  _i5.Future<_i3.Either<_i6.Failure, bool>> call(_i8.NoParams? params) =>
+      (super.noSuchMethod(
+            Invocation.method(#call, [params]),
+            returnValue: _i5.Future<_i3.Either<_i6.Failure, bool>>.value(
+              _FakeEither_1<_i6.Failure, bool>(
+                this,
+                Invocation.method(#call, [params]),
+              ),
+            ),
+          )
+          as _i5.Future<_i3.Either<_i6.Failure, bool>>);
+}
+
+/// A class which mocks [GetBlockedCallsCount].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetBlockedCallsCount extends _i1.Mock
+    implements _i10.GetBlockedCallsCount {
+  MockGetBlockedCallsCount() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.CountryBlockingRepository get repository =>
+      (super.noSuchMethod(
+            Invocation.getter(#repository),
+            returnValue: _FakeCountryBlockingRepository_0(
+              this,
+              Invocation.getter(#repository),
+            ),
+          )
+          as _i2.CountryBlockingRepository);
+
+  @override
+  _i5.Future<_i3.Either<_i6.Failure, int>> call(_i8.NoParams? params) =>
+      (super.noSuchMethod(
+            Invocation.method(#call, [params]),
+            returnValue: _i5.Future<_i3.Either<_i6.Failure, int>>.value(
+              _FakeEither_1<_i6.Failure, int>(
+                this,
+                Invocation.method(#call, [params]),
+              ),
+            ),
+          )
+          as _i5.Future<_i3.Either<_i6.Failure, int>>);
+}
+
 /// A class which mocks [AddBlockedCountry].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAddBlockedCountry extends _i1.Mock implements _i9.AddBlockedCountry {
+class MockAddBlockedCountry extends _i1.Mock implements _i11.AddBlockedCountry {
   MockAddBlockedCountry() {
     _i1.throwOnMissingStub(this);
   }
@@ -111,7 +183,7 @@ class MockAddBlockedCountry extends _i1.Mock implements _i9.AddBlockedCountry {
 
   @override
   _i5.Future<_i3.Either<_i6.Failure, void>> call(
-    _i9.AddBlockedCountryParams? params,
+    _i11.AddBlockedCountryParams? params,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
@@ -129,7 +201,7 @@ class MockAddBlockedCountry extends _i1.Mock implements _i9.AddBlockedCountry {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockRemoveBlockedCountry extends _i1.Mock
-    implements _i10.RemoveBlockedCountry {
+    implements _i12.RemoveBlockedCountry {
   MockRemoveBlockedCountry() {
     _i1.throwOnMissingStub(this);
   }
@@ -147,7 +219,7 @@ class MockRemoveBlockedCountry extends _i1.Mock
 
   @override
   _i5.Future<_i3.Either<_i6.Failure, void>> call(
-    _i10.RemoveBlockedCountryParams? params,
+    _i12.RemoveBlockedCountryParams? params,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
@@ -165,7 +237,7 @@ class MockRemoveBlockedCountry extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockToggleCountryBlocking extends _i1.Mock
-    implements _i11.ToggleCountryBlocking {
+    implements _i13.ToggleCountryBlocking {
   MockToggleCountryBlocking() {
     _i1.throwOnMissingStub(this);
   }
@@ -183,7 +255,7 @@ class MockToggleCountryBlocking extends _i1.Mock
 
   @override
   _i5.Future<_i3.Either<_i6.Failure, void>> call(
-    _i11.ToggleCountryBlockingParams? params,
+    _i13.ToggleCountryBlockingParams? params,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
@@ -201,7 +273,7 @@ class MockToggleCountryBlocking extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockToggleGlobalBlocking extends _i1.Mock
-    implements _i12.ToggleGlobalBlocking {
+    implements _i14.ToggleGlobalBlocking {
   MockToggleGlobalBlocking() {
     _i1.throwOnMissingStub(this);
   }
@@ -235,7 +307,7 @@ class MockToggleGlobalBlocking extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockIncrementBlockedCalls extends _i1.Mock
-    implements _i13.IncrementBlockedCalls {
+    implements _i15.IncrementBlockedCalls {
   MockIncrementBlockedCalls() {
     _i1.throwOnMissingStub(this);
   }
