@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../features/country_blocking/data/datasources/country_blocking_local_data_source.dart';
@@ -41,6 +42,11 @@ final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
 /// Permissions service provider
 final permissionsServiceProvider = Provider<PermissionsService>((ref) {
   return PermissionsService();
+});
+
+/// Package info provider — reads the app version and build number from pubspec.yaml at runtime
+final packageInfoProvider = FutureProvider<PackageInfo>((ref) {
+  return PackageInfo.fromPlatform();
 });
 
 // ==================== Data Sources ====================

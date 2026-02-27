@@ -616,10 +616,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
 
   Widget _buildVersionInfo() {
     final theme = Theme.of(context);
+    final packageInfo = ref.watch(packageInfoProvider);
+    final version = packageInfo.valueOrNull?.version ?? '';
 
     return Center(
       child: Text(
-        '${AppLocalizations.of(context)!.appTitle} V2.5.0',
+        '${AppLocalizations.of(context)!.appTitle} V$version',
         style: theme.textTheme.bodySmall?.copyWith(
           fontSize: 14,
           fontWeight: FontWeight.w500,
@@ -663,7 +665,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
             Text(AppLocalizations.of(context)!.appTitle),
             const SizedBox(height: 4),
             Text(
-              '${AppLocalizations.of(context)!.version} 2.5.0',
+              '${AppLocalizations.of(context)!.version} ${ref.watch(packageInfoProvider).valueOrNull?.version ?? ''}',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
