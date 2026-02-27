@@ -271,6 +271,11 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
         displayCountryName = locName;
       }
     }
+    
+    // Fallback for manually added regions missing an ISO code that were saved as 'Unknown Region'
+    if (displayCountryName == 'Unknown Region' || displayCountryName == 'Unknown' || displayCountryName.isEmpty) {
+        displayCountryName = AppLocalizations.of(context)!.unknownRegion;
+    }
 
     final flagEmoji = CountryFlags.getFlagEmoji(isoCode);
     

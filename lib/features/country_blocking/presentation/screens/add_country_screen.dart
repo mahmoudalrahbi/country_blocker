@@ -19,6 +19,8 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
   final _codeController = TextEditingController();
   final _nameController = TextEditingController();
   String _isoCode = 'UNKNOWN';
+  String? _englishNameFallback;
+  String? _localizedNameFallback;
   int _selectedTab = 0; // 0 = Select Country, 1 = Custom Code
 
   @override
@@ -43,10 +45,25 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
       return;
     }
 
+    // Determine what name to save in the DB
+    // We want to avoid saving the translated Arabic (or other language) name permanently,
+    // so if they just used the picker dropdown, we intercept it and save the English string instead.
+    String finalNameToSave = name;
+    
+    // If the string in the controller matches exactly what the picker auto-filled...
+    if (_localizedNameFallback != null && name == _localizedNameFallback) {
+        // use the canonical english translation
+        finalNameToSave = _englishNameFallback ?? name;
+    }
+    
+    if (finalNameToSave.isEmpty) {
+        finalNameToSave = 'Unknown Region'; // Always save canonical english fallback. UI translates it.
+    }
+
     final country = BlockedCountry(
       isoCode: _isoCode,
       phoneCode: code,
-      name: name.isEmpty ? AppLocalizations.of(context)!.unknownRegion : name,
+      name: finalNameToSave,
     );
 
     // Use notifier to add country
@@ -119,6 +136,8 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
                             _codeController.clear();
                             _nameController.clear();
                             _isoCode = 'UNKNOWN';
+                            _englishNameFallback = null;
+                            _localizedNameFallback = null;
                           });
                         },
                       ),
@@ -133,6 +152,8 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
                             _codeController.clear();
                             _nameController.clear();
                             _isoCode = 'UNKNOWN';
+                            _englishNameFallback = null;
+                            _localizedNameFallback = null;
                           });
                         },
                       ),
@@ -275,7 +296,17 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
       onSelect: (Country country) {
         setState(() {
           _codeController.text = country.phoneCode;
-          _nameController.text = country.name;
+          
+          final locName = CountryLocalizations.of(context)?.countryName(countryCode: country.countryCode);
+          if (locName != null) {
+            _nameController.text = locName;
+            _localizedNameFallback = locName;
+          } else {
+            _nameController.text = country.name;
+            _localizedNameFallback = country.name;
+          }
+          
+          _englishNameFallback = country.name;
           _isoCode = country.countryCode;
         });
       },

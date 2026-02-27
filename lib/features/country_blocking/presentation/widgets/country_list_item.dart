@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 
 
 /// A country list item widget for the blocklist screen
@@ -80,6 +81,7 @@ class CountryListItem extends StatelessWidget {
                     Text(
                       '+$phoneCode${subtitle != null ? ' • $subtitle' : ''}',
                       style: theme.textTheme.bodySmall,
+                      textDirection: ui.TextDirection.ltr,
                     ),
                   ],
                 ),

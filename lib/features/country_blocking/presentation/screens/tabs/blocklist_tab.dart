@@ -170,6 +170,10 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                          }
                       }
                     }
+                    
+                    if (displayCountryName == 'Unknown Region' || displayCountryName == 'Unknown' || displayCountryName.isEmpty) {
+                        displayCountryName = AppLocalizations.of(context)!.unknownRegion;
+                    }
 
                     return CountryListItem(
                       countryName: displayCountryName,
