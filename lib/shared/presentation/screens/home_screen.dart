@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers.dart';
@@ -7,7 +8,7 @@ import '../../../features/country_blocking/presentation/screens/add_country_scre
 import '../../../features/country_blocking/presentation/screens/logs_screen.dart';
 import '../../../features/country_blocking/presentation/screens/tabs/blocklist_tab.dart';
 import '../../../features/country_blocking/presentation/screens/tabs/home_tab.dart';
-import '../../services/permissions_service.dart';
+import 'permission_guard_screen.dart';
 import 'settings_screen.dart';
 
 /// Main home screen with bottom navigation
@@ -28,7 +29,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _checkPermissions() async {
-    await PermissionsService.requestPhonePermissions();
+    final hasPerms = await ref.read(permissionsServiceProvider).hasPhonePermissions();
+    if (mounted) {
+      setState(() {
+        _hasPermissions = hasPerms;
+      });
+    }
   }
 
   void _onNavItemTapped(int index) {
@@ -39,8 +45,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
 
 
+  bool _hasPermissions = false;
+
   @override
   Widget build(BuildContext context) {
+    if (!_hasPermissions) {
+      return PermissionGuardScreen(
+        onPermissionsGranted: () {
+          setState(() {
+            _hasPermissions = true;
+          });
+        },
+      );
+    }
+
     // Watch loading state
     final isLoading = ref.watch(isLoadingProvider);
     final theme = Theme.of(context);
@@ -83,23 +101,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           currentIndex: _selectedIndex,
           onTap: _onNavItemTapped,
           type: BottomNavigationBarType.fixed,
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              activeIcon: Icon(Icons.home),
-              label: 'Home',
+              icon: const Icon(Icons.home),
+              label: AppLocalizations.of(context)!.home,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.public_off),
-              label: 'Blocklist',
+              icon: const Icon(Icons.public_off),
+              label: AppLocalizations.of(context)!.blocklist,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              label: 'Log',
+              icon: const Icon(Icons.history),
+              label: AppLocalizations.of(context)!.logs,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
+              icon: const Icon(Icons.settings),
+              label: AppLocalizations.of(context)!.settings,
             ),
           ],
         ),
@@ -108,17 +125,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    String title = 'Country Blocker';
+    String title = AppLocalizations.of(context)!.appTitle;
 
     switch (_selectedIndex) {
       case 1:
-        title = 'Blocked Countries';
+        title = AppLocalizations.of(context)!.countriesBlocked;
         break;
       case 2:
-        title = 'Recent Blocks';
+        title = AppLocalizations.of(context)!.recentActivity;
         break;
       case 3:
-        title = 'Settings';
+        title = AppLocalizations.of(context)!.settings;
         break;
     }
 
@@ -142,27 +159,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (Platform.isAndroid && _selectedIndex == 0)
           IconButton(
             icon: const Icon(Icons.shield),
-            tooltip: 'Enable Call Blocking',
+            tooltip: AppLocalizations.of(context)!.enableBlocking,
             onPressed: () {
-              PermissionsService.requestRole();
-            },
-          ),
-        if (_selectedIndex == 1 || _selectedIndex == 3)
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-            onPressed: () {
-              // TODO: Show more options
-            },
-          ),
-        if (_selectedIndex == 2)
-          IconButton(
-            icon: Icon(
-              Icons.filter_list,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            onPressed: () {
-              // TODO: Show filter options
+              ref.read(permissionsServiceProvider).requestRole();
             },
           ),
       ],

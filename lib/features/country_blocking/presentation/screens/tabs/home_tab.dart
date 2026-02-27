@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../core/providers.dart';
-import '../../../../../../shared/services/permissions_service.dart';
 import '../../widgets/status_card.dart';
 import '../../widgets/stat_card.dart';
 
@@ -16,12 +16,12 @@ class HomeTab extends ConsumerWidget {
 
     // Ensure we have permissions before enabling
     if (!state.isBlockingActive) {
-      final hasPerms = await PermissionsService.requestPhonePermissions();
+      final hasPerms = await ref.read(permissionsServiceProvider).requestPhonePermissions();
       if (!hasPerms) {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Permissions required to enable blocking'),
+            content: Text(AppLocalizations.of(context)!.permissionRequiredToEnable),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -38,6 +38,7 @@ class HomeTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Watch the state from Riverpod provider
     final state = ref.watch(countryBlockingNotifierProvider);
+    final blockLogsCount = ref.watch(blockLogNotifierProvider).length;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -53,7 +54,7 @@ class HomeTab extends ConsumerWidget {
 
           // Overview header
           Text(
-            'Overview',
+            AppLocalizations.of(context)!.overview,
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           const SizedBox(height: 16),
@@ -63,17 +64,17 @@ class HomeTab extends ConsumerWidget {
             children: [
               Expanded(
                 child: StatCard(
-                  title: 'Blocked Calls',
-                  value: '${state.blockedCallsCount}',
+                  title: AppLocalizations.of(context)!.blockedCalls,
+                  value: '$blockLogsCount',
                   icon: Icons.call_missed,
-                  trend: state.blockedCallsCount > 0 ? 'Total blocked' : null,
-                  isTrendPositive: state.blockedCallsCount > 0 ? true : null,
+                  trend: blockLogsCount > 0 ? AppLocalizations.of(context)!.formattedTotalBlocked : null,
+                  isTrendPositive: blockLogsCount > 0 ? true : null,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: StatCard(
-                  title: 'Countries',
+                  title: AppLocalizations.of(context)!.countries,
                   value: '${state.blockedCountries.length}',
                   icon: Icons.flag,
                 ),

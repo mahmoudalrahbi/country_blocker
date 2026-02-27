@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers.dart';
@@ -12,8 +13,38 @@ class SettingsScreen extends ConsumerStatefulWidget {
   ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBindingObserver {
   bool _notificationsEnabled = true;
+  bool _isIgnoringBatteryOptimizations = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _checkBatteryOptimization();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkBatteryOptimization();
+    }
+  }
+
+  Future<void> _checkBatteryOptimization() async {
+    final isIgnoring = await ref.read(permissionsServiceProvider).isIgnoringBatteryOptimizations();
+    if (mounted) {
+      setState(() {
+        _isIgnoringBatteryOptimizations = isIgnoring;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +74,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            'GENERAL',
+            AppLocalizations.of(context)!.general,
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
             ),
           ),
         ),
@@ -60,10 +90,68 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               _buildAppearanceSelector(),
               _buildDivider(),
               _buildLanguageSelector(),
+              _buildDivider(),
+              _buildBatteryOptimizationTile(),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildBatteryOptimizationTile() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return InkWell(
+      onTap: () async {
+         // Always allow checking/requesting, maybe user wants to disable it? 
+         // System dialog usually only allows enabling. Disabling is manual in settings.
+         // If already ignoring, we might open settings to let them verify or change back?
+         // For now, if not ignoring, request it.
+         if (!_isIgnoringBatteryOptimizations) {
+            await ref.read(permissionsServiceProvider).requestIgnoreBatteryOptimizations();
+            await _checkBatteryOptimization();
+         } else {
+            // Already ignoring, maybe show a toast or open settings?
+            // Let's just open settings just in case they want to revoke.
+            await ref.read(permissionsServiceProvider).openSettings();
+         }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+             _buildIconContainer(Icons.battery_alert, Colors.green),
+             const SizedBox(width: 16),
+             Expanded(
+               child: Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                    Text(
+                      AppLocalizations.of(context)!.runInBackground,
+                       style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      _isIgnoringBatteryOptimizations 
+                         ? AppLocalizations.of(context)!.batteryOptimizationDisabled 
+                         : AppLocalizations.of(context)!.batteryOptimizationEnabled,
+                       style: theme.textTheme.bodySmall?.copyWith(
+                         color: _isIgnoringBatteryOptimizations ? Colors.green : colorScheme.error,
+                       ),
+                    )
+                 ],
+               )
+             ),
+             if (_isIgnoringBatteryOptimizations)
+                Icon(Icons.check_circle, color: Colors.green, size: 20)
+             else
+                Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant, size: 20),
+          ]
+        )
+      )
     );
   }
 
@@ -81,7 +169,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const SizedBox(width: 16),
           Text(
-            'Notifications',
+            AppLocalizations.of(context)!.notifications,
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w500,
             ),
@@ -118,7 +206,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SizedBox(width: 16),
               Text(
-                'Appearance',
+                AppLocalizations.of(context)!.theme,
                 style: theme.textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
@@ -132,7 +220,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: _buildThemeOption(
                   currentThemeMode,
                   ThemeMode.light,
-                  'Light',
+                  AppLocalizations.of(context)!.light,
                   Icons.wb_sunny,
                 ),
               ),
@@ -141,7 +229,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: _buildThemeOption(
                   currentThemeMode,
                   ThemeMode.dark,
-                  'Dark',
+                  AppLocalizations.of(context)!.dark,
                   Icons.dark_mode,
                 ),
               ),
@@ -150,7 +238,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: _buildThemeOption(
                   currentThemeMode,
                   ThemeMode.system,
-                  'System',
+                  AppLocalizations.of(context)!.system,
                   Icons.settings_suggest,
                 ),
               ),
@@ -321,6 +409,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     decoration: BoxDecoration(
                       color: colorScheme.primary,
                       shape: BoxShape.circle,
+                      //borderRadius: BorderRadius.circular(6), // redundant with shape circle
                     ),
                     child: const Icon(
                       Icons.check,
@@ -340,15 +429,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildLanguageSelector() {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final currentLocale = ref.watch(localeProvider);
 
     return InkWell(
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Language selection coming soon'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        _showLanguageDialog(currentLocale);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -356,19 +441,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             _buildIconContainer(
               Icons.language,
-              Colors
-                  .purple, // Keeping distinct color for visual hierarchy, but could map to tertiary
+              Colors.purple,
             ),
             const SizedBox(width: 16),
             Text(
-              'Language',
+              AppLocalizations.of(context)!.language,
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
             ),
             const Spacer(),
             Text(
-              'English',
+              currentLocale.languageCode == 'ar' ? 'العربية' : 'English',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -385,6 +469,42 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
+  void _showLanguageDialog(Locale currentLocale) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.selectCountry), // Reused selectCountry for now, ideally needs separate string
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioGroup<String>(
+              groupValue: currentLocale.languageCode,
+              onChanged: (value) {
+                if (value != null) {
+                  ref.read(localeProvider.notifier).setLocale(Locale(value));
+                  Navigator.pop(context);
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RadioListTile<String>(
+                    title: Text(AppLocalizations.of(context)!.english),
+                    value: 'en',
+                  ),
+                  RadioListTile<String>(
+                    title: Text(AppLocalizations.of(context)!.arabic),
+                    value: 'ar',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildSupportSection() {
     final theme = Theme.of(context);
 
@@ -394,10 +514,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            'SUPPORT',
+            AppLocalizations.of(context)!.support,
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
             ),
           ),
         ),
@@ -407,13 +526,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           child: Column(
             children: [
               _buildMenuItem(
-                'Help Center',
+                AppLocalizations.of(context)!.contactSupport,
                 Icons.help,
                 Colors.orange, // Distinct functional color
                 () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Help Center coming soon'),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.helpCenterComingSoon),
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
@@ -421,7 +540,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               _buildDivider(),
               _buildMenuItem(
-                'About',
+                AppLocalizations.of(context)!.about,
                 Icons.info,
                 theme.colorScheme.onSurfaceVariant,
                 () {
@@ -487,30 +606,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   Widget _buildDivider() {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       height: 1,
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      color: isDark
-          ? AppColors.borderDark.withValues(alpha: 0.5)
-          : AppColors.borderLight.withValues(alpha: 0.5),
+      color: theme.dividerTheme.color,
     );
   }
 
   Widget _buildVersionInfo() {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Center(
       child: Text(
-        'COUNTRY BLOCKER V2.5.0',
+        '${AppLocalizations.of(context)!.appTitle} V2.5.0',
         style: theme.textTheme.bodySmall?.copyWith(
-          color:
-              isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight,
           fontSize: 14,
           fontWeight: FontWeight.w500,
-          letterSpacing: 1.5,
         ),
       ),
     );
@@ -518,7 +630,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   void _showAboutDialog() {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     showDialog(
       context: context,
@@ -542,39 +653,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
             const SizedBox(width: 12),
-            const Text('About'),
+            Text(AppLocalizations.of(context)!.about),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Country Blocker'),
+            Text(AppLocalizations.of(context)!.appTitle),
             const SizedBox(height: 4),
             Text(
-              'Version 2.5.0',
+              '${AppLocalizations.of(context)!.version} 2.5.0',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isDark
-                    ? AppColors.textSecondaryDark
-                    : AppColors.textSecondaryLight,
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 16),
             Text(
-              'Block unwanted international calls by country code. Take control of your phone and protect yourself from spam and fraud.',
+              AppLocalizations.of(context)!.aboutDescription,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isDark
-                    ? AppColors.textSecondaryDark
-                    : AppColors.textSecondaryLight,
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 16),
             Text(
-              '© 2026 Country Blocker. All rights reserved.',
+              AppLocalizations.of(context)!.copyright(AppLocalizations.of(context)!.appTitle),
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isDark
-                    ? AppColors.textTertiaryDark
-                    : AppColors.textTertiaryLight,
                 fontSize: 10,
               ),
             ),
@@ -583,7 +687,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
         ],
       ),

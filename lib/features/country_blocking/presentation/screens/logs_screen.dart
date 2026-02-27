@@ -1,19 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
+import 'package:country_blocker/core/utils/phone_formatter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'dart:ui' as ui;
+import 'package:country_picker/country_picker.dart';
+
+import '../../../../core/providers.dart';
 
 import '../../domain/entities/blocked_call_log.dart';
 import '../../../../core/utils/country_flags.dart';
 
-class LogsScreen extends StatefulWidget {
+class LogsScreen extends ConsumerStatefulWidget {
   const LogsScreen({super.key});
 
   @override
-  State<LogsScreen> createState() => _LogsScreenState();
+  ConsumerState<LogsScreen> createState() => _LogsScreenState();
 }
 
-class _LogsScreenState extends State<LogsScreen> {
+class _LogsScreenState extends ConsumerState<LogsScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Refresh logs when screen is opened
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(blockLogNotifierProvider.notifier).loadLogs();
+    });
+  }
 
   @override
   void dispose() {
@@ -27,9 +43,8 @@ class _LogsScreenState extends State<LogsScreen> {
     });
   }
 
-  // Mock data for demonstration - replace with actual data from provider
-  List<BlockedCallLog> _getMockLogs() {
-    return [];
+  List<BlockedCallLog> _getLogs() {
+    return ref.watch(blockLogNotifierProvider);
   }
 
   Map<String, List<BlockedCallLog>> _groupLogsByDate(List<BlockedCallLog> logs) {
@@ -37,6 +52,7 @@ class _LogsScreenState extends State<LogsScreen> {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
+    final localeName = Localizations.localeOf(context).languageCode;
 
     for (var log in logs) {
       final logDate = DateTime(
@@ -47,11 +63,11 @@ class _LogsScreenState extends State<LogsScreen> {
 
       String key;
       if (logDate == today) {
-        key = 'Today';
+        key = AppLocalizations.of(context)!.today;
       } else if (logDate == yesterday) {
-        key = 'Yesterday';
+        key = AppLocalizations.of(context)!.yesterday;
       } else {
-        key = DateFormat('MMMM d, yyyy').format(logDate);
+        key = DateFormat('MMMM d, yyyy', localeName).format(logDate);
       }
 
       grouped.putIfAbsent(key, () => []);
@@ -74,12 +90,22 @@ class _LogsScreenState extends State<LogsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final allLogs = _getMockLogs();
+    final allLogs = _getLogs();
     final filteredLogs = _filterLogs(allLogs);
     final groupedLogs = _groupLogsByDate(filteredLogs);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
+      floatingActionButton: allLogs.isNotEmpty
+          ? FloatingActionButton(
+              onPressed: () {
+                _showClearConfirmation(context);
+              },
+              backgroundColor: theme.colorScheme.errorContainer,
+              foregroundColor: theme.colorScheme.onErrorContainer,
+              child: const Icon(Icons.delete_outline),
+            )
+          : null,
       body: Column(
         children: [
           // Search bar
@@ -90,7 +116,7 @@ class _LogsScreenState extends State<LogsScreen> {
               onChanged: _onSearchChanged,
               style: theme.textTheme.bodyLarge,
               decoration: InputDecoration(
-                hintText: 'Search number or country',
+                hintText: AppLocalizations.of(context)!.searchCountry,
                 prefixIcon: Icon(
                   Icons.search,
                   color: theme.inputDecorationTheme.hintStyle?.color,
@@ -108,7 +134,7 @@ class _LogsScreenState extends State<LogsScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: _calculateItemCount(groupedLogs),
                     itemBuilder: (context, index) {
-                      return _buildListItem(context, groupedLogs, index);
+                       return _buildListItem(context, groupedLogs, index);
                     },
                   ),
           ),
@@ -132,7 +158,7 @@ class _LogsScreenState extends State<LogsScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            _searchQuery.isEmpty ? 'No blocked calls yet' : 'No results found',
+            _searchQuery.isEmpty ? AppLocalizations.of(context)!.noRecentActivity : AppLocalizations.of(context)!.noResultsFound,
             style: theme.textTheme.bodyLarge,
           ),
         ],
@@ -147,6 +173,29 @@ class _LogsScreenState extends State<LogsScreen> {
       count += logs.length; // Log items
     });
     return count;
+  }
+  
+  void _showClearConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.clearLogsTitle),
+        content: Text(AppLocalizations.of(context)!.clearLogsMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(AppLocalizations.of(context)!.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              ref.read(blockLogNotifierProvider.notifier).clearLogs();
+              Navigator.pop(context);
+            },
+            child: Text(AppLocalizations.of(context)!.delete),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildListItem(
@@ -166,7 +215,7 @@ class _LogsScreenState extends State<LogsScreen> {
       // Check if this is a log item
       for (var i = 0; i < entry.value.length; i++) {
         if (currentIndex == index) {
-          final isOlder = entry.key != 'Today';
+          final isOlder = entry.key != AppLocalizations.of(context)!.today;
           return _buildLogCard(
             entry.value[i],
             isOlder: isOlder,
@@ -190,7 +239,6 @@ class _LogsScreenState extends State<LogsScreen> {
         style: theme.textTheme.labelMedium?.copyWith(
           fontSize: 10,
           fontWeight: FontWeight.bold,
-          letterSpacing: 1.6,
         ),
       ),
     );
@@ -203,7 +251,33 @@ class _LogsScreenState extends State<LogsScreen> {
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final flagEmoji = CountryFlags.getFlagEmoji(log.countryCode);
+    
+    String? isoCode = log.countryCode;
+    String displayCountryName = log.countryName;
+
+    // Try to find the country object to convert phone code to ISO code
+    Country? country;
+    if (int.tryParse(log.countryCode) != null) {
+      country = CountryService().findByPhoneCode(log.countryCode);
+    } else {
+      country = CountryService().findByCode(log.countryCode);
+    }
+
+    if (country != null) {
+      isoCode = country.countryCode;
+      
+      final locName = CountryLocalizations.of(context)?.countryName(countryCode: isoCode);
+      if (locName != null && (log.countryName == country.name || log.countryName == 'Unknown' || log.countryName == 'Unknown Region')) {
+        displayCountryName = locName;
+      }
+    }
+    
+    // Fallback for manually added regions missing an ISO code that were saved as 'Unknown Region'
+    if (displayCountryName == 'Unknown Region' || displayCountryName == 'Unknown' || displayCountryName.isEmpty) {
+        displayCountryName = AppLocalizations.of(context)!.unknownRegion;
+    }
+
+    final flagEmoji = CountryFlags.getFlagEmoji(isoCode);
     
     // Calculate opacity for older items (fade effect)
     double opacity = 1.0;
@@ -248,10 +322,11 @@ class _LogsScreenState extends State<LogsScreen> {
                   children: [
                     // Phone number only (full width)
                     Text(
-                      log.phoneNumber,
+                      PhoneFormatter.formatWithPlusAndSpacing(log.phoneNumber),
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
+                      textDirection: ui.TextDirection.ltr,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
@@ -261,7 +336,7 @@ class _LogsScreenState extends State<LogsScreen> {
                       children: [
                         Flexible(
                           child: Text(
-                            log.countryName,
+                            displayCountryName,
                             style: theme.textTheme.bodySmall,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -307,10 +382,11 @@ class _LogsScreenState extends State<LogsScreen> {
     
     // Just now (< 5 minutes)
     if (difference.inMinutes < 5) {
-      return 'JUST NOW';
+      return AppLocalizations.of(context)!.justNow;
     }
     
     // All other times (today, yesterday, older) - just show time
-    return DateFormat('HH:mm').format(timestamp);
+    final localeName = Localizations.localeOf(context).languageCode;
+    return DateFormat('HH:mm', localeName).format(timestamp);
   }
 }

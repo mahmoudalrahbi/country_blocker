@@ -110,13 +110,11 @@ class AppTheme {
         fontSize: 13,
         fontWeight: FontWeight.bold,
         color: secondary,
-        letterSpacing: 1.2,
       ),
       labelSmall: GoogleFonts.inter(
         fontSize: 11,
         fontWeight: FontWeight.bold,
         color: secondary,
-        letterSpacing: 1.2,
       ),
     );
   }
@@ -156,6 +154,13 @@ class AppTheme {
             width: 1,
           ),
         ),
+      ),
+
+      // Divider Theme
+      dividerTheme: DividerThemeData(
+        color: AppColors.borderDark.withValues(alpha: 0.5),
+        thickness: 1,
+        space: 1,
       ),
 
       // List Tile Theme
@@ -311,6 +316,13 @@ class AppTheme {
             width: 1,
           ),
         ),
+      ),
+
+      // Divider Theme
+      dividerTheme: DividerThemeData(
+        color: AppColors.borderLight.withValues(alpha: 0.5),
+        thickness: 1,
+        space: 1,
       ),
 
       // List Tile Theme

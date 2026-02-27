@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import '../../../../theme/app_theme.dart';
 
 /// A status card widget displaying the current blocking status
@@ -75,7 +76,7 @@ class StatusCard extends StatelessWidget {
                     _PulsingDot(isActive: isActive),
                     const SizedBox(width: 8),
                     Text(
-                      'PROTECTION STATUS',
+                      AppLocalizations.of(context)!.protectionStatus,
                       style: theme.textTheme.labelSmall,
                     ),
                   ],
@@ -84,7 +85,7 @@ class StatusCard extends StatelessWidget {
 
                 // Title
                 Text(
-                  isActive ? 'Blocking Active' : 'Blocking Disabled',
+                  isActive ? AppLocalizations.of(context)!.blockingActive : AppLocalizations.of(context)!.blockingDisabled,
                   style: theme.textTheme.displaySmall,
                 ),
                 const SizedBox(height: 16),
@@ -92,8 +93,8 @@ class StatusCard extends StatelessWidget {
                 // Description
                 Text(
                   isActive
-                      ? 'Incoming calls from your blocked country list are being automatically rejected.'
-                      : 'Call blocking is currently disabled. Enable it to start blocking unwanted calls.',
+                      ? AppLocalizations.of(context)!.blockingActiveDescription
+                      : AppLocalizations.of(context)!.blockingDisabledDescription,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     height: 1.5,
                   ),
@@ -124,7 +125,7 @@ class StatusCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          isActive ? 'Disable Blocking' : 'Enable Blocking',
+                          isActive ? AppLocalizations.of(context)!.disableBlocking : AppLocalizations.of(context)!.enableBlocking,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

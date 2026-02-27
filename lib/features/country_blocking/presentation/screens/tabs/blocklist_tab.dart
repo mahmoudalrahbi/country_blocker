@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:country_picker/country_picker.dart';
 
 import '../../../../../../core/providers.dart';
 import '../../../../../../core/utils/country_flags.dart';
@@ -38,15 +40,15 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Theme.of(context).cardTheme.color,
-        title: const Text('Delete Country'),
-        content: Text('Are you sure you want to remove $name from the blocklist?'),
+        title: Text(AppLocalizations.of(context)!.deleteBlocklistEntryTitle),
+        content: Text(AppLocalizations.of(context)!.deleteBlocklistEntryMessage(name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.onSurface,
             ),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -59,14 +61,14 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
               
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('$name removed from blocklist'),
+                  content: Text(AppLocalizations.of(context)!.itemDeleted),
                   backgroundColor: Theme.of(context).colorScheme.error,
                   behavior: SnackBarBehavior.floating,
                 ),
               );
             },
             child: Text(
-              'Delete',
+              AppLocalizations.of(context)!.delete,
               style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           ),
@@ -98,7 +100,7 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
             onChanged: _onSearchChanged,
             style: Theme.of(context).textTheme.bodyLarge,
             decoration: InputDecoration(
-              hintText: 'Search blocked rules...',
+              hintText: AppLocalizations.of(context)!.searchCountry,
               prefixIcon: Icon(
                 Icons.search,
                 color: Theme.of(context).inputDecorationTheme.hintStyle?.color,
@@ -113,7 +115,7 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           alignment: Alignment.centerLeft,
           child: Text(
-            'ACTIVE RULES (${filteredCountries.length})',
+            '${AppLocalizations.of(context)!.active} (${filteredCountries.length})',
             style: Theme.of(context).textTheme.labelSmall,
           ),
         ),
@@ -136,8 +138,8 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                       const SizedBox(height: 16),
                       Text(
                         _searchQuery.isEmpty
-                            ? 'No blocked countries yet'
-                            : 'No results found',
+                            ? AppLocalizations.of(context)!.addFirstCountry
+                            : AppLocalizations.of(context)!.noResultsFound,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
@@ -145,7 +147,7 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                       const SizedBox(height: 8),
                       if (_searchQuery.isEmpty)
                         Text(
-                          'Tap + to add one',
+                          AppLocalizations.of(context)!.tapToAdd,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                     ],
@@ -155,9 +157,26 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                   itemCount: filteredCountries.length,
                   itemBuilder: (context, index) {
                     final country = filteredCountries[index];
+                    String displayCountryName = country.name;
+
+                    if (country.isoCode != 'UNKNOWN') {
+                      final locName = CountryLocalizations.of(context)?.countryName(countryCode: country.isoCode);
+                      if (locName != null) {
+                         // If the user didn't provide a custom name (meaning the saved name matches the English name), 
+                         // then override it with the localized name.
+                         final englishName = CountryService().findByCode(country.isoCode)?.name;
+                         if (englishName == country.name || country.name == 'Unknown Region') {
+                             displayCountryName = locName;
+                         }
+                      }
+                    }
+                    
+                    if (displayCountryName == 'Unknown Region' || displayCountryName == 'Unknown' || displayCountryName.isEmpty) {
+                        displayCountryName = AppLocalizations.of(context)!.unknownRegion;
+                    }
 
                     return CountryListItem(
-                      countryName: country.name,
+                      countryName: displayCountryName,
                       phoneCode: country.phoneCode,
                       flagEmoji: _getFlagEmoji(country.isoCode),
                       isEnabled: country.isEnabled,
@@ -170,9 +189,10 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              value
-                                  ? '${country.name} blocking enabled'
-                                  : '${country.name} blocking disabled',
+                              AppLocalizations.of(context)!.blockingStateChanged(
+                                displayCountryName,
+                                value ? AppLocalizations.of(context)!.enabled : AppLocalizations.of(context)!.disabled,
+                              ),
                             ),
                             backgroundColor: Theme.of(context).colorScheme.primary,
                             behavior: SnackBarBehavior.floating,
@@ -181,7 +201,7 @@ class _BlocklistTabState extends ConsumerState<BlocklistTab> {
                         );
                       },
                       onDelete: () {
-                        _showDeleteDialog(context, country.phoneCode, country.name);
+                        _showDeleteDialog(context, country.phoneCode, displayCountryName);
                       },
                     );
                   },
