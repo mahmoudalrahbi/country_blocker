@@ -473,7 +473,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.selectCountry), // Reused selectCountry for now, ideally needs separate string
+        title: Text(AppLocalizations.of(context)!.selectLanguage),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -590,6 +590,36 @@ abstract class AppLocalizations {
   /// **'Optimization Enabled'**
   String get batteryOptimizationEnabled;
 
+  /// No description provided for @countryAlreadyInBlocklist.
+  ///
+  /// In en, this message translates to:
+  /// **'This country is already in the blocklist'**
+  String get countryAlreadyInBlocklist;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
+
+  /// No description provided for @failedToAccessStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to access local storage'**
+  String get failedToAccessStorage;
+
+  /// No description provided for @permissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission denied'**
+  String get permissionDenied;
+
+  /// No description provided for @serverError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get serverError;
+
   /// No description provided for @country.
   ///
   /// In en, this message translates to:

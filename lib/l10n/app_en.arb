@@ -114,6 +114,11 @@
   "runInBackgroundDescription": "Allow app to ignore battery optimizations for reliable blocking.",
   "batteryOptimizationDisabled": "Optimization Disabled",
   "batteryOptimizationEnabled": "Optimization Enabled",
+  "countryAlreadyInBlocklist": "This country is already in the blocklist",
+  "selectLanguage": "Select Language",
+  "failedToAccessStorage": "Failed to access local storage",
+  "permissionDenied": "Permission denied",
+  "serverError": "Something went wrong. Please try again.",
   "country": "Country",
   "english": "English",
   "arabic": "العربية"

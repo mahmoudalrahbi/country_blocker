@@ -271,6 +271,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get batteryOptimizationEnabled => 'التحسين مفعل';
 
   @override
+  String get countryAlreadyInBlocklist =>
+      'هذه الدولة موجودة بالفعل في قائمة الحظر';
+
+  @override
+  String get selectLanguage => 'اختر اللغة';
+
+  @override
+  String get failedToAccessStorage => 'فشل الوصول إلى التخزين المحلي';
+
+  @override
+  String get permissionDenied => 'تم رفض الإذن';
+
+  @override
+  String get serverError => 'حدث خطأ. يرجى المحاولة مرة أخرى.';
+
+  @override
   String get country => 'دولة';
 
   @override

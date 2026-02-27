@@ -273,6 +273,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get batteryOptimizationEnabled => 'Optimization Enabled';
 
   @override
+  String get countryAlreadyInBlocklist =>
+      'This country is already in the blocklist';
+
+  @override
+  String get selectLanguage => 'Select Language';
+
+  @override
+  String get failedToAccessStorage => 'Failed to access local storage';
+
+  @override
+  String get permissionDenied => 'Permission denied';
+
+  @override
+  String get serverError => 'Something went wrong. Please try again.';
+
+  @override
   String get country => 'Country';
 
   @override

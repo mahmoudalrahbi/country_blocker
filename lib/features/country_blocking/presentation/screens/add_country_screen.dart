@@ -74,9 +74,11 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
     final error = ref.read(errorMessageProvider);
     if (error != null) {
       if (!mounted) return;
+      // Intercept known domain-layer hardcoded English errors and replace with localized versions
+      final localizedError = _localizeErrorMessage(context, error);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error),
+          content: Text(localizedError),
           backgroundColor: Theme.of(context).colorScheme.error,
           behavior: SnackBarBehavior.floating,
         ),
@@ -287,6 +289,23 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
         ),
       ),
     );
+  }
+
+  /// Translates known domain-layer hardcoded English error messages to localized versions.
+  String _localizeErrorMessage(BuildContext context, String error) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (error) {
+      case 'This country is already in the blocklist':
+        return l10n.countryAlreadyInBlocklist;
+      case 'Failed to access local storage':
+        return l10n.failedToAccessStorage;
+      case 'Permission denied':
+        return l10n.permissionDenied;
+      case 'Server error occurred':
+        return l10n.serverError;
+      default:
+        return error;
+    }
   }
 
   void _showCountryPicker() {
