@@ -46,7 +46,7 @@ dependencies:
   flutter_riverpod: ^2.4.0
   dartz: ^0.10.1
   equatable: ^2.0.5
-  freezed_annotation: ^2.4.1
+  freezed_annotation: ^3.0.0
   phone_numbers_parser: ^9.0.19
 
 dev_dependencies:
@@ -59,10 +59,14 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
-  
+
+  # Custom lint for detecting hardcoded (un-localised) strings
+  custom_lint: ^0.8.1
+  hardcoded_strings_lint: ^1.0.4
+
   # Testing & Code Generation
   mockito: ^5.4.4
-  freezed: ^2.4.5
+  freezed: ^3.0.0
   build_runner: ^2.4.6
 
 # For information on the generic Dart part of this file, see the
