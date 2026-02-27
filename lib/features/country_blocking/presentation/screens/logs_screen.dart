@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:country_blocker/l10n/app_localizations.dart';
+import 'package:country_blocker/core/utils/phone_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -292,7 +293,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
                   children: [
                     // Phone number only (full width)
                     Text(
-                      log.phoneNumber,
+                      PhoneFormatter.formatWithPlusAndSpacing(log.phoneNumber),
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

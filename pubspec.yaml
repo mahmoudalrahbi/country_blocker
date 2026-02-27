@@ -47,6 +47,7 @@ dependencies:
   dartz: ^0.10.1
   equatable: ^2.0.5
   freezed_annotation: ^2.4.1
+  phone_numbers_parser: ^9.0.19
 
 dev_dependencies:
   flutter_test:
