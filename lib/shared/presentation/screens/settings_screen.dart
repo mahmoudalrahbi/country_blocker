@@ -13,8 +13,38 @@ class SettingsScreen extends ConsumerStatefulWidget {
   ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBindingObserver {
   bool _notificationsEnabled = true;
+  bool _isIgnoringBatteryOptimizations = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _checkBatteryOptimization();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkBatteryOptimization();
+    }
+  }
+
+  Future<void> _checkBatteryOptimization() async {
+    final isIgnoring = await ref.read(permissionsServiceProvider).isIgnoringBatteryOptimizations();
+    if (mounted) {
+      setState(() {
+        _isIgnoringBatteryOptimizations = isIgnoring;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +90,68 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               _buildAppearanceSelector(),
               _buildDivider(),
               _buildLanguageSelector(),
+              _buildDivider(),
+              _buildBatteryOptimizationTile(),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildBatteryOptimizationTile() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return InkWell(
+      onTap: () async {
+         // Always allow checking/requesting, maybe user wants to disable it? 
+         // System dialog usually only allows enabling. Disabling is manual in settings.
+         // If already ignoring, we might open settings to let them verify or change back?
+         // For now, if not ignoring, request it.
+         if (!_isIgnoringBatteryOptimizations) {
+            await ref.read(permissionsServiceProvider).requestIgnoreBatteryOptimizations();
+            await _checkBatteryOptimization();
+         } else {
+            // Already ignoring, maybe show a toast or open settings?
+            // Let's just open settings just in case they want to revoke.
+            await ref.read(permissionsServiceProvider).openSettings();
+         }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+             _buildIconContainer(Icons.battery_alert, Colors.green),
+             const SizedBox(width: 16),
+             Expanded(
+               child: Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                    Text(
+                      AppLocalizations.of(context)!.runInBackground,
+                       style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      _isIgnoringBatteryOptimizations 
+                         ? AppLocalizations.of(context)!.batteryOptimizationDisabled 
+                         : AppLocalizations.of(context)!.batteryOptimizationEnabled,
+                       style: theme.textTheme.bodySmall?.copyWith(
+                         color: _isIgnoringBatteryOptimizations ? Colors.green : colorScheme.error,
+                       ),
+                    )
+                 ],
+               )
+             ),
+             if (_isIgnoringBatteryOptimizations)
+                Icon(Icons.check_circle, color: Colors.green, size: 20)
+             else
+                Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant, size: 20),
+          ]
+        )
+      )
     );
   }
 
@@ -321,6 +409,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     decoration: BoxDecoration(
                       color: colorScheme.primary,
                       shape: BoxShape.circle,
+                      //borderRadius: BorderRadius.circular(6), // redundant with shape circle
                     ),
                     child: const Icon(
                       Icons.check,

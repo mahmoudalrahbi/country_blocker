@@ -17,11 +17,26 @@ class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "requestRole") {
-                requestCallScreeningRole()
-                result.success(true)
-            } else {
-                result.notImplemented()
+            when (call.method) {
+                "requestRole" -> {
+                    requestCallScreeningRole()
+                    result.success(true)
+                }
+                "checkRole" -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val roleManager = getSystemService(Context.ROLE_SERVICE) as RoleManager
+                        val isHeld = roleManager.isRoleHeld(RoleManager.ROLE_CALL_SCREENING)
+                        result.success(isHeld)
+                    } else {
+                        // For older versions, we might standardly return true or check default dialer
+                        // But since we target blocking which requires this role/service, let's return false or handle gracefully
+                        // For now, assuming Q+ for this specific feature as per BlockingService requirement
+                        result.success(true) 
+                    }
+                }
+                else -> {
+                    result.notImplemented()
+                }
             }
         }
     }

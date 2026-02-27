@@ -305,7 +305,7 @@ abstract class AppLocalizations {
   /// No description provided for @permissionDescription.
   ///
   /// In en, this message translates to:
-  /// **'To protect you from unwanted calls, Country Blocker needs access to read your phone state and contacts.\n\nWe do not upload or share your data.'**
+  /// **'To block unwanted calls, this app must be set as your Default Caller ID & Spam App.\n\nWe also need access to your phone state and contacts to identify callers.\n\nWe do not upload or share your data.'**
   String get permissionDescription;
 
   /// No description provided for @grantPermissions.
@@ -565,6 +565,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'© 2026 {appTitle}. All rights reserved.'**
   String copyright(String appTitle);
+
+  /// No description provided for @runInBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Run in Background'**
+  String get runInBackground;
+
+  /// No description provided for @runInBackgroundDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow app to ignore battery optimizations for reliable blocking.'**
+  String get runInBackgroundDescription;
+
+  /// No description provided for @batteryOptimizationDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimization Disabled'**
+  String get batteryOptimizationDisabled;
+
+  /// No description provided for @batteryOptimizationEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimization Enabled'**
+  String get batteryOptimizationEnabled;
 }
 
 class _AppLocalizationsDelegate

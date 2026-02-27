@@ -112,7 +112,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get permissionDescription =>
-      'لحمايتك من المكالمات غير المرغوب فيها، يحتاج التطبيق إلى إذن للوصول إلى حالة الهاتف وجهات الاتصال.\n\nنحن لا نقوم برفع أو مشاركة بياناتك.';
+      'لحظر المكالمات غير المرغوب فيها، يجب تعيين هذا التطبيق كتطبيق معرف المتصل والبريد العشوائي الافتراضي.\n\nنحتاج أيضًا إلى الوصول إلى حالة الهاتف وجهات الاتصال للتعرف على المتصلين.\n\nنحن لا نشارك بياناتك.';
 
   @override
   String get grantPermissions => 'منح الأذونات';
@@ -256,4 +256,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String copyright(String appTitle) {
     return '© 2026 $appTitle. جميع الحقوق محفوظة.';
   }
+
+  @override
+  String get runInBackground => 'التشغيل في الخلفية';
+
+  @override
+  String get runInBackgroundDescription =>
+      'السماح للتطبيق بتجاهل تحسينات البطارية لحظر موثوق.';
+
+  @override
+  String get batteryOptimizationDisabled => 'تم تعطيل التحسين';
+
+  @override
+  String get batteryOptimizationEnabled => 'التحسين مفعل';
 }

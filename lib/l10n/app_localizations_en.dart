@@ -112,7 +112,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get permissionDescription =>
-      'To protect you from unwanted calls, Country Blocker needs access to read your phone state and contacts.\n\nWe do not upload or share your data.';
+      'To block unwanted calls, this app must be set as your Default Caller ID & Spam App.\n\nWe also need access to your phone state and contacts to identify callers.\n\nWe do not upload or share your data.';
 
   @override
   String get grantPermissions => 'Grant Permissions';
@@ -258,4 +258,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String copyright(String appTitle) {
     return '© 2026 $appTitle. All rights reserved.';
   }
+
+  @override
+  String get runInBackground => 'Run in Background';
+
+  @override
+  String get runInBackgroundDescription =>
+      'Allow app to ignore battery optimizations for reliable blocking.';
+
+  @override
+  String get batteryOptimizationDisabled => 'Optimization Disabled';
+
+  @override
+  String get batteryOptimizationEnabled => 'Optimization Enabled';
 }

@@ -59,9 +59,24 @@ class _PermissionGuardScreenState extends ConsumerState<PermissionGuardScreen> w
   }
 
   Future<void> _requestPermissions() async {
-    final granted = await ref.read(permissionsServiceProvider).requestPhonePermissions();
-    if (granted && mounted) {
+    final permissionsService = ref.read(permissionsServiceProvider);
+    
+    // 1. Request Runtime Permissions first
+    await permissionsService.requestPhonePermissions();
+
+    // 2. Check if we have everything
+    final hasAll = await permissionsService.hasPhonePermissions();
+    if (hasAll && mounted) {
       widget.onPermissionsGranted();
+      return;
+    }
+
+    // 3. If missing role, request it
+    // Note: hasPhonePermissions checks both runtime perms AND role.
+    // If we are here, something is missing.
+    final hasRole = await permissionsService.hasRole();
+    if (!hasRole && mounted) {
+      await permissionsService.requestRole();
     }
   }
 
