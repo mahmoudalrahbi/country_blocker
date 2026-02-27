@@ -589,6 +589,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Optimization Enabled'**
   String get batteryOptimizationEnabled;
+
+  /// No description provided for @country.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @arabic.
+  ///
+  /// In en, this message translates to:
+  /// **'العربية'**
+  String get arabic;
 }
 
 class _AppLocalizationsDelegate

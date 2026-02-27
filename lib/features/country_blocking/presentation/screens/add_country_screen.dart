@@ -35,7 +35,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
     if (code.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please enter a country code'),
+          content: Text(AppLocalizations.of(context)!.pleaseEnterCountryCode),
           backgroundColor: Theme.of(context).colorScheme.error,
           behavior: SnackBarBehavior.floating,
         ),
@@ -46,7 +46,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
     final country = BlockedCountry(
       isoCode: _isoCode,
       phoneCode: code,
-      name: name.isEmpty ? 'Unknown Region' : name,
+      name: name.isEmpty ? AppLocalizations.of(context)!.unknownRegion : name,
     );
 
     // Use notifier to add country
@@ -73,7 +73,7 @@ class _AddCountryScreenState extends ConsumerState<AddCountryScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context)!.countryAddedToBlocklist(name.isEmpty ? 'Country' : name)),
+        content: Text(AppLocalizations.of(context)!.countryAddedToBlocklist(name.isEmpty ? AppLocalizations.of(context)!.country : name)),
         backgroundColor: Theme.of(context).colorScheme.primary,
         behavior: SnackBarBehavior.floating,
       ),

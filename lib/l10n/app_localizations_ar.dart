@@ -269,4 +269,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get batteryOptimizationEnabled => 'التحسين مفعل';
+
+  @override
+  String get country => 'دولة';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get arabic => 'العربية';
 }

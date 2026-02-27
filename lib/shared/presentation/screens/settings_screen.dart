@@ -489,11 +489,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   RadioListTile<String>(
-                    title: const Text('English'),
+                    title: Text(AppLocalizations.of(context)!.english),
                     value: 'en',
                   ),
                   RadioListTile<String>(
-                    title: const Text('العربية'),
+                    title: Text(AppLocalizations.of(context)!.arabic),
                     value: 'ar',
                   ),
                 ],

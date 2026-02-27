@@ -271,4 +271,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get batteryOptimizationEnabled => 'Optimization Enabled';
+
+  @override
+  String get country => 'Country';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get arabic => 'العربية';
 }

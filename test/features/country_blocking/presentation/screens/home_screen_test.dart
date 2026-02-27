@@ -57,7 +57,10 @@ void main() {
         .thenAnswer((_) async => const Right([]));
     when(mockPermissionsService.hasPhonePermissions())
         .thenAnswer((_) async => true);
+    when(mockPermissionsService.isIgnoringBatteryOptimizations())
+        .thenAnswer((_) async => false);
     // Mock shared preferences defaults to avoid null errors if accessed
+    when(mockSharedPreferences.reload()).thenAnswer((_) async => true);
     when(mockSharedPreferences.getStringList(any)).thenReturn(null);
     when(mockSharedPreferences.getString(any)).thenReturn(null);
     when(mockSharedPreferences.getBool(any)).thenReturn(null);

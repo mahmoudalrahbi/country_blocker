@@ -38,6 +38,7 @@ class HomeTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Watch the state from Riverpod provider
     final state = ref.watch(countryBlockingNotifierProvider);
+    final blockLogsCount = ref.watch(blockLogNotifierProvider).length;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -64,10 +65,10 @@ class HomeTab extends ConsumerWidget {
               Expanded(
                 child: StatCard(
                   title: AppLocalizations.of(context)!.blockedCalls,
-                  value: '${state.blockedCallsCount}',
+                  value: '$blockLogsCount',
                   icon: Icons.call_missed,
-                  trend: state.blockedCallsCount > 0 ? AppLocalizations.of(context)!.formattedTotalBlocked : null,
-                  isTrendPositive: state.blockedCallsCount > 0 ? true : null,
+                  trend: blockLogsCount > 0 ? AppLocalizations.of(context)!.formattedTotalBlocked : null,
+                  isTrendPositive: blockLogsCount > 0 ? true : null,
                 ),
               ),
               const SizedBox(width: 16),

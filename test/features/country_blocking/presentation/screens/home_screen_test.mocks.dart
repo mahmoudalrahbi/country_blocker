@@ -90,6 +90,14 @@ class MockPermissionsService extends _i1.Mock
           as _i6.Future<void>);
 
   @override
+  _i6.Future<bool> hasRole() =>
+      (super.noSuchMethod(
+            Invocation.method(#hasRole, []),
+            returnValue: _i6.Future<bool>.value(false),
+          )
+          as _i6.Future<bool>);
+
+  @override
   _i6.Future<bool> requestPhonePermissions() =>
       (super.noSuchMethod(
             Invocation.method(#requestPhonePermissions, []),
@@ -101,6 +109,22 @@ class MockPermissionsService extends _i1.Mock
   _i6.Future<bool> hasPhonePermissions() =>
       (super.noSuchMethod(
             Invocation.method(#hasPhonePermissions, []),
+            returnValue: _i6.Future<bool>.value(false),
+          )
+          as _i6.Future<bool>);
+
+  @override
+  _i6.Future<bool> requestIgnoreBatteryOptimizations() =>
+      (super.noSuchMethod(
+            Invocation.method(#requestIgnoreBatteryOptimizations, []),
+            returnValue: _i6.Future<bool>.value(false),
+          )
+          as _i6.Future<bool>);
+
+  @override
+  _i6.Future<bool> isIgnoringBatteryOptimizations() =>
+      (super.noSuchMethod(
+            Invocation.method(#isIgnoringBatteryOptimizations, []),
             returnValue: _i6.Future<bool>.value(false),
           )
           as _i6.Future<bool>);

@@ -113,5 +113,8 @@
   "runInBackground": "Run in Background",
   "runInBackgroundDescription": "Allow app to ignore battery optimizations for reliable blocking.",
   "batteryOptimizationDisabled": "Optimization Disabled",
-  "batteryOptimizationEnabled": "Optimization Enabled"
+  "batteryOptimizationEnabled": "Optimization Enabled",
+  "country": "Country",
+  "english": "English",
+  "arabic": "العربية"
 }

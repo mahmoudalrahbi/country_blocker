@@ -82,5 +82,8 @@
   "runInBackground": "التشغيل في الخلفية",
   "runInBackgroundDescription": "السماح للتطبيق بتجاهل تحسينات البطارية لحظر موثوق.",
   "batteryOptimizationDisabled": "تم تعطيل التحسين",
-  "batteryOptimizationEnabled": "التحسين مفعل"
+  "batteryOptimizationEnabled": "التحسين مفعل",
+  "country": "دولة",
+  "english": "English",
+  "arabic": "العربية"
 }
