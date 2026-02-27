@@ -3,6 +3,7 @@ import 'package:country_blocker/l10n/app_localizations.dart';
 import 'package:country_blocker/core/utils/phone_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'dart:ui' as ui;
 
 import '../../../../core/providers.dart';
 
@@ -50,6 +51,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
+    final localeName = Localizations.localeOf(context).languageCode;
 
     for (var log in logs) {
       final logDate = DateTime(
@@ -64,7 +66,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
       } else if (logDate == yesterday) {
         key = AppLocalizations.of(context)!.yesterday;
       } else {
-        key = DateFormat('MMMM d, yyyy').format(logDate);
+        key = DateFormat('MMMM d, yyyy', localeName).format(logDate);
       }
 
       grouped.putIfAbsent(key, () => []);
@@ -297,6 +299,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
+                      textDirection: ui.TextDirection.ltr,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
@@ -356,6 +359,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
     }
     
     // All other times (today, yesterday, older) - just show time
-    return DateFormat('HH:mm').format(timestamp);
+    final localeName = Localizations.localeOf(context).languageCode;
+    return DateFormat('HH:mm', localeName).format(timestamp);
   }
 }
