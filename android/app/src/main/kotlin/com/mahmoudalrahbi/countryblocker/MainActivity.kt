@@ -1,4 +1,4 @@
-package com.example.country_blocker
+package com.mahmoudalrahbi.countryblocker
 
 import android.app.role.RoleManager
 import android.content.Context
@@ -11,7 +11,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
-    private val CHANNEL = "com.example.country_blocker/channel"
+    private val CHANNEL = "com.mahmoudalrahbi.countryblocker/channel"
     private val REQUEST_ID = 1
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {

@@ -3,7 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 
 class PermissionsService {
-  final platform = const MethodChannel('com.example.country_blocker/channel');
+  final platform = const MethodChannel('com.mahmoudalrahbi.countryblocker/channel');
 
   Future<void> requestRole() async {
     if (Platform.isAndroid) {

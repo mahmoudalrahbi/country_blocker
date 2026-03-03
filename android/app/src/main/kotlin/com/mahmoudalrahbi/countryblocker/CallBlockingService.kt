@@ -1,4 +1,4 @@
-package com.example.country_blocker
+package com.mahmoudalrahbi.countryblocker
 
 import android.content.Context
 import android.telecom.Call
