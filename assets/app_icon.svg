@@ -1,0 +1,80 @@
+<svg id="masterSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D1B2A"/>
+      <stop offset="50%" stop-color="#1B2A3F"/>
+      <stop offset="100%" stop-color="#0A1628"/>
+    </linearGradient>
+    <linearGradient id="shG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A3A6B"/>
+      <stop offset="60%" stop-color="#0F2547"/>
+      <stop offset="100%" stop-color="#091B35"/>
+    </linearGradient>
+    <linearGradient id="shB" x1="0%" y1="0%" x2="100%" y2="120%">
+      <stop offset="0%" stop-color="#4A9FFF"/>
+      <stop offset="40%" stop-color="#2E6FC9"/>
+      <stop offset="100%" stop-color="#1A4A8C"/>
+    </linearGradient>
+    <linearGradient id="glG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity=".9"/>
+      <stop offset="100%" stop-color="#1D4ED8" stop-opacity=".7"/>
+    </linearGradient>
+    <linearGradient id="rG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4444"/>
+      <stop offset="100%" stop-color="#CC0000"/>
+    </linearGradient>
+    <radialGradient id="ag" cx="50%" cy="48%" r="45%">
+      <stop offset="0%" stop-color="#1E4FA3" stop-opacity=".4"/>
+      <stop offset="100%" stop-color="#0D1B2A" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="bGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="rGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shShadow">
+      <feDropShadow dx="0" dy="10" stdDeviation="22" flood-color="#000" flood-opacity=".5"/>
+    </filter>
+    <clipPath id="shClip">
+      <path d="M512 185 L730 272 L730 522 Q730 700 512 800 Q294 700 294 522 L294 272 Z"/>
+    </clipPath>
+    <pattern id="dotPat" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="1.5" fill="#4A9FFF"/>
+    </pattern>
+  </defs>
+  <rect width="1024" height="1024" rx="200" ry="200" fill="url(#bgG)"/>
+  <rect width="1024" height="1024" rx="200" ry="200" fill="url(#dotPat)" opacity=".07"/>
+  <rect width="1024" height="1024" rx="200" ry="200" fill="url(#ag)"/>
+  <path d="M512 195 L722 282 L722 526 Q722 700 512 808 Q302 700 302 526 L302 282 Z" fill="#000" opacity=".35" filter="url(#shShadow)" transform="translate(0,14)"/>
+  <path d="M512 195 L722 282 L722 526 Q722 700 512 808 Q302 700 302 526 L302 282 Z" fill="url(#shG)"/>
+  <g clip-path="url(#shClip)">
+    <circle cx="512" cy="490" r="192" fill="url(#glG)" opacity=".85"/>
+    <ellipse cx="512" cy="490" rx="192" ry="50" fill="none" stroke="#5BA4FF" stroke-width="1.5" opacity=".3"/>
+    <ellipse cx="512" cy="490" rx="192" ry="112" fill="none" stroke="#5BA4FF" stroke-width="1.5" opacity=".3"/>
+    <ellipse cx="512" cy="490" rx="192" ry="162" fill="none" stroke="#5BA4FF" stroke-width="1.5" opacity=".3"/>
+    <line x1="512" y1="298" x2="512" y2="682" stroke="#5BA4FF" stroke-width="1.5" opacity=".3"/>
+    <ellipse cx="512" cy="490" rx="80" ry="192" fill="none" stroke="#5BA4FF" stroke-width="1.5" opacity=".3"/>
+    <ellipse cx="512" cy="490" rx="152" ry="192" fill="none" stroke="#5BA4FF" stroke-width="1.5" opacity=".3"/>
+    <ellipse cx="450" cy="440" rx="38" ry="55" fill="#2563EB" opacity=".65" transform="rotate(-12,450,440)"/>
+    <ellipse cx="460" cy="530" rx="25" ry="38" fill="#2563EB" opacity=".65" transform="rotate(8,460,530)"/>
+    <ellipse cx="540" cy="420" rx="28" ry="40" fill="#2563EB" opacity=".65" transform="rotate(5,540,420)"/>
+    <ellipse cx="548" cy="510" rx="30" ry="48" fill="#2563EB" opacity=".65" transform="rotate(-5,548,510)"/>
+    <ellipse cx="592" cy="432" rx="42" ry="32" fill="#2563EB" opacity=".65" transform="rotate(-8,592,432)"/>
+    <ellipse cx="460" cy="390" rx="62" ry="42" fill="white" opacity=".07" transform="rotate(-20,460,390)"/>
+  </g>
+  <path d="M512 195 L722 282 L722 526 Q722 700 512 808 Q302 700 302 526 L302 282 Z" fill="none" stroke="url(#shB)" stroke-width="7" filter="url(#bGlow)" opacity=".95"/>
+  <path d="M512 210 L706 292 L706 360 L512 280 L318 360 L318 292 Z" fill="white" opacity=".06"/>
+  <circle cx="700" cy="308" r="92" fill="#0D1B2A" opacity=".92"/>
+  <circle cx="700" cy="308" r="86" fill="url(#rG)" filter="url(#rGlow)"/>
+  <circle cx="700" cy="308" r="52" fill="none" stroke="white" stroke-width="11"/>
+  <line x1="652" y1="260" x2="748" y2="356" stroke="white" stroke-width="11" stroke-linecap="round"/>
+  <text x="512" y="898" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-weight="800" font-size="66" fill="white" text-anchor="middle" letter-spacing="7" opacity=".92">BLOCKER</text>
+  <line x1="325" y1="914" x2="699" y2="914" stroke="#3B82F6" stroke-width="2.5" opacity=".5"/>
+  <circle cx="200" cy="200" r="4" fill="#3B82F6" opacity=".35"/>
+  <circle cx="824" cy="200" r="4" fill="#3B82F6" opacity=".35"/>
+  <circle cx="200" cy="824" r="4" fill="#3B82F6" opacity=".35"/>
+  <circle cx="824" cy="824" r="4" fill="#3B82F6" opacity=".35"/>
+</svg>
