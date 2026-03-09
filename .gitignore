@@ -90,3 +90,9 @@ app.*.map.json
 /web/*.js.map
 /web/.packages
 /web/generated_plugin_registrant.dart
+
+# Keystore properties
+android/key.properties
+# Keystore files (never commit these to source control)
+*.jks
+*.keystore
