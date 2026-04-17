@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500" width="1024" height="500">
+  <defs>
+    <linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D1B2A"/>
+      <stop offset="50%" stop-color="#1B2A3F"/>
+      <stop offset="100%" stop-color="#0A1628"/>
+    </linearGradient>
+    <linearGradient id="shG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A3A6B"/>
+      <stop offset="60%" stop-color="#0F2547"/>
+      <stop offset="100%" stop-color="#091B35"/>
+    </linearGradient>
+    <linearGradient id="shB" x1="0%" y1="0%" x2="100%" y2="120%">
+      <stop offset="0%" stop-color="#4A9FFF"/>
+      <stop offset="40%" stop-color="#2E6FC9"/>
+      <stop offset="100%" stop-color="#1A4A8C"/>
+    </linearGradient>
+    <linearGradient id="glG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity=".9"/>
+      <stop offset="100%" stop-color="#1D4ED8" stop-opacity=".7"/>
+    </linearGradient>
+    <linearGradient id="rG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4444"/>
+      <stop offset="100%" stop-color="#CC0000"/>
+    </linearGradient>
+    <linearGradient id="textG" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#CBD5E1"/>
+    </linearGradient>
+    <radialGradient id="ag" cx="30%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#1E4FA3" stop-opacity=".25"/>
+      <stop offset="100%" stop-color="#0D1B2A" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="bGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="rGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shShadow">
+      <feDropShadow dx="0" dy="5" stdDeviation="12" flood-color="#000" flood-opacity=".5"/>
+    </filter>
+    <filter id="textGlow" x="-10%" y="-30%" width="120%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="shClip">
+      <path d="M250 92 L358 136 L358 256 Q358 342 250 392 Q142 342 142 256 L142 136 Z"/>
+    </clipPath>
+    <pattern id="dotPat" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="15" cy="15" r="1" fill="#4A9FFF"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="500" fill="url(#bgG)"/>
+  <rect width="1024" height="500" fill="url(#dotPat)" opacity=".05"/>
+  <rect width="1024" height="500" fill="url(#ag)"/>
+
+  <!-- Subtle horizontal accent line -->
+  <line x1="0" y1="250" x2="1024" y2="250" stroke="#3B82F6" stroke-width="0.5" opacity=".08"/>
+
+  <!-- ===== ICON GROUP (left side, centered vertically) ===== -->
+  <!-- Shield shadow -->
+  <path d="M250 92 L358 136 L358 256 Q358 342 250 392 Q142 342 142 256 L142 136 Z"
+        fill="#000" opacity=".35" filter="url(#shShadow)" transform="translate(0,7)"/>
+  <!-- Shield body -->
+  <path d="M250 92 L358 136 L358 256 Q358 342 250 392 Q142 342 142 256 L142 136 Z"
+        fill="url(#shG)"/>
+  <!-- Globe inside shield -->
+  <g clip-path="url(#shClip)">
+    <circle cx="250" cy="240" r="94" fill="url(#glG)" opacity=".85"/>
+    <!-- Latitude lines -->
+    <ellipse cx="250" cy="240" rx="94" ry="24" fill="none" stroke="#5BA4FF" stroke-width="1" opacity=".35"/>
+    <ellipse cx="250" cy="240" rx="94" ry="55" fill="none" stroke="#5BA4FF" stroke-width="1" opacity=".35"/>
+    <ellipse cx="250" cy="240" rx="94" ry="79" fill="none" stroke="#5BA4FF" stroke-width="1" opacity=".35"/>
+    <!-- Vertical axis -->
+    <line x1="250" y1="146" x2="250" y2="334" stroke="#5BA4FF" stroke-width="1" opacity=".35"/>
+    <!-- Longitude ellipses -->
+    <ellipse cx="250" cy="240" rx="39" ry="94" fill="none" stroke="#5BA4FF" stroke-width="1" opacity=".35"/>
+    <ellipse cx="250" cy="240" rx="74" ry="94" fill="none" stroke="#5BA4FF" stroke-width="1" opacity=".35"/>
+    <!-- Continent blobs -->
+    <ellipse cx="221" cy="215" rx="18" ry="27" fill="#2563EB" opacity=".65" transform="rotate(-12,221,215)"/>
+    <ellipse cx="225" cy="260" rx="12" ry="18" fill="#2563EB" opacity=".65" transform="rotate(8,225,260)"/>
+    <ellipse cx="264" cy="205" rx="14" ry="20" fill="#2563EB" opacity=".65" transform="rotate(5,264,205)"/>
+    <ellipse cx="268" cy="250" rx="15" ry="24" fill="#2563EB" opacity=".65" transform="rotate(-5,268,250)"/>
+    <ellipse cx="289" cy="211" rx="21" ry="16" fill="#2563EB" opacity=".65" transform="rotate(-8,289,211)"/>
+  </g>
+  <!-- Shield border glow -->
+  <path d="M250 92 L358 136 L358 256 Q358 342 250 392 Q142 342 142 256 L142 136 Z"
+        fill="none" stroke="url(#shB)" stroke-width="4" filter="url(#bGlow)" opacity=".95"/>
+
+  <!-- Red prohibition badge -->
+  <circle cx="348" cy="150" r="45" fill="#0D1B2A" opacity=".92"/>
+  <circle cx="348" cy="150" r="42" fill="url(#rG)" filter="url(#rGlow)"/>
+  <circle cx="348" cy="150" r="25" fill="none" stroke="white" stroke-width="5.5"/>
+  <line x1="324" y1="126" x2="372" y2="174" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
+
+  <!-- ===== TEXT GROUP (right side) ===== -->
+  <!-- App name -->
+  <text x="460" y="218"
+        font-family="'Helvetica Neue',Helvetica,Arial,sans-serif"
+        font-weight="800"
+        font-size="72"
+        fill="url(#textG)"
+        letter-spacing="1"
+        opacity=".97">Country</text>
+  <text x="460" y="298"
+        font-family="'Helvetica Neue',Helvetica,Arial,sans-serif"
+        font-weight="800"
+        font-size="72"
+        fill="url(#textG)"
+        letter-spacing="1"
+        opacity=".97">Blocker</text>
+  <!-- Divider line -->
+  <line x1="460" y1="320" x2="800" y2="320" stroke="#3B82F6" stroke-width="2" opacity=".5"/>
+  <!-- Tagline -->
+  <text x="460" y="358"
+        font-family="'Helvetica Neue',Helvetica,Arial,sans-serif"
+        font-weight="400"
+        font-size="28"
+        fill="#7DD3FC"
+        letter-spacing="0.5"
+        opacity=".9">Block calls by country. Instantly.</text>
+
+  <!-- Corner accent dots -->
+  <circle cx="80" cy="80" r="3" fill="#3B82F6" opacity=".3"/>
+  <circle cx="944" cy="80" r="3" fill="#3B82F6" opacity=".3"/>
+  <circle cx="80" cy="420" r="3" fill="#3B82F6" opacity=".3"/>
+  <circle cx="944" cy="420" r="3" fill="#3B82F6" opacity=".3"/>
+</svg>
