@@ -1,6 +1,7 @@
 package com.mahmoudalrahbi.countryblocker
 
 import android.content.Context
+import android.net.Uri
 import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.telephony.TelephonyManager
@@ -15,8 +16,14 @@ class CallBlockingService : CallScreeningService() {
     override fun onScreenCall(callDetails: Call.Details) {
         val rawPhoneNumber = callDetails.handle?.schemeSpecificPart ?: return
         
-        // Clean the number - some devices might send encoded chars
-        val phoneNumber = java.net.URLDecoder.decode(rawPhoneNumber, "UTF-8").trim()
+        // Use Uri.decode instead of URLDecoder to preserve '+' 
+        // (URLDecoder treats '+' as space)
+        var phoneNumber = Uri.decode(rawPhoneNumber).trim()
+        
+        // Remove 'tel:' if present
+        if (phoneNumber.startsWith("tel:")) {
+            phoneNumber = phoneNumber.substring(4)
+        }
         
         Log.d("CountryBlocker", "Incoming call detected: $phoneNumber")
 
@@ -109,11 +116,8 @@ class CallBlockingService : CallScreeningService() {
              }
         }
 
-        if (!isValidNumber) {
-             // If still invalid, check naive fallback
-             return fallbackCheck(number, blockedJsonString)
-        }
-
+        val cleanNumber = number.replace(Regex("\\D"), "")
+        
         try {
             // Check against blocked list
             val jsonArray = org.json.JSONArray(blockedJsonString)
@@ -121,58 +125,52 @@ class CallBlockingService : CallScreeningService() {
                 val item = jsonArray.getJSONObject(i)
                 
                 // 2. PER-COUNTRY SWITCH CHECK
-                // Check if this specific rule is enabled. Default to true if missing.
                 val isRuleEnabled = if (item.has("isEnabled")) item.getBoolean("isEnabled") else true
                 if (!isRuleEnabled) {
                     continue
                 }
                 
-                val blockedCodeStr = item.getString("phoneCode") // "1", "971"
+                val blockedCodeStr = item.getString("phoneCode")
+                val cleanBlockedCode = blockedCodeStr.replace(Regex("\\D"), "")
                 
-                // 3. Strict Code Match via LibPhoneNumber
+                if (cleanBlockedCode.isEmpty()) continue
+                
+                // 3. MATCHING LOGIC
+                
+                // Case A: Strict Code Match via LibPhoneNumber
+                // Even if the number is technically "invalid" (e.g. too long), 
+                // if libphonenumber could extract the country code, we use it.
+                var countryCodeMatched = false
                 try {
-                    val blockedCode = blockedCodeStr.toInt()
-                     Log.e("CountryBlocker", "Checking against blocked code: $blockedCode, incoming code: $incomingCountryCode, isValidNumber: $isValidNumber")
-                    if (isValidNumber && incomingCountryCode == blockedCode) {
-                        var countryName = "Unknown"
-                        if (phoneNumberProto != null) {
-                             val regionCode = phoneUtil.getRegionCodeForNumber(phoneNumberProto)
-                             if (regionCode != null) {
-                                 countryName = Locale("", regionCode).displayCountry
-                             }
-                        }
-                        saveBlockedCall(number, incomingCountryCode.toString(), countryName, 3)
-                         Log.e("CountryBlocker", "Blocked call from country code: $incomingCountryCode, country name: $countryName")
-                        return true
+                    val blockedCodeInt = cleanBlockedCode.toInt()
+                    if (incomingCountryCode == blockedCodeInt && incomingCountryCode != 0) {
+                        countryCodeMatched = true
                     }
-                } catch (e: NumberFormatException) {
-                    continue
+                } catch (e: Exception) {}
+
+                // Case B: Prefix Match (Fallback/Custom Rules)
+                // This handles custom prefixes like "2439" or numbers where libphonenumber failed.
+                val prefixMatched = cleanNumber.startsWith(cleanBlockedCode)
+                
+                if (countryCodeMatched || prefixMatched) {
+                    var countryName = "Unknown"
+                    if (phoneNumberProto != null) {
+                        val regionCode = phoneUtil.getRegionCodeForNumber(phoneNumberProto)
+                        if (regionCode != null) {
+                            countryName = Locale("", regionCode).displayCountry
+                        }
+                    }
+                    
+                    val reportedCode = if (incomingCountryCode != 0) incomingCountryCode.toString() else cleanBlockedCode
+                    saveBlockedCall(number, reportedCode, countryName, 3)
+                    Log.e("CountryBlocker", "Blocked call matched: code=$cleanBlockedCode, country=$countryName")
+                    return true
                 }
             }
         } catch (e: Exception) {
             Log.e("CountryBlocker", "Error parsing blocked list", e)
         }
 
-        return false
-    }
-    
-    // Fallback for when libphonenumber fails to parse (e.g. unknown format)
-    private fun fallbackCheck(number: String, blockedJsonString: String): Boolean {
-        try {
-            val jsonArray = org.json.JSONArray(blockedJsonString)
-            for (i in 0 until jsonArray.length()) {
-                val item = jsonArray.getJSONObject(i)
-                val code = item.getString("phoneCode")
-                
-                // Only match overly explicit prefixes to avoid "1" matching "12..."
-                if (number.startsWith("+$code") || number.startsWith("00$code")) {
-                    saveBlockedCall(number, code, "Unknown", 3)
-                    return true
-                }
-            }
-        } catch (e: Exception) {
-            // ignore
-        }
         return false
     }
 
