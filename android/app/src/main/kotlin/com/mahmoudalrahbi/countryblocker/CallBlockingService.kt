@@ -103,20 +103,26 @@ class CallBlockingService : CallScreeningService() {
         // treated as a local number and fails validation.
         if (!isValidNumber && !number.startsWith("+")) {
              try {
-                val numberPlus = "+$number"
-                val potentialProto = phoneUtil.parse(numberPlus, null) // null region for international format
+                // Normalize: 00-prefix → + (e.g. "002438..." → "+2438...")
+                val digits = number.replace(Regex("\\D"), "")
+                val normalizedNumber = if (digits.startsWith("00")) "+${digits.substring(2)}" else "+$number"
+                val potentialProto = phoneUtil.parse(normalizedNumber, null)
                  if (phoneUtil.isValidNumber(potentialProto)) {
                      phoneNumberProto = potentialProto
                      incomingCountryCode = phoneNumberProto.countryCode
                      isValidNumber = true
-                     Log.e("CountryBlocker", "=== FIXED: Parsed with '+' prefix. CountryCode=$incomingCountryCode ===")
+                     Log.e("CountryBlocker", "=== FIXED: Parsed normalized number. CountryCode=$incomingCountryCode ===")
+                 } else if (incomingCountryCode == 0 && potentialProto.countryCode != 0) {
+                     // Even if invalid (e.g. too long), extract country code for Case A
+                     incomingCountryCode = potentialProto.countryCode
+                     Log.e("CountryBlocker", "=== Extracted country code from invalid number: $incomingCountryCode ===")
                  }
              } catch (e: Exception) {
-                 Log.e("CountryBlocker", "Fallback '+' parsing failed", e)
+                 Log.e("CountryBlocker", "Fallback parsing failed", e)
              }
         }
 
-        val cleanNumber = number.replace(Regex("\\D"), "")
+        val cleanNumber = normalizeForPrefixMatch(number)
         
         try {
             // Check against blocked list
@@ -172,6 +178,18 @@ class CallBlockingService : CallScreeningService() {
         }
 
         return false
+    }
+
+    companion object {
+        /**
+         * Strips all non-digit characters and removes a leading `00` international-dial prefix
+         * so that prefix-matching works regardless of whether the carrier delivers the number
+         * as `+243...`, `00243...`, or plain `243...`.
+         */
+        fun normalizeForPrefixMatch(number: String): String {
+            val digits = number.replace(Regex("\\D"), "")
+            return if (digits.startsWith("00")) digits.substring(2) else digits
+        }
     }
 
     private fun saveBlockedCall(phoneNumber: String, countryCode: String, countryName: String, reason: Int) {
