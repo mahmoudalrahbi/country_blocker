@@ -6,7 +6,7 @@ part 'country_blocking_state.freezed.dart';
 /// Immutable state for country blocking feature
 /// Using Freezed for immutability and code generation
 @freezed
-class CountryBlockingState with _$CountryBlockingState {
+abstract class CountryBlockingState with _$CountryBlockingState {
   const factory CountryBlockingState({
     @Default([]) List<BlockedCountry> blockedCountries,
     @Default(0) int blockedCallsCount,

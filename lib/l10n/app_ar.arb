@@ -90,5 +90,7 @@
   "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى.",
   "country": "دولة",
   "english": "English",
-  "arabic": "العربية"
+  "arabic": "العربية",
+  "usageAnalytics": "تحليلات الاستخدام",
+  "usageAnalyticsDescription": "مشاركة بيانات الاستخدام المجهولة لتحسين التطبيق"
 }

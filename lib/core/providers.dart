@@ -2,6 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'telemetry/analytics_service.dart';
+import 'telemetry/crash_reporter.dart';
+
 import '../features/country_blocking/data/datasources/country_blocking_local_data_source.dart';
 import '../features/country_blocking/data/datasources/country_blocking_local_data_source_impl.dart';
 import '../features/country_blocking/data/repositories/country_blocking_repository_impl.dart';
@@ -31,17 +34,66 @@ import '../shared/services/permissions_service.dart';
 
 // ==================== External Dependencies ====================
 
-/// SharedPreferences provider
-/// This will be overridden in main.dart with the actual instance
+/// SharedPreferences provider — overridden in main.dart with the real instance
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError(
     'sharedPreferencesProvider must be overridden in main.dart',
   );
 });
 
+/// CrashReporter provider.
+/// Defaults to NoOpCrashReporter so tests never need to override it.
+/// main.dart overrides with FirebaseCrashReporter in release builds.
+final crashReporterProvider = Provider<CrashReporter>((ref) {
+  return NoOpCrashReporter();
+});
+
+const _analyticsEnabledKey = 'analytics_enabled';
+
+/// AnalyticsService provider.
+/// Reads the persisted consent flag (default: true/enabled).
+/// main.dart may override with a Firebase-backed implementation.
+/// Defaults to NoOpAnalyticsService so tests need no override.
+final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  final enabled = prefs.getBool(_analyticsEnabledKey) ?? true;
+  return ConsentGatedAnalyticsService(NoOpAnalyticsService(), enabled: enabled);
+});
+
+/// Notifier that manages the analytics enabled/disabled toggle.
+final analyticsEnabledProvider =
+    StateNotifierProvider<AnalyticsEnabledNotifier, bool>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  final initial = prefs.getBool(_analyticsEnabledKey) ?? true;
+  return AnalyticsEnabledNotifier(
+    prefs: prefs,
+    analyticsService: ref.watch(analyticsServiceProvider),
+    initial: initial,
+  );
+});
+
+class AnalyticsEnabledNotifier extends StateNotifier<bool> {
+  final SharedPreferences _prefs;
+  final AnalyticsService _analyticsService;
+
+  AnalyticsEnabledNotifier({
+    required SharedPreferences prefs,
+    required AnalyticsService analyticsService,
+    required bool initial,
+  })  : _prefs = prefs,
+        _analyticsService = analyticsService,
+        super(initial);
+
+  Future<void> setEnabled(bool enabled) async {
+    state = enabled;
+    await _prefs.setBool(_analyticsEnabledKey, enabled);
+    await _analyticsService.setEnabled(enabled);
+  }
+}
+
 /// Permissions service provider
 final permissionsServiceProvider = Provider<PermissionsService>((ref) {
-  return PermissionsService();
+  return PermissionsService(analytics: ref.watch(analyticsServiceProvider));
 });
 
 /// Package info provider — reads the app version and build number from pubspec.yaml at runtime
@@ -74,6 +126,7 @@ final countryBlockingRepositoryProvider =
     Provider<CountryBlockingRepository>((ref) {
   return CountryBlockingRepositoryImpl(
     localDataSource: ref.watch(countryBlockingLocalDataSourceProvider),
+    crashReporter: ref.watch(crashReporterProvider),
   );
 });
 
@@ -163,6 +216,8 @@ final countryBlockingNotifierProvider =
     toggleCountryBlocking: ref.watch(toggleCountryBlockingProvider),
     toggleGlobalBlocking: ref.watch(toggleGlobalBlockingProvider),
     incrementBlockedCalls: ref.watch(incrementBlockedCallsProvider),
+    analytics: ref.watch(analyticsServiceProvider),
+    prefs: ref.watch(sharedPreferencesProvider),
   );
 });
 

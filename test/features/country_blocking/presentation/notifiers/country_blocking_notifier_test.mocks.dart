@@ -6,6 +6,7 @@
 import 'dart:async' as _i5;
 
 import 'package:country_blocker/core/error/failures.dart' as _i6;
+import 'package:country_blocker/core/telemetry/analytics_service.dart' as _i16;
 import 'package:country_blocker/core/usecase/usecase.dart' as _i8;
 import 'package:country_blocker/features/country_blocking/domain/entities/blocked_country.dart'
     as _i7;
@@ -43,6 +44,7 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
+// ignore_for_file: invalid_use_of_internal_member
 
 class _FakeCountryBlockingRepository_0 extends _i1.SmartFake
     implements _i2.CountryBlockingRepository {
@@ -335,4 +337,31 @@ class MockIncrementBlockedCalls extends _i1.Mock
             ),
           )
           as _i5.Future<_i3.Either<_i6.Failure, void>>);
+}
+
+/// A class which mocks [AnalyticsService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAnalyticsService extends _i1.Mock implements _i16.AnalyticsService {
+  MockAnalyticsService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<void> logEvent(String? name, {Map<String, Object>? parameters}) =>
+      (super.noSuchMethod(
+            Invocation.method(#logEvent, [name], {#parameters: parameters}),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> setEnabled(bool? enabled) =>
+      (super.noSuchMethod(
+            Invocation.method(#setEnabled, [enabled]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }

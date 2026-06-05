@@ -1,4 +1,5 @@
 import 'package:country_blocker/core/error/failures.dart';
+import 'package:country_blocker/core/telemetry/analytics_service.dart';
 import 'package:country_blocker/core/usecase/usecase.dart';
 import 'package:country_blocker/features/country_blocking/domain/entities/blocked_country.dart';
 import 'package:country_blocker/features/country_blocking/domain/usecases/add_blocked_country.dart';
@@ -26,6 +27,7 @@ import 'country_blocking_notifier_test.mocks.dart';
   ToggleCountryBlocking,
   ToggleGlobalBlocking,
   IncrementBlockedCalls,
+  AnalyticsService,
 ])
 void main() {
   late CountryBlockingNotifier notifier;
@@ -37,6 +39,7 @@ void main() {
   late MockToggleCountryBlocking mockToggleCountryBlocking;
   late MockToggleGlobalBlocking mockToggleGlobalBlocking;
   late MockIncrementBlockedCalls mockIncrementBlockedCalls;
+  late MockAnalyticsService mockAnalytics;
 
   setUp(() {
     mockGetBlockedCountries = MockGetBlockedCountries();
@@ -47,6 +50,9 @@ void main() {
     mockToggleCountryBlocking = MockToggleCountryBlocking();
     mockToggleGlobalBlocking = MockToggleGlobalBlocking();
     mockIncrementBlockedCalls = MockIncrementBlockedCalls();
+    mockAnalytics = MockAnalyticsService();
+    when(mockAnalytics.logEvent(any, parameters: anyNamed('parameters')))
+        .thenAnswer((_) async {});
   });
 
   void setUpNotifier() {
@@ -59,6 +65,7 @@ void main() {
       toggleCountryBlocking: mockToggleCountryBlocking,
       toggleGlobalBlocking: mockToggleGlobalBlocking,
       incrementBlockedCalls: mockIncrementBlockedCalls,
+      analytics: mockAnalytics,
     );
   }
 
@@ -172,16 +179,295 @@ void main() {
           .thenAnswer((_) async => const Right(0));
       when(mockAddBlockedCountry(any))
           .thenAnswer((_) async => const Right(null));
-      
+
       setUpNotifier();
       await Future.delayed(Duration.zero);
-      
+
       // act
       await notifier.addCountry(const AddBlockedCountryParams(country: tBlockedCountry));
-      
+
       // assert
       verify(mockAddBlockedCountry(const AddBlockedCountryParams(country: tBlockedCountry)));
       verify(mockGetBlockedCountries(NoParams())).called(2); // Once in init, once in reload
+    });
+  });
+
+  group('removeCountry', () {
+    void setUpInitMocks() {
+      when(mockGetBlockedCountries(any))
+          .thenAnswer((_) async => const Right(tBlockedCountries));
+      when(mockGetGlobalBlockingStatus(any))
+          .thenAnswer((_) async => const Right(true));
+      when(mockGetBlockedCallsCount(any))
+          .thenAnswer((_) async => const Right(0));
+    }
+
+    test('should call RemoveBlockedCountry and reload countries on success', () async {
+      // arrange
+      setUpInitMocks();
+      when(mockRemoveBlockedCountry(any))
+          .thenAnswer((_) async => const Right(null));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+
+      // act
+      await notifier.removeCountry('1');
+
+      // assert
+      verify(mockRemoveBlockedCountry(const RemoveBlockedCountryParams(phoneCode: '1')));
+      verify(mockGetBlockedCountries(NoParams())).called(2);
+    });
+
+    test('should set error state when RemoveBlockedCountry fails', () async {
+      // arrange
+      setUpInitMocks();
+      when(mockRemoveBlockedCountry(any))
+          .thenAnswer((_) async => const Left(CacheFailure('Remove error')));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+
+      // act
+      await notifier.removeCountry('1');
+
+      // assert
+      expect(notifier.state.errorMessage, 'Remove error');
+    });
+  });
+
+  group('toggleCountry', () {
+    void setUpInitMocks() {
+      when(mockGetBlockedCountries(any))
+          .thenAnswer((_) async => const Right(tBlockedCountries));
+      when(mockGetGlobalBlockingStatus(any))
+          .thenAnswer((_) async => const Right(true));
+      when(mockGetBlockedCallsCount(any))
+          .thenAnswer((_) async => const Right(0));
+    }
+
+    test('should call ToggleCountryBlocking and reload countries on success', () async {
+      // arrange
+      setUpInitMocks();
+      when(mockToggleCountryBlocking(any))
+          .thenAnswer((_) async => const Right(null));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+
+      // act
+      await notifier.toggleCountry('1', false);
+
+      // assert
+      verify(mockToggleCountryBlocking(
+        const ToggleCountryBlockingParams(phoneCode: '1', isEnabled: false),
+      ));
+      verify(mockGetBlockedCountries(NoParams())).called(2);
+    });
+
+    test('should set error state when ToggleCountryBlocking fails', () async {
+      // arrange
+      setUpInitMocks();
+      when(mockToggleCountryBlocking(any))
+          .thenAnswer((_) async => const Left(CacheFailure('Toggle error')));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+
+      // act
+      await notifier.toggleCountry('1', false);
+
+      // assert
+      expect(notifier.state.errorMessage, 'Toggle error');
+    });
+  });
+
+  group('toggleGlobalBlocking', () {
+    void setUpInitMocks({bool initialStatus = false}) {
+      when(mockGetBlockedCountries(any))
+          .thenAnswer((_) async => const Right([]));
+      when(mockGetGlobalBlockingStatus(any))
+          .thenAnswer((_) async => Right(initialStatus));
+      when(mockGetBlockedCallsCount(any))
+          .thenAnswer((_) async => const Right(0));
+    }
+
+    test('should flip isBlockingActive from false to true on success', () async {
+      // arrange
+      setUpInitMocks(initialStatus: false);
+      when(mockToggleGlobalBlocking(any))
+          .thenAnswer((_) async => const Right(null));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+      expect(notifier.state.isBlockingActive, false);
+
+      // act
+      await notifier.toggleGlobalBlocking();
+
+      // assert
+      expect(notifier.state.isBlockingActive, true);
+      expect(notifier.state.errorMessage, isNull);
+    });
+
+    test('should flip isBlockingActive from true to false on success', () async {
+      // arrange
+      setUpInitMocks(initialStatus: true);
+      when(mockToggleGlobalBlocking(any))
+          .thenAnswer((_) async => const Right(null));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+      expect(notifier.state.isBlockingActive, true);
+
+      // act
+      await notifier.toggleGlobalBlocking();
+
+      // assert
+      expect(notifier.state.isBlockingActive, false);
+    });
+
+    test('should set error state and not flip status when ToggleGlobalBlocking fails', () async {
+      // arrange
+      setUpInitMocks(initialStatus: false);
+      when(mockToggleGlobalBlocking(any))
+          .thenAnswer((_) async => const Left(CacheFailure('Toggle error')));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+
+      // act
+      await notifier.toggleGlobalBlocking();
+
+      // assert
+      expect(notifier.state.isBlockingActive, false);
+      expect(notifier.state.errorMessage, 'Toggle error');
+    });
+  });
+
+  group('incrementBlockedCallsCount', () {
+    void setUpInitMocks({int initialCount = 0}) {
+      when(mockGetBlockedCountries(any))
+          .thenAnswer((_) async => const Right([]));
+      when(mockGetGlobalBlockingStatus(any))
+          .thenAnswer((_) async => const Right(false));
+      when(mockGetBlockedCallsCount(any))
+          .thenAnswer((_) async => Right(initialCount));
+    }
+
+    test('should increment blockedCallsCount in state on success', () async {
+      // arrange
+      setUpInitMocks(initialCount: 5);
+      when(mockIncrementBlockedCalls(any))
+          .thenAnswer((_) async => const Right(null));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+      expect(notifier.state.blockedCallsCount, 5);
+
+      // act
+      await notifier.incrementBlockedCallsCount();
+
+      // assert
+      expect(notifier.state.blockedCallsCount, 6);
+    });
+
+    test('should not update error state when IncrementBlockedCalls fails (silent)', () async {
+      // arrange
+      setUpInitMocks(initialCount: 3);
+      when(mockIncrementBlockedCalls(any))
+          .thenAnswer((_) async => const Left(CacheFailure('Increment error')));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+
+      // act
+      await notifier.incrementBlockedCallsCount();
+
+      // assert
+      expect(notifier.state.blockedCallsCount, 3); // unchanged
+      expect(notifier.state.errorMessage, isNull);  // silently fails
+    });
+  });
+
+  group('clearError', () {
+    test('should clear error message from state', () async {
+      // arrange
+      when(mockGetBlockedCountries(any))
+          .thenAnswer((_) async => const Left(CacheFailure('Some error')));
+      when(mockGetGlobalBlockingStatus(any))
+          .thenAnswer((_) async => const Right(false));
+      when(mockGetBlockedCallsCount(any))
+          .thenAnswer((_) async => const Right(0));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+      expect(notifier.state.errorMessage, isNotNull);
+
+      // act
+      notifier.clearError();
+
+      // assert
+      expect(notifier.state.errorMessage, isNull);
+    });
+  });
+
+  group('analytics events', () {
+    void setUpInitMocksForAnalytics() {
+      when(mockGetBlockedCountries(any))
+          .thenAnswer((_) async => const Right([tBlockedCountry]));
+      when(mockGetGlobalBlockingStatus(any))
+          .thenAnswer((_) async => const Right(false));
+      when(mockGetBlockedCallsCount(any))
+          .thenAnswer((_) async => const Right(0));
+    }
+
+    test('addCountry fires country_added event with ISO code on success', () async {
+      setUpInitMocksForAnalytics();
+      when(mockAddBlockedCountry(any))
+          .thenAnswer((_) async => const Right(null));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+      clearInteractions(mockAnalytics);
+
+      await notifier.addCountry(
+        const AddBlockedCountryParams(country: tBlockedCountry),
+      );
+
+      verify(mockAnalytics.logEvent('country_added',
+          parameters: {'country_code': 'US'})).called(1);
+    });
+
+    test('addCountry does not fire event on failure', () async {
+      setUpInitMocksForAnalytics();
+      when(mockAddBlockedCountry(any))
+          .thenAnswer((_) async => const Left(CacheFailure()));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+      clearInteractions(mockAnalytics);
+
+      await notifier.addCountry(
+        const AddBlockedCountryParams(country: tBlockedCountry),
+      );
+
+      verifyNever(mockAnalytics.logEvent('country_added',
+          parameters: anyNamed('parameters')));
+    });
+
+    test('toggleGlobalBlocking fires global_blocking_toggled with new enabled value', () async {
+      setUpInitMocksForAnalytics();
+      when(mockToggleGlobalBlocking(any))
+          .thenAnswer((_) async => const Right(null));
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+      clearInteractions(mockAnalytics);
+
+      await notifier.toggleGlobalBlocking();
+
+      verify(mockAnalytics.logEvent('global_blocking_toggled',
+          parameters: {'enabled': true})).called(1);
+    });
+
+    test('logLogsScreenOpened fires logs_screen_opened event', () async {
+      setUpInitMocksForAnalytics();
+      setUpNotifier();
+      await Future.delayed(Duration.zero);
+      clearInteractions(mockAnalytics);
+
+      notifier.logLogsScreenOpened();
+
+      verify(mockAnalytics.logEvent('logs_screen_opened',
+          parameters: anyNamed('parameters'))).called(1);
     });
   });
 }

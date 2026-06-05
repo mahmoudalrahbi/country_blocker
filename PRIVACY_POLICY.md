@@ -1,41 +1,64 @@
 # Privacy Policy
 
-**Last Updated:** [Date]
+**Last Updated:** 2026-06-05
 
 ## Introduction
 
-We built the Country Blocker app as a Free app. This SERVICE is provided at no cost and is intended for use as is.
+Country Blocker is a free app. This service is provided at no cost and is intended for use as is.
 
-This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.
+This page explains what data the app collects, how it is used, and what stays on your device.
 
-If you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy.
+## What stays on your device
 
-## Information Collection and Use
+The following data is stored **locally only** and is never transmitted to any server or third party:
 
-For a better experience, while using our Service, I may require you to provide us with certain personally identifiable information. In order to function as a Default Caller ID & Spam blocking app, Country Blocker requires the following permissions and data access:
+- **Phone numbers** — incoming caller numbers processed by the call-screening service.
+- **Call logs** — records of calls that were blocked, including numbers, times, and country codes.
+- **Contacts** — used only to optionally prevent blocking calls from people in your contacts list.
+- **Your blocking configuration** — the list of countries you have chosen to block and whether blocking is enabled.
 
-- **Read Call Logs (`READ_CALL_LOG`) & Read Phone State (`READ_PHONE_STATE`):** Required to detect incoming phone numbers, check the country code, and determine whether the call should be blocked according to your preferences.
-- **Answer Phone Calls (`ANSWER_PHONE_CALLS`) & Call Screening (`BIND_SCREENING_SERVICE`):** Required to automatically disconnect calls originating from countries you have chosen to block.
-- **Read Contacts (`READ_CONTACTS`):** (If applicable) Used to optionally prevent blocking calls from people in your contact list.
+## What we collect to improve the app
 
-**Data Privacy Commitment:**
-- **No Remote Storage:** All call logs, phone numbers, and blocking preferences are stored **locally** on your device. We do not transmit this data to any external servers.
-- **No Third-Party Sharing:** We do not sell, rent, or share your phone numbers, call logs, or contacts with any third parties or use them for targeted advertising.
+To understand how the app is used and fix errors, we use **Firebase** (by Google), which collects:
 
-## Log Data
+### Crash diagnostics (always on)
+When the app encounters an error, Firebase Crashlytics automatically collects:
+- The type and location of the error (stack trace)
+- Device model, operating system version
+- App version
+- A random device identifier and approximate IP address
 
-I want to inform you that whenever you use my Service, in a case of an error in the app I collect data and information (through third-party products) on your phone called Log Data. This Log Data may include information such as your device Internet Protocol (“IP”) address, device name, operating system version, the configuration of the app when utilizing my Service, the time and date of your use of the Service, and other statistics.
+This collection cannot be turned off. No phone numbers, call logs, or your blocking configuration are included in crash reports.
+
+### Anonymous usage data (on by default, can be turned off)
+Firebase Analytics collects anonymous usage signals to help understand how features are used:
+- Which features you interact with (e.g. adding a country, toggling blocking)
+- Whether permissions were granted
+- Country codes of blocked calls (counts only — never the phone number)
+- Theme and language preferences
+
+This data is described as "anonymous" — it is tied to a random app installation identifier and your IP address, not to your name, phone number, or account.
+
+**You can disable usage data collection at any time** in the app's Settings screen ("Usage analytics" toggle). Crash diagnostics continue regardless.
+
+## Permissions used
+
+- **Read Call Logs / Read Phone State** — detect incoming numbers and check country codes.
+- **Answer Phone Calls / Call Screening** — automatically disconnect calls from blocked countries.
+- **Read Contacts** — optionally prevent blocking numbers in your contacts.
+
+## Third-party services
+
+This app uses **Firebase** (Google LLC). Firebase's privacy policy is available at https://firebase.google.com/support/privacy.
 
 ## Security
 
-I value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.
+No method of transmission over the internet is 100% secure. We use commercially reasonable means to protect any data that leaves your device, but cannot guarantee absolute security.
 
-## Changes to This Privacy Policy
+## Changes to this policy
 
-I may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Privacy Policy on this page.
+This policy may be updated from time to time. Changes are effective immediately upon posting. You are advised to review this page periodically.
 
-These changes are effective immediately after they are posted on this page.
+## Contact
 
-## Contact Us
-
-If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me by opening an issue on the app's GitHub repository.
+For questions or concerns about this policy, open an issue on the app's GitHub repository.

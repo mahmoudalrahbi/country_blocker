@@ -3,32 +3,31 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i5;
 
-import 'package:country_blocker/core/error/failures.dart' as _i8;
-import 'package:country_blocker/core/usecase/usecase.dart' as _i10;
+import 'package:country_blocker/core/error/failures.dart' as _i7;
+import 'package:country_blocker/core/usecase/usecase.dart' as _i9;
 import 'package:country_blocker/features/country_blocking/domain/entities/blocked_country.dart'
-    as _i9;
+    as _i8;
 import 'package:country_blocker/features/country_blocking/domain/repositories/country_blocking_repository.dart'
-    as _i3;
+    as _i2;
 import 'package:country_blocker/features/country_blocking/domain/usecases/add_blocked_country.dart'
-    as _i11;
+    as _i10;
 import 'package:country_blocker/features/country_blocking/domain/usecases/get_blocked_countries.dart'
-    as _i7;
+    as _i6;
 import 'package:country_blocker/features/country_blocking/domain/usecases/increment_blocked_calls.dart'
-    as _i15;
-import 'package:country_blocker/features/country_blocking/domain/usecases/remove_blocked_country.dart'
-    as _i12;
-import 'package:country_blocker/features/country_blocking/domain/usecases/toggle_country_blocking.dart'
-    as _i13;
-import 'package:country_blocker/features/country_blocking/domain/usecases/toggle_global_blocking.dart'
     as _i14;
+import 'package:country_blocker/features/country_blocking/domain/usecases/remove_blocked_country.dart'
+    as _i11;
+import 'package:country_blocker/features/country_blocking/domain/usecases/toggle_country_blocking.dart'
+    as _i12;
+import 'package:country_blocker/features/country_blocking/domain/usecases/toggle_global_blocking.dart'
+    as _i13;
 import 'package:country_blocker/shared/services/permissions_service.dart'
-    as _i5;
-import 'package:dartz/dartz.dart' as _i4;
-import 'package:flutter/services.dart' as _i2;
+    as _i4;
+import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:shared_preferences/src/shared_preferences_legacy.dart' as _i16;
+import 'package:shared_preferences/src/shared_preferences_legacy.dart' as _i15;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -43,20 +42,16 @@ import 'package:shared_preferences/src/shared_preferences_legacy.dart' as _i16;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
+// ignore_for_file: invalid_use_of_internal_member
 
-class _FakeMethodChannel_0 extends _i1.SmartFake implements _i2.MethodChannel {
-  _FakeMethodChannel_0(Object parent, Invocation parentInvocation)
+class _FakeCountryBlockingRepository_0 extends _i1.SmartFake
+    implements _i2.CountryBlockingRepository {
+  _FakeCountryBlockingRepository_0(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeCountryBlockingRepository_1 extends _i1.SmartFake
-    implements _i3.CountryBlockingRepository {
-  _FakeCountryBlockingRepository_1(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
-}
-
-class _FakeEither_2<L, R> extends _i1.SmartFake implements _i4.Either<L, R> {
-  _FakeEither_2(Object parent, Invocation parentInvocation)
+class _FakeEither_1<L, R> extends _i1.SmartFake implements _i3.Either<L, R> {
+  _FakeEither_1(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -64,298 +59,303 @@ class _FakeEither_2<L, R> extends _i1.SmartFake implements _i4.Either<L, R> {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockPermissionsService extends _i1.Mock
-    implements _i5.PermissionsService {
+    implements _i4.PermissionsService {
   MockPermissionsService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.MethodChannel get platform =>
+  _i5.Future<bool> platformCheckRole() =>
       (super.noSuchMethod(
-            Invocation.getter(#platform),
-            returnValue: _FakeMethodChannel_0(
-              this,
-              Invocation.getter(#platform),
-            ),
+            Invocation.method(#platformCheckRole, []),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i2.MethodChannel);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<void> requestRole() =>
+  _i5.Future<bool> platformRequestPhonePermissions() =>
+      (super.noSuchMethod(
+            Invocation.method(#platformRequestPhonePermissions, []),
+            returnValue: _i5.Future<bool>.value(false),
+          )
+          as _i5.Future<bool>);
+
+  @override
+  _i5.Future<void> requestRole() =>
       (super.noSuchMethod(
             Invocation.method(#requestRole, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i6.Future<bool> hasRole() =>
+  _i5.Future<bool> hasRole() =>
       (super.noSuchMethod(
             Invocation.method(#hasRole, []),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> requestPhonePermissions() =>
+  _i5.Future<bool> requestPhonePermissions() =>
       (super.noSuchMethod(
             Invocation.method(#requestPhonePermissions, []),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> hasPhonePermissions() =>
+  _i5.Future<bool> hasPhonePermissions() =>
       (super.noSuchMethod(
             Invocation.method(#hasPhonePermissions, []),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> requestIgnoreBatteryOptimizations() =>
+  _i5.Future<bool> requestIgnoreBatteryOptimizations() =>
       (super.noSuchMethod(
             Invocation.method(#requestIgnoreBatteryOptimizations, []),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> isIgnoringBatteryOptimizations() =>
+  _i5.Future<bool> isIgnoringBatteryOptimizations() =>
       (super.noSuchMethod(
             Invocation.method(#isIgnoringBatteryOptimizations, []),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> openSettings() =>
+  _i5.Future<bool> openSettings() =>
       (super.noSuchMethod(
             Invocation.method(#openSettings, []),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 }
 
 /// A class which mocks [GetBlockedCountries].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGetBlockedCountries extends _i1.Mock
-    implements _i7.GetBlockedCountries {
+    implements _i6.GetBlockedCountries {
   MockGetBlockedCountries() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.CountryBlockingRepository get repository =>
+  _i2.CountryBlockingRepository get repository =>
       (super.noSuchMethod(
             Invocation.getter(#repository),
-            returnValue: _FakeCountryBlockingRepository_1(
+            returnValue: _FakeCountryBlockingRepository_0(
               this,
               Invocation.getter(#repository),
             ),
           )
-          as _i3.CountryBlockingRepository);
+          as _i2.CountryBlockingRepository);
 
   @override
-  _i6.Future<_i4.Either<_i8.Failure, List<_i9.BlockedCountry>>> call(
-    _i10.NoParams? params,
+  _i5.Future<_i3.Either<_i7.Failure, List<_i8.BlockedCountry>>> call(
+    _i9.NoParams? params,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
             returnValue:
-                _i6.Future<
-                  _i4.Either<_i8.Failure, List<_i9.BlockedCountry>>
+                _i5.Future<
+                  _i3.Either<_i7.Failure, List<_i8.BlockedCountry>>
                 >.value(
-                  _FakeEither_2<_i8.Failure, List<_i9.BlockedCountry>>(
+                  _FakeEither_1<_i7.Failure, List<_i8.BlockedCountry>>(
                     this,
                     Invocation.method(#call, [params]),
                   ),
                 ),
           )
-          as _i6.Future<_i4.Either<_i8.Failure, List<_i9.BlockedCountry>>>);
+          as _i5.Future<_i3.Either<_i7.Failure, List<_i8.BlockedCountry>>>);
 }
 
 /// A class which mocks [AddBlockedCountry].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAddBlockedCountry extends _i1.Mock implements _i11.AddBlockedCountry {
+class MockAddBlockedCountry extends _i1.Mock implements _i10.AddBlockedCountry {
   MockAddBlockedCountry() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.CountryBlockingRepository get repository =>
+  _i2.CountryBlockingRepository get repository =>
       (super.noSuchMethod(
             Invocation.getter(#repository),
-            returnValue: _FakeCountryBlockingRepository_1(
+            returnValue: _FakeCountryBlockingRepository_0(
               this,
               Invocation.getter(#repository),
             ),
           )
-          as _i3.CountryBlockingRepository);
+          as _i2.CountryBlockingRepository);
 
   @override
-  _i6.Future<_i4.Either<_i8.Failure, void>> call(
-    _i11.AddBlockedCountryParams? params,
+  _i5.Future<_i3.Either<_i7.Failure, void>> call(
+    _i10.AddBlockedCountryParams? params,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
-            returnValue: _i6.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i5.Future<_i3.Either<_i7.Failure, void>>.value(
+              _FakeEither_1<_i7.Failure, void>(
                 this,
                 Invocation.method(#call, [params]),
               ),
             ),
           )
-          as _i6.Future<_i4.Either<_i8.Failure, void>>);
+          as _i5.Future<_i3.Either<_i7.Failure, void>>);
 }
 
 /// A class which mocks [RemoveBlockedCountry].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockRemoveBlockedCountry extends _i1.Mock
-    implements _i12.RemoveBlockedCountry {
+    implements _i11.RemoveBlockedCountry {
   MockRemoveBlockedCountry() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.CountryBlockingRepository get repository =>
+  _i2.CountryBlockingRepository get repository =>
       (super.noSuchMethod(
             Invocation.getter(#repository),
-            returnValue: _FakeCountryBlockingRepository_1(
+            returnValue: _FakeCountryBlockingRepository_0(
               this,
               Invocation.getter(#repository),
             ),
           )
-          as _i3.CountryBlockingRepository);
+          as _i2.CountryBlockingRepository);
 
   @override
-  _i6.Future<_i4.Either<_i8.Failure, void>> call(
-    _i12.RemoveBlockedCountryParams? params,
+  _i5.Future<_i3.Either<_i7.Failure, void>> call(
+    _i11.RemoveBlockedCountryParams? params,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
-            returnValue: _i6.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i5.Future<_i3.Either<_i7.Failure, void>>.value(
+              _FakeEither_1<_i7.Failure, void>(
                 this,
                 Invocation.method(#call, [params]),
               ),
             ),
           )
-          as _i6.Future<_i4.Either<_i8.Failure, void>>);
+          as _i5.Future<_i3.Either<_i7.Failure, void>>);
 }
 
 /// A class which mocks [ToggleCountryBlocking].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockToggleCountryBlocking extends _i1.Mock
-    implements _i13.ToggleCountryBlocking {
+    implements _i12.ToggleCountryBlocking {
   MockToggleCountryBlocking() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.CountryBlockingRepository get repository =>
+  _i2.CountryBlockingRepository get repository =>
       (super.noSuchMethod(
             Invocation.getter(#repository),
-            returnValue: _FakeCountryBlockingRepository_1(
+            returnValue: _FakeCountryBlockingRepository_0(
               this,
               Invocation.getter(#repository),
             ),
           )
-          as _i3.CountryBlockingRepository);
+          as _i2.CountryBlockingRepository);
 
   @override
-  _i6.Future<_i4.Either<_i8.Failure, void>> call(
-    _i13.ToggleCountryBlockingParams? params,
+  _i5.Future<_i3.Either<_i7.Failure, void>> call(
+    _i12.ToggleCountryBlockingParams? params,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
-            returnValue: _i6.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i5.Future<_i3.Either<_i7.Failure, void>>.value(
+              _FakeEither_1<_i7.Failure, void>(
                 this,
                 Invocation.method(#call, [params]),
               ),
             ),
           )
-          as _i6.Future<_i4.Either<_i8.Failure, void>>);
+          as _i5.Future<_i3.Either<_i7.Failure, void>>);
 }
 
 /// A class which mocks [ToggleGlobalBlocking].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockToggleGlobalBlocking extends _i1.Mock
-    implements _i14.ToggleGlobalBlocking {
+    implements _i13.ToggleGlobalBlocking {
   MockToggleGlobalBlocking() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.CountryBlockingRepository get repository =>
+  _i2.CountryBlockingRepository get repository =>
       (super.noSuchMethod(
             Invocation.getter(#repository),
-            returnValue: _FakeCountryBlockingRepository_1(
+            returnValue: _FakeCountryBlockingRepository_0(
               this,
               Invocation.getter(#repository),
             ),
           )
-          as _i3.CountryBlockingRepository);
+          as _i2.CountryBlockingRepository);
 
   @override
-  _i6.Future<_i4.Either<_i8.Failure, void>> call(_i10.NoParams? params) =>
+  _i5.Future<_i3.Either<_i7.Failure, void>> call(_i9.NoParams? params) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
-            returnValue: _i6.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i5.Future<_i3.Either<_i7.Failure, void>>.value(
+              _FakeEither_1<_i7.Failure, void>(
                 this,
                 Invocation.method(#call, [params]),
               ),
             ),
           )
-          as _i6.Future<_i4.Either<_i8.Failure, void>>);
+          as _i5.Future<_i3.Either<_i7.Failure, void>>);
 }
 
 /// A class which mocks [IncrementBlockedCalls].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockIncrementBlockedCalls extends _i1.Mock
-    implements _i15.IncrementBlockedCalls {
+    implements _i14.IncrementBlockedCalls {
   MockIncrementBlockedCalls() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.CountryBlockingRepository get repository =>
+  _i2.CountryBlockingRepository get repository =>
       (super.noSuchMethod(
             Invocation.getter(#repository),
-            returnValue: _FakeCountryBlockingRepository_1(
+            returnValue: _FakeCountryBlockingRepository_0(
               this,
               Invocation.getter(#repository),
             ),
           )
-          as _i3.CountryBlockingRepository);
+          as _i2.CountryBlockingRepository);
 
   @override
-  _i6.Future<_i4.Either<_i8.Failure, void>> call(_i10.NoParams? params) =>
+  _i5.Future<_i3.Either<_i7.Failure, void>> call(_i9.NoParams? params) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
-            returnValue: _i6.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i5.Future<_i3.Either<_i7.Failure, void>>.value(
+              _FakeEither_1<_i7.Failure, void>(
                 this,
                 Invocation.method(#call, [params]),
               ),
             ),
           )
-          as _i6.Future<_i4.Either<_i8.Failure, void>>);
+          as _i5.Future<_i3.Either<_i7.Failure, void>>);
 }
 
 /// A class which mocks [SharedPreferences].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSharedPreferences extends _i1.Mock implements _i16.SharedPreferences {
+class MockSharedPreferences extends _i1.Mock implements _i15.SharedPreferences {
   MockSharedPreferences() {
     _i1.throwOnMissingStub(this);
   }
@@ -402,75 +402,75 @@ class MockSharedPreferences extends _i1.Mock implements _i16.SharedPreferences {
           as List<String>?);
 
   @override
-  _i6.Future<bool> setBool(String? key, bool? value) =>
+  _i5.Future<bool> setBool(String? key, bool? value) =>
       (super.noSuchMethod(
             Invocation.method(#setBool, [key, value]),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> setInt(String? key, int? value) =>
+  _i5.Future<bool> setInt(String? key, int? value) =>
       (super.noSuchMethod(
             Invocation.method(#setInt, [key, value]),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> setDouble(String? key, double? value) =>
+  _i5.Future<bool> setDouble(String? key, double? value) =>
       (super.noSuchMethod(
             Invocation.method(#setDouble, [key, value]),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> setString(String? key, String? value) =>
+  _i5.Future<bool> setString(String? key, String? value) =>
       (super.noSuchMethod(
             Invocation.method(#setString, [key, value]),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> setStringList(String? key, List<String>? value) =>
+  _i5.Future<bool> setStringList(String? key, List<String>? value) =>
       (super.noSuchMethod(
             Invocation.method(#setStringList, [key, value]),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> remove(String? key) =>
+  _i5.Future<bool> remove(String? key) =>
       (super.noSuchMethod(
             Invocation.method(#remove, [key]),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> commit() =>
+  _i5.Future<bool> commit() =>
       (super.noSuchMethod(
             Invocation.method(#commit, []),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<bool> clear() =>
+  _i5.Future<bool> clear() =>
       (super.noSuchMethod(
             Invocation.method(#clear, []),
-            returnValue: _i6.Future<bool>.value(false),
+            returnValue: _i5.Future<bool>.value(false),
           )
-          as _i6.Future<bool>);
+          as _i5.Future<bool>);
 
   @override
-  _i6.Future<void> reload() =>
+  _i5.Future<void> reload() =>
       (super.noSuchMethod(
             Invocation.method(#reload, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 }

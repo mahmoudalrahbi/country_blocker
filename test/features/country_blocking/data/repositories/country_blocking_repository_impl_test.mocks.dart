@@ -5,6 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
+import 'package:country_blocker/core/telemetry/crash_reporter.dart' as _i5;
 import 'package:country_blocker/features/country_blocking/data/datasources/country_blocking_local_data_source.dart'
     as _i2;
 import 'package:country_blocker/features/country_blocking/data/models/blocked_country_model.dart'
@@ -24,6 +25,7 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
+// ignore_for_file: invalid_use_of_internal_member
 
 /// A class which mocks [CountryBlockingLocalDataSource].
 ///
@@ -84,6 +86,24 @@ class MockCountryBlockingLocalDataSource extends _i1.Mock
   _i3.Future<void> cacheBlockedCallsCount(int? count) =>
       (super.noSuchMethod(
             Invocation.method(#cacheBlockedCallsCount, [count]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+}
+
+/// A class which mocks [CrashReporter].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockCrashReporter extends _i1.Mock implements _i5.CrashReporter {
+  MockCrashReporter() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Future<void> recordNonFatal(String? type, String? message) =>
+      (super.noSuchMethod(
+            Invocation.method(#recordNonFatal, [type, message]),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )

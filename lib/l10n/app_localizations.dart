@@ -637,6 +637,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'العربية'**
   String get arabic;
+
+  /// No description provided for @usageAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage Analytics'**
+  String get usageAnalytics;
+
+  /// No description provided for @usageAnalyticsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Share anonymous usage data to improve the app'**
+  String get usageAnalyticsDescription;
 }
 
 class _AppLocalizationsDelegate

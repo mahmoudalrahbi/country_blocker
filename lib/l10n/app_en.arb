@@ -121,5 +121,7 @@
   "serverError": "Something went wrong. Please try again.",
   "country": "Country",
   "english": "English",
-  "arabic": "العربية"
+  "arabic": "العربية",
+  "usageAnalytics": "Usage Analytics",
+  "usageAnalyticsDescription": "Share anonymous usage data to improve the app"
 }

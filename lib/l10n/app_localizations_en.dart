@@ -296,4 +296,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get arabic => 'العربية';
+
+  @override
+  String get usageAnalytics => 'Usage Analytics';
+
+  @override
+  String get usageAnalyticsDescription =>
+      'Share anonymous usage data to improve the app';
 }

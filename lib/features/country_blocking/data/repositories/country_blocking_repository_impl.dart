@@ -1,17 +1,27 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/telemetry/crash_reporter.dart';
+import '../../../../core/telemetry/failure_sanitizer.dart';
 import '../../domain/entities/blocked_country.dart';
 import '../../domain/repositories/country_blocking_repository.dart';
 import '../datasources/country_blocking_local_data_source.dart';
 import '../models/blocked_country_model.dart';
 
-/// Implementation of CountryBlockingRepository
-/// Handles data operations and converts exceptions to failures
 class CountryBlockingRepositoryImpl implements CountryBlockingRepository {
   final CountryBlockingLocalDataSource localDataSource;
+  final CrashReporter _crashReporter;
 
-  CountryBlockingRepositoryImpl({required this.localDataSource});
+  CountryBlockingRepositoryImpl({
+    required this.localDataSource,
+    CrashReporter? crashReporter,
+  }) : _crashReporter = crashReporter ?? NoOpCrashReporter();
+
+  Future<Left<Failure, T>> _reportAndReturn<T>(Failure failure) async {
+    final sanitized = sanitizeFailure(failure);
+    await _crashReporter.recordNonFatal(sanitized.type, sanitized.message);
+    return Left(failure);
+  }
 
   @override
   Future<Either<Failure, List<BlockedCountry>>> getBlockedCountries() async {
@@ -19,7 +29,7 @@ class CountryBlockingRepositoryImpl implements CountryBlockingRepository {
       final countries = await localDataSource.getCachedBlockedCountries();
       return Right(countries);
     } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+      return _reportAndReturn(CacheFailure(e.message));
     }
   }
 
@@ -42,7 +52,7 @@ class CountryBlockingRepositoryImpl implements CountryBlockingRepository {
 
       return const Right(null);
     } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+      return _reportAndReturn(CacheFailure(e.message));
     }
   }
 
@@ -62,7 +72,7 @@ class CountryBlockingRepositoryImpl implements CountryBlockingRepository {
 
       return const Right(null);
     } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+      return _reportAndReturn(CacheFailure(e.message));
     }
   }
 
@@ -88,7 +98,7 @@ class CountryBlockingRepositoryImpl implements CountryBlockingRepository {
 
       return const Right(null);
     } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+      return _reportAndReturn(CacheFailure(e.message));
     }
   }
 
@@ -98,7 +108,7 @@ class CountryBlockingRepositoryImpl implements CountryBlockingRepository {
       final status = await localDataSource.getGlobalBlockingStatus();
       return Right(status);
     } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+      return _reportAndReturn(CacheFailure(e.message));
     }
   }
 
@@ -116,7 +126,7 @@ class CountryBlockingRepositoryImpl implements CountryBlockingRepository {
 
       return const Right(null);
     } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+      return _reportAndReturn(CacheFailure(e.message));
     }
   }
 
@@ -126,7 +136,7 @@ class CountryBlockingRepositoryImpl implements CountryBlockingRepository {
       final count = await localDataSource.getBlockedCallsCount();
       return Right(count);
     } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+      return _reportAndReturn(CacheFailure(e.message));
     }
   }
 
@@ -144,7 +154,7 @@ class CountryBlockingRepositoryImpl implements CountryBlockingRepository {
 
       return const Right(null);
     } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+      return _reportAndReturn(CacheFailure(e.message));
     }
   }
 }

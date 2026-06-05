@@ -87,6 +87,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
             children: [
               _buildNotificationToggle(),
               _buildDivider(),
+              _buildAnalyticsToggle(),
+              _buildDivider(),
               _buildAppearanceSelector(),
               _buildDivider(),
               _buildLanguageSelector(),
@@ -152,6 +154,48 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
           ]
         )
       )
+    );
+  }
+
+  Widget _buildAnalyticsToggle() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final analyticsEnabled = ref.watch(analyticsEnabledProvider);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          _buildIconContainer(Icons.analytics_outlined, colorScheme.tertiary),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.usageAnalytics,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  l10n.usageAnalyticsDescription,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Switch.adaptive(
+            value: analyticsEnabled,
+            onChanged: (value) {
+              ref.read(analyticsEnabledProvider.notifier).setEnabled(value);
+            },
+          ),
+        ],
+      ),
     );
   }
 

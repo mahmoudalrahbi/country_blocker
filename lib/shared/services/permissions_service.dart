@@ -1,14 +1,47 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 
-class PermissionsService {
-  final platform = const MethodChannel('com.mahmoudalrahbi.countryblocker/channel');
+import '../../core/telemetry/analytics_service.dart';
 
-  Future<void> requestRole() async {
+class PermissionsService {
+  final _channel = const MethodChannel('com.mahmoudalrahbi.countryblocker/channel');
+  final AnalyticsService _analytics;
+
+  PermissionsService({AnalyticsService? analytics})
+      : _analytics = analytics ?? NoOpAnalyticsService();
+
+  // ---- Overridable platform seams (for testing) ----
+
+  @visibleForTesting
+  Future<bool> platformCheckRole() async {
     if (Platform.isAndroid) {
       try {
-        await platform.invokeMethod('requestRole');
+        return await _channel.invokeMethod('checkRole') as bool;
+      } on PlatformException {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @visibleForTesting
+  Future<bool> platformRequestPhonePermissions() async {
+    if (Platform.isAndroid) {
+      final statuses = await [Permission.phone, Permission.contacts].request();
+      return statuses[Permission.phone]?.isGranted ?? false;
+    }
+    return true;
+  }
+
+  // ---- Public API ----
+
+  Future<void> requestRole() async {
+    await _analytics.logEvent('permission_role_requested');
+    if (Platform.isAndroid) {
+      try {
+        await _channel.invokeMethod('requestRole');
       } on PlatformException catch (e) {
         // ignore: avoid_print
         print("Failed to request role: '${e.message}'.");
@@ -17,40 +50,25 @@ class PermissionsService {
   }
 
   Future<bool> hasRole() async {
-    if (Platform.isAndroid) {
-      try {
-        final bool isHeld = await platform.invokeMethod('checkRole');
-        return isHeld;
-      } on PlatformException catch (e) {
-        // ignore: avoid_print
-        print("Failed to check role: '${e.message}'.");
-        return false;
-      }
-    }
-    return true;
+    final result = await platformCheckRole();
+    await _analytics.logEvent(
+      result ? 'permission_role_granted' : 'permission_role_denied',
+    );
+    return result;
   }
 
   Future<bool> requestPhonePermissions() async {
-    if (Platform.isAndroid) {
-      Map<Permission, PermissionStatus> statuses = await [
-        Permission.phone,
-        Permission.contacts,
-      ].request();
-
-      // Also request role if not held? No, role request is separate UI flow usually.
-      // But we should return false if role is not held?
-      // The current flow in PermissionGuardScreen calls requestPhonePermissions then checks again.
-      // We should probably rely on hasPhonePermissions to be the ultimate checker.
-      
-      return statuses[Permission.phone]?.isGranted ?? false;
-    }
-    return true; // iOS handles checking differently via Call Directory Extension usually
+    final result = await platformRequestPhonePermissions();
+    await _analytics.logEvent(
+      result ? 'permission_phone_granted' : 'permission_phone_denied',
+    );
+    return result;
   }
 
   Future<bool> hasPhonePermissions() async {
     if (Platform.isAndroid) {
       final hasPerm = await Permission.phone.isGranted;
-      final hasRoleHeld = await hasRole();
+      final hasRoleHeld = await platformCheckRole();
       return hasPerm && hasRoleHeld;
     }
     return true;
@@ -68,7 +86,7 @@ class PermissionsService {
   }
 
   Future<bool> isIgnoringBatteryOptimizations() async {
-      if (Platform.isAndroid) {
+    if (Platform.isAndroid) {
       return await Permission.ignoreBatteryOptimizations.isGranted;
     }
     return true;

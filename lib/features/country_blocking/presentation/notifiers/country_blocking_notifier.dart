@@ -1,6 +1,9 @@
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/telemetry/analytics_service.dart';
+import '../../../../core/telemetry/calls_blocked_harvester.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../../domain/entities/blocked_country.dart';
 import '../../domain/usecases/add_blocked_country.dart';
@@ -13,8 +16,9 @@ import '../../domain/usecases/toggle_country_blocking.dart';
 import '../../domain/usecases/toggle_global_blocking.dart';
 import 'country_blocking_state.dart';
 
-/// StateNotifier for managing country blocking state
-/// This is the presentation layer business logic
+const _harvesterWatermarkKey = 'calls_blocked_harvester_watermark';
+const _nativeLogsKey = 'flutter.blocked_call_logs_native';
+
 class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
   final GetBlockedCountries _getBlockedCountries;
   final GetGlobalBlockingStatus _getGlobalBlockingStatus;
@@ -24,6 +28,8 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
   final ToggleCountryBlocking _toggleCountryBlocking;
   final ToggleGlobalBlocking _toggleGlobalBlocking;
   final IncrementBlockedCalls _incrementBlockedCalls;
+  final AnalyticsService _analytics;
+  final SharedPreferences? _prefs;
 
   CountryBlockingNotifier({
     required GetBlockedCountries getBlockedCountries,
@@ -34,6 +40,8 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
     required ToggleCountryBlocking toggleCountryBlocking,
     required ToggleGlobalBlocking toggleGlobalBlocking,
     required IncrementBlockedCalls incrementBlockedCalls,
+    AnalyticsService? analytics,
+    SharedPreferences? prefs,
   })  : _getBlockedCountries = getBlockedCountries,
         _getGlobalBlockingStatus = getGlobalBlockingStatus,
         _getBlockedCallsCount = getBlockedCallsCount,
@@ -42,8 +50,9 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
         _toggleCountryBlocking = toggleCountryBlocking,
         _toggleGlobalBlocking = toggleGlobalBlocking,
         _incrementBlockedCalls = incrementBlockedCalls,
+        _analytics = analytics ?? NoOpAnalyticsService(),
+        _prefs = prefs,
         super(CountryBlockingState.initial()) {
-    // Load initial data concurrently
     loadInitialState();
   }
 
@@ -90,6 +99,16 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
       isLoading: false,
       errorMessage: errorMessage,
     );
+
+    if (_prefs != null) {
+      await CallsBlockedHarvester.harvest(
+        nativeLogsJson: _prefs.getString(_nativeLogsKey),
+        watermark: _prefs.getInt(_harvesterWatermarkKey) ?? 0,
+        analytics: _analytics,
+        onWatermarkUpdate: (w) async =>
+            _prefs.setInt(_harvesterWatermarkKey, w),
+      );
+    }
   }
 
   /// Load blocked countries from repository
@@ -115,7 +134,8 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
     result.fold(
       (failure) => state = CountryBlockingState.error(state, failure.message),
       (_) {
-        // Reload countries after adding
+        _analytics.logEvent('country_added',
+            parameters: {'country_code': params.country.isoCode});
         loadBlockedCountries();
       },
     );
@@ -123,6 +143,10 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
 
   /// Remove a country from the blocklist
   Future<void> removeCountry(String phoneCode) async {
+    final country = state.blockedCountries
+        .cast<BlockedCountry?>()
+        .firstWhere((c) => c?.phoneCode == phoneCode, orElse: () => null);
+
     final result = await _removeBlockedCountry(
       RemoveBlockedCountryParams(phoneCode: phoneCode),
     );
@@ -130,7 +154,10 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
     result.fold(
       (failure) => state = CountryBlockingState.error(state, failure.message),
       (_) {
-        // Reload countries after removing
+        if (country != null) {
+          _analytics.logEvent('country_removed',
+              parameters: {'country_code': country.isoCode});
+        }
         loadBlockedCountries();
       },
     );
@@ -138,6 +165,10 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
 
   /// Toggle blocking status for a specific country
   Future<void> toggleCountry(String phoneCode, bool isEnabled) async {
+    final country = state.blockedCountries
+        .cast<BlockedCountry?>()
+        .firstWhere((c) => c?.phoneCode == phoneCode, orElse: () => null);
+
     final result = await _toggleCountryBlocking(
       ToggleCountryBlockingParams(
         phoneCode: phoneCode,
@@ -148,7 +179,12 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
     result.fold(
       (failure) => state = CountryBlockingState.error(state, failure.message),
       (_) {
-        // Reload countries after toggling
+        if (country != null) {
+          _analytics.logEvent('country_toggled', parameters: {
+            'country_code': country.isoCode,
+            'enabled': isEnabled,
+          });
+        }
         loadBlockedCountries();
       },
     );
@@ -161,13 +197,19 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
     result.fold(
       (failure) => state = CountryBlockingState.error(state, failure.message),
       (_) {
-        // Toggle the state
+        final newEnabled = !state.isBlockingActive;
+        _analytics.logEvent('global_blocking_toggled',
+            parameters: {'enabled': newEnabled});
         state = state.copyWith(
-          isBlockingActive: !state.isBlockingActive,
+          isBlockingActive: newEnabled,
           errorMessage: null,
         );
       },
     );
+  }
+
+  void logLogsScreenOpened() {
+    _analytics.logEvent('logs_screen_opened');
   }
 
   /// Increment the blocked calls counter

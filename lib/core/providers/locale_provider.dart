@@ -2,18 +2,22 @@ import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../providers.dart';
+import '../telemetry/analytics_service.dart';
 
 /// Provider for the current locale of the application.
 final localeProvider = StateNotifierProvider<LocaleNotifier, Locale>((ref) {
   final prefs = ref.watch(sharedPreferencesProvider);
-  return LocaleNotifier(prefs);
+  return LocaleNotifier(prefs, analytics: ref.watch(analyticsServiceProvider));
 });
 
 class LocaleNotifier extends StateNotifier<Locale> {
   final SharedPreferences _prefs;
+  final AnalyticsService _analytics;
   static const _localeKey = 'app_locale';
 
-  LocaleNotifier(this._prefs) : super(_initialLocale(_prefs));
+  LocaleNotifier(this._prefs, {AnalyticsService? analytics})
+      : _analytics = analytics ?? NoOpAnalyticsService(),
+        super(_initialLocale(_prefs));
 
   static Locale _initialLocale(SharedPreferences prefs) {
     final savedLocale = prefs.getString(_localeKey);
@@ -32,5 +36,9 @@ class LocaleNotifier extends StateNotifier<Locale> {
     if (state == locale) return;
     state = locale;
     await _prefs.setString(_localeKey, locale.languageCode);
+    await _analytics.logEvent(
+      'language_changed',
+      parameters: {'language_code': locale.languageCode},
+    );
   }
 }

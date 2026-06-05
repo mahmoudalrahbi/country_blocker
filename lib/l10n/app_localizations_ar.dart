@@ -294,4 +294,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get arabic => 'العربية';
+
+  @override
+  String get usageAnalytics => 'تحليلات الاستخدام';
+
+  @override
+  String get usageAnalyticsDescription =>
+      'مشاركة بيانات الاستخدام المجهولة لتحسين التطبيق';
 }
