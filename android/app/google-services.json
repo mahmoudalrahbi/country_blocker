@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "744979149692",
+    "project_id": "country-blocker-prod",
+    "storage_bucket": "country-blocker-prod.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744979149692:android:979d305da4aeea29292af9",
+        "android_client_info": {
+          "package_name": "com.mahmoudalrahbi.countryblocker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIqPDcdD12Y2qyOLhqzr6itX9jF3XjXuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
