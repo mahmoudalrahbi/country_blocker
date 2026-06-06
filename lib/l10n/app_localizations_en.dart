@@ -303,4 +303,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get usageAnalyticsDescription =>
       'Share anonymous usage data to improve the app';
+
+  @override
+  String get notificationPermissionRequired => 'Notifications Required';
+
+  @override
+  String get notificationPermissionDescription =>
+      'This app sends you updates and monthly summaries of blocked calls.\n\nNotifications are required to use the app.';
 }

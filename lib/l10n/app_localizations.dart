@@ -649,6 +649,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share anonymous usage data to improve the app'**
   String get usageAnalyticsDescription;
+
+  /// No description provided for @notificationPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications Required'**
+  String get notificationPermissionRequired;
+
+  /// No description provided for @notificationPermissionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This app sends you updates and monthly summaries of blocked calls.\n\nNotifications are required to use the app.'**
+  String get notificationPermissionDescription;
 }
 
 class _AppLocalizationsDelegate

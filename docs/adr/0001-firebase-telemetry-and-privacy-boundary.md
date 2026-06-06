@@ -11,6 +11,6 @@ We need crash diagnostics and usage analytics for a published call-blocking app,
 ## Consequences
 
 - Crash diagnostics are always on (no toggle); usage analytics are on by default with one Settings toggle (opt-out).
-- Collection is disabled when `kDebugMode` so developer testing never reaches production dashboards.
+- Crashlytics error hooks and Analytics collection are disabled when `kDebugMode` so developer testing never reaches production dashboards. Firebase Core itself initializes unconditionally (debug and release) to support FCM notification testing in development — see the split-guard pattern in `main.dart`.
 - A strict scrubbing rule applies: phone numbers and the blocklist must never appear in any event or non-fatal. Only country codes, counts, and sanitized failure types/messages.
 - A Google Play Data Safety disclosure is now required.

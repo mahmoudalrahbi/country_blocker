@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'notifications/device_record_sync_service.dart';
+import 'notifications/notification_service.dart';
 import 'telemetry/analytics_service.dart';
 import 'telemetry/crash_reporter.dart';
 
@@ -39,6 +42,27 @@ final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError(
     'sharedPreferencesProvider must be overridden in main.dart',
   );
+});
+
+/// Global NavigatorKey — passed to MaterialApp and used by NotificationRouter.
+final navigatorKeyProvider = Provider<GlobalKey<NavigatorState>>((ref) {
+  return GlobalKey<NavigatorState>();
+});
+
+/// NotificationService provider.
+/// Defaults to NoOpNotificationService so tests need no override.
+/// main.dart overrides with FirebaseNotificationService.
+final notificationServiceProvider = Provider<NotificationService>((ref) {
+  return NoOpNotificationService();
+});
+
+/// DeviceRecordSyncService provider — pushes the device's Shareable Signal
+/// (blockedCallsCount only) to Firestore.
+/// Defaults to NoOpDeviceRecordSyncService so tests need no override.
+/// main.dart overrides with FirestoreDeviceRecordSyncService.
+final deviceRecordSyncServiceProvider =
+    Provider<DeviceRecordSyncService>((ref) {
+  return NoOpDeviceRecordSyncService();
 });
 
 /// CrashReporter provider.
@@ -217,6 +241,7 @@ final countryBlockingNotifierProvider =
     toggleGlobalBlocking: ref.watch(toggleGlobalBlockingProvider),
     incrementBlockedCalls: ref.watch(incrementBlockedCallsProvider),
     analytics: ref.watch(analyticsServiceProvider),
+    deviceRecordSync: ref.watch(deviceRecordSyncServiceProvider),
     prefs: ref.watch(sharedPreferencesProvider),
   );
 });

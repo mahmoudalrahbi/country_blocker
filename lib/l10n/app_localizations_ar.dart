@@ -301,4 +301,11 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get usageAnalyticsDescription =>
       'مشاركة بيانات الاستخدام المجهولة لتحسين التطبيق';
+
+  @override
+  String get notificationPermissionRequired => 'الإشعارات مطلوبة';
+
+  @override
+  String get notificationPermissionDescription =>
+      'يرسل هذا التطبيق تحديثات وملخصات شهرية للمكالمات المحظورة.\n\nالإشعارات مطلوبة لاستخدام التطبيق.';
 }

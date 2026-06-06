@@ -1,4 +1,5 @@
 import 'package:country_blocker/core/error/failures.dart';
+import 'package:country_blocker/core/notifications/device_record_sync_service.dart';
 import 'package:country_blocker/core/telemetry/analytics_service.dart';
 import 'package:country_blocker/core/usecase/usecase.dart';
 import 'package:country_blocker/features/country_blocking/domain/entities/blocked_country.dart';
@@ -17,6 +18,17 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'country_blocking_notifier_test.mocks.dart';
+
+/// Records every sync() call so tests can assert the notifier triggered a
+/// device record sync with the live blocked-calls count.
+class _SpyDeviceRecordSyncService implements DeviceRecordSyncService {
+  final List<int> syncedCounts = [];
+
+  @override
+  Future<void> sync({required int blockedCallsCount}) async {
+    syncedCounts.add(blockedCallsCount);
+  }
+}
 
 @GenerateMocks([
   GetBlockedCountries,
@@ -55,7 +67,7 @@ void main() {
         .thenAnswer((_) async {});
   });
 
-  void setUpNotifier() {
+  void setUpNotifier({DeviceRecordSyncService? deviceRecordSync}) {
     notifier = CountryBlockingNotifier(
       getBlockedCountries: mockGetBlockedCountries,
       getGlobalBlockingStatus: mockGetGlobalBlockingStatus,
@@ -66,6 +78,7 @@ void main() {
       toggleGlobalBlocking: mockToggleGlobalBlocking,
       incrementBlockedCalls: mockIncrementBlockedCalls,
       analytics: mockAnalytics,
+      deviceRecordSync: deviceRecordSync,
     );
   }
 
@@ -468,6 +481,98 @@ void main() {
 
       verify(mockAnalytics.logEvent('logs_screen_opened',
           parameters: anyNamed('parameters'))).called(1);
+    });
+  });
+
+  group('device record sync triggers', () {
+    late _SpyDeviceRecordSyncService spySync;
+
+    setUp(() {
+      spySync = _SpyDeviceRecordSyncService();
+    });
+
+    void setUpInitMocks({int initialCount = 0}) {
+      when(mockGetBlockedCountries(any))
+          .thenAnswer((_) async => const Right(tBlockedCountries));
+      when(mockGetGlobalBlockingStatus(any))
+          .thenAnswer((_) async => const Right(true));
+      when(mockGetBlockedCallsCount(any))
+          .thenAnswer((_) async => Right(initialCount));
+    }
+
+    test('incrementBlockedCallsCount syncs the new count', () async {
+      setUpInitMocks(initialCount: 5);
+      when(mockIncrementBlockedCalls(any))
+          .thenAnswer((_) async => const Right(null));
+      setUpNotifier(deviceRecordSync: spySync);
+      await Future.delayed(Duration.zero);
+      spySync.syncedCounts.clear();
+
+      await notifier.incrementBlockedCallsCount();
+
+      expect(spySync.syncedCounts, [6]);
+    });
+
+    test('addCountry syncs the device record on success', () async {
+      setUpInitMocks(initialCount: 4);
+      when(mockAddBlockedCountry(any))
+          .thenAnswer((_) async => const Right(null));
+      setUpNotifier(deviceRecordSync: spySync);
+      await Future.delayed(Duration.zero);
+      spySync.syncedCounts.clear();
+
+      await notifier
+          .addCountry(const AddBlockedCountryParams(country: tBlockedCountry));
+
+      expect(spySync.syncedCounts, [4]);
+    });
+
+    test('addCountry does not sync on failure', () async {
+      setUpInitMocks(initialCount: 4);
+      when(mockAddBlockedCountry(any))
+          .thenAnswer((_) async => const Left(CacheFailure()));
+      setUpNotifier(deviceRecordSync: spySync);
+      await Future.delayed(Duration.zero);
+      spySync.syncedCounts.clear();
+
+      await notifier
+          .addCountry(const AddBlockedCountryParams(country: tBlockedCountry));
+
+      expect(spySync.syncedCounts, isEmpty);
+    });
+
+    test('removeCountry syncs the device record on success', () async {
+      setUpInitMocks(initialCount: 9);
+      when(mockRemoveBlockedCountry(any))
+          .thenAnswer((_) async => const Right(null));
+      setUpNotifier(deviceRecordSync: spySync);
+      await Future.delayed(Duration.zero);
+      spySync.syncedCounts.clear();
+
+      await notifier.removeCountry('1');
+
+      expect(spySync.syncedCounts, [9]);
+    });
+
+    test('removeCountry does not sync on failure', () async {
+      setUpInitMocks(initialCount: 9);
+      when(mockRemoveBlockedCountry(any))
+          .thenAnswer((_) async => const Left(CacheFailure('Remove error')));
+      setUpNotifier(deviceRecordSync: spySync);
+      await Future.delayed(Duration.zero);
+      spySync.syncedCounts.clear();
+
+      await notifier.removeCountry('1');
+
+      expect(spySync.syncedCounts, isEmpty);
+    });
+
+    test('startup syncs the device record with the loaded count', () async {
+      setUpInitMocks(initialCount: 11);
+      setUpNotifier(deviceRecordSync: spySync);
+      await Future.delayed(Duration.zero);
+
+      expect(spySync.syncedCounts, [11]);
     });
   });
 }

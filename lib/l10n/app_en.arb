@@ -123,5 +123,7 @@
   "english": "English",
   "arabic": "العربية",
   "usageAnalytics": "Usage Analytics",
-  "usageAnalyticsDescription": "Share anonymous usage data to improve the app"
+  "usageAnalyticsDescription": "Share anonymous usage data to improve the app",
+  "notificationPermissionRequired": "Notifications Required",
+  "notificationPermissionDescription": "This app sends you updates and monthly summaries of blocked calls.\n\nNotifications are required to use the app."
 }

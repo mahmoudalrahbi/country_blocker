@@ -92,5 +92,7 @@
   "english": "English",
   "arabic": "العربية",
   "usageAnalytics": "تحليلات الاستخدام",
-  "usageAnalyticsDescription": "مشاركة بيانات الاستخدام المجهولة لتحسين التطبيق"
+  "usageAnalyticsDescription": "مشاركة بيانات الاستخدام المجهولة لتحسين التطبيق",
+  "notificationPermissionRequired": "الإشعارات مطلوبة",
+  "notificationPermissionDescription": "يرسل هذا التطبيق تحديثات وملخصات شهرية للمكالمات المحظورة.\n\nالإشعارات مطلوبة لاستخدام التطبيق."
 }

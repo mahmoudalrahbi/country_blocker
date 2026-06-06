@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -56,7 +53,6 @@ class DefaultFirebaseOptions {
     projectId: 'country-blocker-prod',
     storageBucket: 'country-blocker-prod.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAkD4d6mcrh9VNVX2B-SPuCKEXj4boMSZE',
     appId: '1:744979149692:ios:4282c2c4a4906aa9292af9',
@@ -64,5 +60,14 @@ class DefaultFirebaseOptions {
     projectId: 'country-blocker-prod',
     storageBucket: 'country-blocker-prod.firebasestorage.app',
     iosBundleId: 'com.mahmoudalrahbi.countryblocker',
+  );
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDju0hqCQc84uyGZG5m0aEt9MiXzHgeL_w',
+    appId: '1:744979149692:web:67077c70bf3f811e292af9',
+    messagingSenderId: '744979149692',
+    projectId: 'country-blocker-prod',
+    authDomain: 'country-blocker-prod.firebaseapp.com',
+    storageBucket: 'country-blocker-prod.firebasestorage.app',
+    measurementId: 'G-LPEFNDH0K8',
   );
 }

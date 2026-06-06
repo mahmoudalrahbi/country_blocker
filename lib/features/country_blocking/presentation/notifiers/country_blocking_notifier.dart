@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/notifications/device_record_sync_service.dart';
 import '../../../../core/telemetry/analytics_service.dart';
 import '../../../../core/telemetry/calls_blocked_harvester.dart';
 import '../../../../core/usecase/usecase.dart';
@@ -29,6 +30,7 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
   final ToggleGlobalBlocking _toggleGlobalBlocking;
   final IncrementBlockedCalls _incrementBlockedCalls;
   final AnalyticsService _analytics;
+  final DeviceRecordSyncService _deviceRecordSync;
   final SharedPreferences? _prefs;
 
   CountryBlockingNotifier({
@@ -41,6 +43,7 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
     required ToggleGlobalBlocking toggleGlobalBlocking,
     required IncrementBlockedCalls incrementBlockedCalls,
     AnalyticsService? analytics,
+    DeviceRecordSyncService? deviceRecordSync,
     SharedPreferences? prefs,
   })  : _getBlockedCountries = getBlockedCountries,
         _getGlobalBlockingStatus = getGlobalBlockingStatus,
@@ -51,9 +54,17 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
         _toggleGlobalBlocking = toggleGlobalBlocking,
         _incrementBlockedCalls = incrementBlockedCalls,
         _analytics = analytics ?? NoOpAnalyticsService(),
+        _deviceRecordSync = deviceRecordSync ?? NoOpDeviceRecordSyncService(),
         _prefs = prefs,
         super(CountryBlockingState.initial()) {
     loadInitialState();
+  }
+
+  /// Pushes the current [Device Record] to Firestore (count only — never the
+  /// blocklist). Fire-and-forget; failures are swallowed so syncing never
+  /// disrupts the UI.
+  void _syncDeviceRecord() {
+    _deviceRecordSync.sync(blockedCallsCount: state.blockedCallsCount);
   }
 
   /// Load all initial state (countries, global blocking status, blocked calls count)
@@ -109,6 +120,8 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
             _prefs.setInt(_harvesterWatermarkKey, w),
       );
     }
+
+    _syncDeviceRecord();
   }
 
   /// Load blocked countries from repository
@@ -137,6 +150,7 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
         _analytics.logEvent('country_added',
             parameters: {'country_code': params.country.isoCode});
         loadBlockedCountries();
+        _syncDeviceRecord();
       },
     );
   }
@@ -159,6 +173,7 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
               parameters: {'country_code': country.isoCode});
         }
         loadBlockedCountries();
+        _syncDeviceRecord();
       },
     );
   }
@@ -226,6 +241,7 @@ class CountryBlockingNotifier extends StateNotifier<CountryBlockingState> {
         state = state.copyWith(
           blockedCallsCount: state.blockedCallsCount + 1,
         );
+        _syncDeviceRecord();
       },
     );
   }

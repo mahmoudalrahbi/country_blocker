@@ -1,6 +1,6 @@
 # Country Blocker
 
-A Flutter app that rejects incoming calls based on the caller's country. This glossary defines the shared language of the blocking domain and — as of the telemetry work — the precise boundary between data that stays on the device and data that may leave it.
+A Flutter app that rejects incoming calls based on the caller's country. This glossary defines the shared language of the blocking domain, the precise boundary between data that stays on the device and data that may leave it, and the push notification infrastructure.
 
 ## Language
 
@@ -24,7 +24,7 @@ _Avoid_: history, call record
 Data that must never leave the device — raw phone numbers, **Blocked Call Logs**, contacts, and **Blocking Preferences** in identifiable per-user form.
 
 **Shareable Signal**:
-Aggregate, non-identifying data that may be sent off-device — bare country codes, counts, and crash diagnostics — once decoupled from any phone number or person. The boundary is *identifiability + aggregation*, not the country code itself: "a call from +91 was blocked" is shareable; "this user's blocklist is [IN, RU]" is not.
+Aggregate, non-identifying data that may be sent off-device — bare country codes, counts, and crash diagnostics — once decoupled from any phone number or person. The boundary is *identifiability + aggregation*, not the country code itself: "a call from +91 was blocked" is shareable; "this user's blocklist is [IN, RU]" is not. A `blockedCallsCount` stored in a **Device Record** is also a Shareable Signal: it is a count, carries no phone numbers, and is no more identifying than the pseudonymous data already collected by Firebase Analytics (see ADR 0002).
 
 **Usage Analytics**:
 Behaviour data — feature usage, the permission funnel, country-level block counts — collected via Firebase Analytics. On by default; the user can disable it with one Settings toggle.
@@ -33,6 +33,22 @@ _Avoid_: tracking, telemetry (as a loose synonym)
 **Crash Diagnostics**:
 Always-on error reporting via Firebase Crashlytics — stack traces plus device/OS/IP metadata. Covers both **Crashes** and reported **Non-fatals**. Has no off-switch.
 _Avoid_: logging, telemetry (as a loose synonym)
+
+### Notifications
+
+**Device Token**:
+The FCM registration token that uniquely identifies one app installation on one device. Stored in Firestore as the key of a **Device Record**. Rotated by FCM at any time; the app re-syncs it on every launch.
+_Avoid_: FCM token, push token (use Device Token consistently in code and docs)
+
+**Device Record**:
+The Firestore document at `devices/{deviceToken}` that the app maintains for targeting purposes. Contains only: `token`, `blockedCallsCount`, `platform`, `appVersion`, `lastSyncedAt`. Never contains **Blocking Preferences** or any **Local-only Data**.
+
+**Notification Type**:
+The `type` field in every FCM payload that drives deep-link routing. Defined values: `update_available`, `monthly_summary`, `announcement`. Every notification sent must carry a `type`; the app ignores messages without one.
+
+**Notification Router**:
+The component that reads the `type` field from an incoming FCM message and navigates to the appropriate screen using the global `NavigatorKey`. Lives in `lib/core/notifications/`.
+_Avoid_: deep link handler, push handler
 
 ## Flagged ambiguities
 
