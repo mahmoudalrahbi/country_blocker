@@ -47,7 +47,7 @@ dependencies:
   dartz: ^0.10.1
   equatable: ^2.0.5
   freezed_annotation: ^3.0.0
-  phone_numbers_parser: ^9.0.19
+  phone_numbers_parser: ^9.0.23
   package_info_plus: ^8.3.0
 
   # Telemetry — crash diagnostics + usage analytics (issue #19)
