@@ -63,7 +63,7 @@ flutter {
     source = "../.."
 }
 dependencies {
-    implementation("com.googlecode.libphonenumber:libphonenumber:8.13.24")
+    implementation("com.googlecode.libphonenumber:libphonenumber:9.0.34")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("com.googlecode.libphonenumber:libphonenumber:8.13.24")
+    testImplementation("com.googlecode.libphonenumber:libphonenumber:9.0.34")
 }
